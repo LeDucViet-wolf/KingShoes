@@ -5,7 +5,7 @@
 	version="4.0">
 	<display-name>KingShoeApi</display-name>
 	<servlet>
-		<servlet-name>myservlet</servlet-name>
+		<servlet-name>my_servlet</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
@@ -13,7 +13,7 @@
 		</init-param>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>myservlet</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<servlet-name>my_servlet</servlet-name>
+		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 </web-app>
