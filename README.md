@@ -1,2 +1,0 @@
-# KingShoes
-Hoàng Cao Long
