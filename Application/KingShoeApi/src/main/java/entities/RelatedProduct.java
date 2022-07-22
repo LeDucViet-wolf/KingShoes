@@ -8,43 +8,50 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tblProductImage")
-public class ProductImage {
+@Table(name = "tblRelatedProduct")
+public class RelatedProduct {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "entity_id")
 	public Integer entityId;
 	@Column(name = "product_id")
 	public Integer productId;
-	@Column(name = "value")
-	public String value;
+	@Column(name = "related_product_id")
+	public Integer relatedProductId;
 	
-	public ProductImage() {
+	public RelatedProduct() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ProductImage(Integer entityId, Integer productId, String value) {
+
+	public RelatedProduct(Integer entityId, Integer productId, Integer relatedProductId) {
 		super();
 		this.entityId = entityId;
 		this.productId = productId;
-		this.value = value;
+		this.relatedProductId = relatedProductId;
 	}
+
 	public Integer getEntityId() {
 		return entityId;
 	}
+
 	public void setEntityId(Integer entityId) {
 		this.entityId = entityId;
 	}
+
 	public Integer getProductId() {
 		return productId;
 	}
+
 	public void setProductId(Integer productId) {
 		this.productId = productId;
 	}
-	public String getValue() {
-		return value;
+
+	public Integer getRelatedProductId() {
+		return relatedProductId;
 	}
-	public void setValue(String value) {
-		this.value = value;
+
+	public void setRelatedProductId(Integer relatedProductId) {
+		this.relatedProductId = relatedProductId;
 	}
 }
