@@ -11,5 +11,20 @@
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
         
         <mapping class="entities.Category"/>
+        <mapping class="entities.Customer"/>
+        <mapping class="entities.ProductReview"/>
+        <mapping class="entities.CustomerPoint"/>
+        <mapping class="entities.Quote"/>
+        <mapping class="entities.QuoteItem"/>
+        <mapping class="entities.Product"/>
+        <mapping class="entities.ProductImage"/>
+        <mapping class="entities.RelatedProduct"/>
+        <mapping class="entities.ShippingMethod"/>
+        <mapping class="entities.PaymentMethod"/>
+        <mapping class="entities.Order"/>
+        <mapping class="entities.OrderItem"/>
+        <mapping class="entities.ProductPoint"/>
+        <mapping class="entities.User"/>
+        <mapping class="entities.Role"/>
     </session-factory>
 </hibernate-configuration>

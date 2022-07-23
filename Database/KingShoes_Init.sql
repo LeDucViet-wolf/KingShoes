@@ -116,7 +116,7 @@ create table tblCustomerPoint
 (
 	entity_id int auto_increment primary key,
 	customer_id int,
-	`value` varchar(256)
+	`value` int
 );
 
 create table tblProductPoint

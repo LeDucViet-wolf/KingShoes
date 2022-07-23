@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,11 +17,11 @@ public class Customer {
 	@Column(name = "entity_id")
 	public Integer entityId;
 	@Column(name = "first_name")
-	public Integer firstName;
+	public String firstName;
 	@Column(name = "last_name")
 	public String lastName;
 	@Column(name = "birthday")
-	public String birthday;
+	public Date birthday;
 	@Column(name = "gender")
 	public Integer gender;
 	@Column(name = "email")
@@ -32,11 +34,11 @@ public class Customer {
 	public String address;
 	@Column(name = "status")
 	public Integer status;
+	
 	public Customer() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	public Customer(Integer entityId, Integer firstName, String lastName, String birthday, Integer gender, String email,
+	public Customer(Integer entityId, String firstName, String lastName, Date birthday, Integer gender, String email,
 			String phone, String password, String address, Integer status) {
 		super();
 		this.entityId = entityId;
@@ -56,10 +58,10 @@ public class Customer {
 	public void setEntityId(Integer entityId) {
 		this.entityId = entityId;
 	}
-	public Integer getFirstName() {
+	public String getFirstName() {
 		return firstName;
 	}
-	public void setFirstName(Integer firstName) {
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 	public String getLastName() {
@@ -68,10 +70,10 @@ public class Customer {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public String getBirthday() {
+	public Date getBirthday() {
 		return birthday;
 	}
-	public void setBirthday(String birthday) {
+	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}
 	public Integer getGender() {

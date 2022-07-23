@@ -23,7 +23,6 @@ public class Category {
 	
 	public Category() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Category(Integer entityId, String name, Integer status, String image) {

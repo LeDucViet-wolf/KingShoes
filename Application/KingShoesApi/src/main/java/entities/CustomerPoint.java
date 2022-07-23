@@ -17,14 +17,14 @@ public class CustomerPoint {
 	@Column(name = "customer_id")
 	public String customerId;
 	@Column(name = "value")
-	public String value;
+	public Integer value;
 
 	public CustomerPoint() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CustomerPoint(Integer entityId, String customerId, String value) {
+	public CustomerPoint(Integer entityId, String customerId, Integer value) {
 		super();
 		this.entityId = entityId;
 		this.customerId = customerId;
@@ -47,11 +47,11 @@ public class CustomerPoint {
 		this.customerId = customerId;
 	}
 
-	public String getValue() {
+	public Integer getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(Integer value) {
 		this.value = value;
 	}
 }
