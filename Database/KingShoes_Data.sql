@@ -57,3 +57,20 @@ insert into tblCustomerPoint(`customer_id`,`value`) values
 (8,80),
 (9,90),
 (10,100);
+
+insert into tblRole(`name`,`resource`, `is_admin`) values
+('Admin', '', 1),
+('Vendor', '', 2);
+
+insert into tblUser(`first_name`,`last_name`,`account`,`password`,`image`,`role_id`) values
+('Lê Đức', 'Việt', 'leducviet', 'admin.123', '', 2),
+('Hoàng Cao', 'Long', 'hoangcaolong', 'admin.123', '', 2),
+('Đặng Tuấn', 'Đạt', 'dangtuandat', 'admin.123', '', 1);
+
+insert into tblShippingMethod(`name`,`price`,`code`,`status`) values
+('Free Shipping', 0, 'FSP', 1),
+('Domestic Express Delivery', 100000, 'DED', 1),
+('Express Delivery Abroad', 200000, 'EDA', 2);
+
+insert into tblPaymentMethod(`name`,`code`,`status`) values
+('Cash On Delivery', 'COD', 1);

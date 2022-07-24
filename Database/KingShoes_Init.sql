@@ -141,5 +141,6 @@ create table tblRole
 (
 	entity_id int auto_increment primary key,
 	name varchar(256),
-	`resource` varchar(256)
+	`resource` varchar(256),
+	is_admin int
 );
