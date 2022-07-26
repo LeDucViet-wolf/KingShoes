@@ -1,0 +1,481 @@
+.bettings {
+    .bg-red {
+        background-color: $color-close;
+    }
+
+    .bg-blue {
+        background-color: #002868;
+    }
+
+    .bg-black {
+        background-color: #262626;
+    }
+
+    .bg-grey {
+        background-color: #757171;
+    }
+
+    .close-bet {
+        color: $color-close;
+    }
+
+    .open {
+        color: $color-open;
+    }
+
+    .win,
+    .list-bet-table table .win .odd-bet {
+        color: #02a04a;
+    }
+
+    tr td span.win {
+        background-color: #ecfdf3 !important;
+    }
+
+    .lose {
+        color: $color-close;
+    }
+
+
+
+    .row.row-title,
+    .row.row-total,
+    .row.row-money,
+    .list-bet .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .change-the-bet {
+
+        thead,
+        tbody,
+        tfoot,
+        tr,
+        td,
+        th {
+            width: 175px;
+        }
+    }
+
+    .col-title {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .change-title h4 {
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .row {
+
+        &.row-total,
+        &.row-money {
+            background: #ffffff;
+            margin-left: 0;
+            margin-right: 0;
+            padding-top: 25px;
+            padding-bottom: 25px;
+            border: 1px solid $border-color;
+            border-top: 0;
+
+            .table> :not(:first-child) {
+                border: 0;
+            }
+
+            td,
+            th {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+    }
+
+    .table-number {
+        td {
+            font-size: 30px;
+            font-weight: 700;
+        }
+    }
+
+    .table-text-sub td,
+    .table-money td,
+    .table-number-money,
+    .table-money th {
+        font-size: 13px;
+    }
+
+    .table-number-sub {
+        td {
+            color: $color-close;
+            font-weight: 700;
+            font-size: 19px;
+            padding-top: 15px;
+        }
+    }
+
+    .table-number-sub.open td,
+    .table-text-sub.open span {
+        color: $color-open;
+    }
+
+    .table-text-sub {
+        span {
+            font-weight: 700;
+            padding: 0;
+        }
+    }
+
+    .table-money {
+        td {
+            font-weight: 700;
+        }
+    }
+
+    .table-number-money {
+        td {
+            font-weight: 500;
+
+            ul {
+                list-style: none;
+                padding-left: 0;
+                margin: 0;
+            }
+        }
+    }
+
+    tr {
+        &.table-text-sub {
+            &.fs-12 {
+                td {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+
+    .tabs-bet {
+        margin-top: 100px;
+
+        .react-tabs__tab--selected {
+            background: #ffffff;
+            border-color: #ffffff;
+            border-radius: 0;
+        }
+
+        .react-tabs__tab-list {
+            border-bottom: 0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            border: 1px solid $border-color;
+        }
+
+        li {
+            &.react-tabs__tab {
+                &.react-tabs__tab--selected {
+                    &::after {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    .tabs-bet li.react-tabs__tab.react-tabs__tab--selected h5,
+    .tabs-bet li.react-tabs__tab.react-tabs__tab--selected p {
+        color: #111111;
+    }
+
+    li.react-tabs__tab h5,
+    li.react-tabs__tab p {
+        font-size: 14px;
+        margin-bottom: 0;
+        color: #949494;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .table-total {
+        margin-bottom: 60px;
+    }
+
+    .table-title {
+        font-size: 32px;
+    }
+
+    .table-row {
+        background: #f2f2f2;
+        margin: 0;
+    }
+
+    .table-row div {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .table-row .table-bettor-no .table-bettor-title {
+        border-left: 0;
+    }
+
+    .table-bettor-title {
+        border: 1px solid var(--border-table);
+        font-size: 16px;
+        padding: 10px 0;
+    }
+
+    .table> :not(caption)>*>* {
+        padding: 0;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+    }
+
+    li {
+        &.react-tabs__tab {
+            width: 25%;
+            flex: 0 0 auto;
+            bottom: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 0;
+            flex-wrap: wrap;
+            background-color: #f9f9f9;
+
+            p {
+                line-height: 15px;
+            }
+
+            &:not(:last-child) {
+                border-right: 1px solid $border-color;
+            }
+        }
+    }
+
+    .list-bet {
+        margin-bottom: 100px;
+        background-color: #fff;
+
+        table {
+            thead {
+                border-bottom: 1px solid $border-color;
+
+                th {
+                    line-height: 17px;
+                    padding: 20px 5px;
+                    vertical-align: middle;
+
+                    i {
+                        font-size: 11px;
+                    }
+                }
+            }
+
+            tbody {
+                td {
+                    padding: 10px 5px;
+                    height: 50px;
+                }
+            }
+        }
+    }
+
+    .odd,
+    .counter {
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .odd {
+        background-color: $color-close  !important;
+    }
+
+    .counter {
+        background-color: $color-open  !important;
+        padding-right: 25px;
+    }
+
+    .list-bet-no table thead tr th:not(:first-child),
+    .list-bet-no table tbody tr td:not(:first-child) {
+        padding-left: 15px;
+    }
+
+    .list-bet-table {
+        border: 1px solid $border-color;
+        border-top: 0;
+
+        table {
+            td {
+                font-size: 11px;
+
+                &.name-bet {
+                    font-size: 12px;
+                }
+
+                &.odd-bet {
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: $color-close;
+                    text-align: center;
+                }
+
+                i {
+                    color: #ed690f;
+                    margin-left: 25px;
+                }
+            }
+
+            tr {
+                &:not(:last-child) {
+                    border-bottom: 1px solid $border-color;
+                }
+            }
+
+            tbody {
+                tr {
+                    &:nth-child(2n + 2) {
+                        background-color: #f7f7f7;
+                    }
+                }
+            }
+        }
+    }
+
+    .list-bet-no {
+        border-left: 0;
+    }
+
+    .list-bet-yes {
+        border-right: 0;
+    }
+
+    .tag-bet {
+        span {
+            font-weight: 700;
+            text-align: center;
+            background-color: #fff1f3 !important;
+            padding: 6px 12px;
+            border-radius: 50px;
+            line-height: 25px;
+        }
+    }
+
+    .counter {
+        background-color: $color-open  !important;
+        padding-right: 25px;
+    }
+
+    .paid span,
+    .counter span {
+        position: relative;
+    }
+
+    .counter ul,
+    .paid ul {
+        list-style: none;
+        padding: 15px 0 15px 20px;
+        margin: 0;
+        background-color: rgb(255, 255, 255);
+        border-radius: 10px;
+        position: absolute;
+        top: 35px;
+        right: 0;
+        left: -15px;
+        width: 222px;
+        border: 1px solid #e2e2e2;
+        box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.15);
+        display: none;
+    }
+
+    th.paid ul {
+        left: -50px;
+        width: 170px;
+    }
+
+    th.paid.paid-no ul {
+        left: -160px;
+    }
+
+    th.paid.paid-no ul::before {
+        right: 10px;
+    }
+
+    .counter ul::before,
+    .paid ul::before {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid #ffffff;
+        border-right: 8px solid transparent;
+        position: absolute;
+        top: -15px;
+        bottom: 0;
+    }
+
+    .counter:hover ul,
+    .paid:hover ul {
+        display: block;
+    }
+
+    .counter ul li,
+    .paid ul li {
+        text-align: left;
+        font-weight: 500;
+        color: #111111;
+        line-height: 25px;
+    }
+
+    .btn-sm {
+        margin-left: 5px;
+    }
+
+    table tr td.arrow {
+        width: 5px;
+    }
+}
+
+.d-arrow {
+    background-color: $color-close  !important;
+}
+
+.arrow i {
+    font-size: 20px;
+}
+
+.win,
+.list-bet-table .win.odd-bet {
+    color: #02a04a;
+}
+
+tr td span.win {
+    background-color: #ecfdf3 !important;
+}
+
+.lose {
+    color: $color-close;
+}
+
+.primary-bet {
+    color: #f97602;
+}
+
+.detail-bet{
+    .tag-bet {
+        span {
+            font-weight: 700;
+            text-align: center;
+            padding: 6px 12px;
+            border-radius: 50px;
+            line-height: 25px;
+            &:first-child{
+            background-color: #fff1f3;
+
+            }
+        }
+    }
+}

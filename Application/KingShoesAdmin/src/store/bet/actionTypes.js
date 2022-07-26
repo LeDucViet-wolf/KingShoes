@@ -1,0 +1,4 @@
+/* ALLBET */
+export const GET_ALLBET = "GET_ALLBET"
+export const GET_ALLBET_SUCCESS = "GET_ALLBET_SUCCESS"
+export const GET_ALLBET_FAIL = "GET_ALLBET_FAIL"
