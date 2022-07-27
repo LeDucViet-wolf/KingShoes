@@ -1,30 +1,33 @@
 import React from 'react'
+import RelatedProduct from './components/RelatedProduct'
+import Breadcrumb from '../../components/Breadcrumb'
 
 const ProductDetail = (props) => {
     return (
         <>
+            <Breadcrumb />
             <div className="container-fluid pb-5">
                 <div className="row px-xl-5">
                     <div className="col-lg-5 mb-30">
-                        <div id="product-carousel" className="carousel slide" dataRide="carousel">
+                        <div id="product-carousel" className="carousel slide" dataride="carousel">
                             <div className="carousel-inner bg-light">
                                 <div className="carousel-item active">
-                                    <img className="w-100 h-100" src="img/product-1.jpg" alt="Image" />
+                                    <img className="w-100 h-100" src="../../../public/img/product-1.jpg" alt="Image" />
                                 </div>
                                 <div className="carousel-item">
-                                    <img className="w-100 h-100" src="img/product-2.jpg" alt="Image" />
+                                    <img className="w-100 h-100" src="../../../public/img/product-2.jpg" alt="Image" />
                                 </div>
                                 <div className="carousel-item">
-                                    <img className="w-100 h-100" src="img/product-3.jpg" alt="Image" />
+                                    <img className="w-100 h-100" src="../../../public/img/product-3.jpg" alt="Image" />
                                 </div>
                                 <div className="carousel-item">
-                                    <img className="w-100 h-100" src="img/product-4.jpg" alt="Image" />
+                                    <img className="w-100 h-100" src="../../../public/img/product-4.jpg" alt="Image" />
                                 </div>
                             </div>
-                            <a className="carousel-control-prev" href="#product-carousel" dataSlide="prev">
+                            <a className="carousel-control-prev" href="#product-carousel" dataslide="prev">
                                 <i className="fa fa-2x fa-angle-left text-dark"></i>
                             </a>
-                            <a className="carousel-control-next" href="#product-carousel" dataSlide="next">
+                            <a className="carousel-control-next" href="#product-carousel" dataslide="next">
                                 <i className="fa fa-2x fa-angle-right text-dark"></i>
                             </a>
                         </div>
@@ -98,13 +101,13 @@ const ProductDetail = (props) => {
                                 </form>
                             </div>
                             <div className="d-flex align-items-center mb-4 pt-2">
-                                <div className="input-group quantity mr-3" style={{width: '130px'}}>
+                                <div className="input-group quantity mr-3" style={{ width: '130px' }}>
                                     <div className="input-group-btn">
                                         <button className="btn btn-primary btn-minus">
                                             <i className="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="text" className="form-control bg-secondary border-0 text-center" value="1" />
+                                    <input type="text" className="form-control bg-secondary border-0 text-center" defaultValue="1" />
                                     <div className="input-group-btn">
                                         <button className="btn btn-primary btn-plus">
                                             <i className="fa fa-plus"></i>
@@ -138,9 +141,9 @@ const ProductDetail = (props) => {
                     <div className="col">
                         <div className="bg-light p-30">
                             <div className="nav nav-tabs mb-4">
-                                <a className="nav-item nav-link text-dark active" dataToggle="tab" href="#tab-pane-1">Description</a>
-                                <a className="nav-item nav-link text-dark" dataToggle="tab" href="#tab-pane-2">Information</a>
-                                <a className="nav-item nav-link text-dark" dataToggle="tab" href="#tab-pane-3">Reviews (0)</a>
+                                <a className="nav-item nav-link text-dark active" datatoggle="tab" href="#tab-pane-1">Description</a>
+                                <a className="nav-item nav-link text-dark" datatoggle="tab" href="#tab-pane-2">Information</a>
+                                <a className="nav-item nav-link text-dark" datatoggle="tab" href="#tab-pane-3">Reviews (0)</a>
                             </div>
                             <div className="tab-content">
                                 <div className="tab-pane fade show active" id="tab-pane-1">
@@ -191,7 +194,7 @@ const ProductDetail = (props) => {
                                         <div className="col-md-6">
                                             <h4 className="mb-4">1 review for "Product Name"</h4>
                                             <div className="media mb-4">
-                                                <img src="img/user.jpg" alt="Image" className="img-fluid mr-3 mt-1" style={{width: '45px'}} />
+                                                <img src="../../../public/img/user.jpg" alt="Image" className="img-fluid mr-3 mt-1" style={{ width: '45px' }} />
                                                 <div className="media-body">
                                                     <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
                                                     <div className="text-primary mb-2">
@@ -232,7 +235,7 @@ const ProductDetail = (props) => {
                                                     <input type="email" className="form-control" id="email" />
                                                 </div>
                                                 <div className="form-group mb-0">
-                                                    <input type="submit" value="Leave Your Review" className="btn btn-primary px-3" />
+                                                    <input type="submit" defaultValue="Leave Your Review" className="btn btn-primary px-3" />
                                                 </div>
                                             </form>
                                         </div>
@@ -243,6 +246,7 @@ const ProductDetail = (props) => {
                     </div>
                 </div>
             </div>
+            <RelatedProduct />
         </>
     )
 }
