@@ -7,7 +7,6 @@ import Checkout from '../pages/checkout/Checkout'
 import Contact from '../pages/contact/Contact'
 
 const RoutePages = () => {
-  const auth = localStorage.getItem('token')
   return (
     <Routes>
       {
