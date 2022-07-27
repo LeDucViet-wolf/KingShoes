@@ -108,25 +108,37 @@ const fakeBackend = () => {
 
   mock.onPost("/post-jwt-login").reply(config => {
     const user = JSON.parse(config["data"])
-    const validUser = users.filter(
-      usr => usr.username === user.username && usr.password === user.password
-    )
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (validUser["length"] === 1) {
-          const token = user.at
 
-          const tokenObj = { accessToken: token } // Token Obj
-          const validUserObj = { ...validUser[0], ...tokenObj } // validUser Obj
+    var config = {
+      method: "get",
+      url: "http://localhost:3113/signDraw",
+    }
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          axios(config)
+          .then(function (response) {
+            const validUser = response.data.filter(
+              usr => usr.account === user.username && usr.password === user.password
+            )
+            if (validUser["length"] === 1) {
+              const token = user.at
+  
+              const tokenObj = { accessToken: token } // Token Obj
+              const validUserObj = { ...validUser[0], ...tokenObj } // validUser Obj
+              resolve([200, validUserObj])
+            } else {
+              reject([
+                "Username and password are invalid. Please enter correct username and password",
+              ])
+            }
+    
+          })
+          .catch(err => {
+            console.log(err)
+          })
 
-          resolve([200, validUserObj])
-        } else {
-          reject([
-            "Username and password are invalid. Please enter correct username and password",
-          ])
-        }
+        })
       })
-    })
   })
 
   mock.onPost("/post-jwt-profile").reply(config => {
@@ -901,10 +913,7 @@ const fakeBackend = () => {
     return new Promise((resolve, reject) => {
       var config = {
         method: 'get',
-        url: 'http://38.242.236.227:3456/api/customer',
-        headers: { 
-          'Authorization': 'Bearer '+JSON.parse(localStorage.getItem("authUser")).accessToken
-        }
+        url: 'http://localhost:3113/get-all-customers',
       };
       setTimeout(() => {
         axios(config)
@@ -913,7 +922,7 @@ const fakeBackend = () => {
               const d = response.data;
               var rd = []
               d.forEach(e => {
-                e.name = e.firstname +"\xa0"+ e.lastname
+                e.name = e.firstName +"\xa0"+ e.lastName
                 rd.push(e)
               });
               resolve([200, rd])
@@ -933,20 +942,14 @@ const fakeBackend = () => {
     return new Promise((resolve, reject) => {
       var config = {
         method: 'get',
-        url: 'http://38.242.236.227:3456/api/bets',
+        url: 'http://localhost:3113/get-all-products',
       };
       setTimeout(() => {
         axios(config)
           .then(function (response) {
             if (response.data) {
               const d = response.data;
-              var rd = []
-              d.forEach(e => {
-                e.amountYes = e.bettor_yes && e.bettor_yes_id == e.created_user.id?e.amount:e.amount_counter;
-                e.amountNo = e.bettor_no && e.bettor_no_id == e.created_user.id?e.amount:e.amount_counter;
-                rd.push(e)
-              });
-              resolve([200, response.data])
+              resolve([200, d])
             } else {
               reject([400, "Cannot get users"])
             }

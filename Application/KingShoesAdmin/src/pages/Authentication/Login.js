@@ -53,26 +53,7 @@ const Login = props => {
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: values => {
-      var data = JSON.stringify(values)
-      var config = {
-        method: "post",
-        url: "http://38.242.236.227:3456/api/login",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: data,
-      }
-
-      axios(config)
-        .then(function (response) {
-          // console.log(response.data);
-          values.at = response.data.access_token
-          console.log(values)
-          dispatch(loginUser(values, props.history))
-        })
-        .catch(err => {
-          dispatch(loginUser("wrong", props.history))
-        })
+      dispatch(loginUser(values, props.history));
     },
   })
 

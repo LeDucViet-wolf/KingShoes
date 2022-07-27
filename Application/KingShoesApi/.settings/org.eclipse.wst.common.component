@@ -5,7 +5,7 @@
     
     
     
-    <wb-module deploy-name="KingShoeApi-0.0.1-SNAPSHOT">
+    <wb-module deploy-name="KingShoesApi-0.0.1-SNAPSHOT">
                                                         
         
         
@@ -40,9 +40,7 @@
         
         
         <property name="java-output-path" value="/KingShoeApi/build/classes"/>
-                        
-        
-        <property name="context-root" value="KingShoeApi"/>
+        <property name="context-root" value="KingShoesApi"/>
                                                     
     
     

@@ -162,7 +162,7 @@ const TableContainer = ({
         {isAddUserList && (
           <Col sm="7">
             <div className="text-sm-end">
-              {/* <Button
+              <Button
                 type="button"
                 color="primary"
                 className="btn mb-2 me-2"
@@ -170,7 +170,7 @@ const TableContainer = ({
               >
                 <i className="mdi mdi-plus-circle-outline me-1" />
                 Create New User
-              </Button> */}
+              </Button>
             </div>
           </Col>
         )}

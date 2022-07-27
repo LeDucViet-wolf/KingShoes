@@ -117,7 +117,7 @@ const ContactsList = props => {
     () => [
       {
         Header: "ID",
-        accessor: "id",
+        accessor: "entityId",
         Cell: cellProps => {
           return<Name {...cellProps} />
         },
@@ -125,14 +125,6 @@ const ContactsList = props => {
       {
         Header: "Name",
         accessor: "name",
-        sort: true,
-        Cell: cellProps => {
-          return <Name {...cellProps} />
-        },
-      },
-      {
-        Header: "UserName",
-        accessor: "username",
         sort: true,
         Cell: cellProps => {
           return <Name {...cellProps} />
@@ -162,24 +154,8 @@ const ContactsList = props => {
 
       },
       {
-        Header: "City",
-        accessor: "city",
-        sort: true,
-        Cell: cellProps => {
-          return <Name {...cellProps} />
-        },
-      },
-      {
-        Header: "State",
-        accessor: "state",
-        sort: true,
-        Cell: cellProps => {
-          return <Name {...cellProps} />
-        },
-      },
-      {
-        Header: "Country",
-        accessor: "country",
+        Header: "Address",
+        accessor: "address",
         sort: true,
         Cell: cellProps => {
           return <Name {...cellProps} />
@@ -301,6 +277,7 @@ const ContactsList = props => {
 
   return (
     <React.Fragment>
+      
       <DeleteModal
         show={deleteModal}
         onDeleteClick={handleDeleteUser}

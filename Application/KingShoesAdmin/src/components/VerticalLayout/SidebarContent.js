@@ -112,30 +112,10 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to="#" className="has-arrow">
+              <Link to={process.env.REACT_APP_SECURITY_URL + "/bet"}>
                 <i className="bx bx-money"></i>
-                <span>{props.t("Bet")}</span>
+                <span>{props.t("Products")}</span>
               </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to={process.env.REACT_APP_SECURITY_URL + "/bet"}>{props.t("All Bet")}</Link>
-                </li>
-                <li>
-                  <Link to={process.env.REACT_APP_SECURITY_URL + "/bet-review"}>{props.t("Review Bet")}</Link>
-                </li>
-                <li>
-                  <Link to={process.env.REACT_APP_SECURITY_URL + "/bet-challange"}>{props.t("Challenged")}</Link>
-                </li>
-                <li>
-                  <Link to={process.env.REACT_APP_SECURITY_URL + "/bet-open"}>{props.t("Open")}</Link>
-                </li>
-                <li>
-                  <Link to={process.env.REACT_APP_SECURITY_URL + "/bet-close"}>{props.t("Close")}</Link>
-                </li>
-                <li>
-                  <Link to={process.env.REACT_APP_SECURITY_URL + "/contracts"}>{props.t("Contracts")}</Link>
-                </li>
-              </ul>
             </li>
             <li>
               <Link to={process.env.REACT_APP_SECURITY_URL + "/certificate"}>
