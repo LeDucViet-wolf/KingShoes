@@ -1,7 +1,12 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 const Header = () => {
+    const getNavLinkClass = (path) => {
+        console.log(this.props.location.pathname)
+        return this.props.location.pathname === path ? 'active' : '';
+    }
+
     return (
         <>
             {/* Topbar */}
@@ -125,17 +130,17 @@ const Header = () => {
                             </button>
                             <div className="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                                 <div className="navbar-nav mr-auto py-0">
-                                    <Link to="/" className="nav-item nav-link active">Home</Link>
-                                    <Link to="/product-list" className="nav-item nav-link ">Shop</Link>
-                                    <Link to="/product-detail/1" className="nav-item nav-link ">Shop Detail</Link>
+                                    <NavLink activeclassname="active" to="/" className="nav-item nav-link">Home</NavLink>
+                                    <NavLink activeclassname="active" to="/product-list" className="nav-item nav-link">Shop</NavLink>
+                                    <NavLink activeclassname="active" to="/product-detail/1" className="nav-item nav-link ">Shop Detail</NavLink>
                                     <div className="nav-item dropdown">
-                                        <a href="#" className="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i className="fa fa-angle-down mt-1"></i></a>
+                                        <a className="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i className="fa fa-angle-down mt-1"></i></a>
                                         <div className="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <Link to="/cart" className="dropdown-item">Shopping Cart</Link>
-                                        <Link to="/checkout" className="dropdown-item">Checkout</Link>
+                                            <NavLink activeclassname="active" to="/cart" className="dropdown-item">Shopping Cart</NavLink>
+                                            <NavLink activeclassname="active" to="/checkout" className="dropdown-item">Checkout</NavLink>
                                         </div>
                                     </div>
-                                    <Link to="/contact" className="nav-item nav-link">Contact</Link>
+                                    <NavLink activeclassname="active" to="/contact" className="nav-item nav-link">Contact</NavLink>
                                 </div>
                                 <div className="navbar-nav ml-auto py-0 d-none d-lg-block">
                                     <a href="" className="btn px-0">

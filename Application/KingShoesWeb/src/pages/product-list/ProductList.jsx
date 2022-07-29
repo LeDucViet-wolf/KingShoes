@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Sidebar from './components/Sidebar'
 import Breadcrumb from '../../components/Breadcrumb'
+import { getAxios } from '../../utils/request'
 
-const ProductList = (props) => {
+const ProductList = () => {
     return (
         <>
-            <Breadcrumb />
+            <Breadcrumb pageUrl='/product-list' pageName='Shop' pageNameChild='Shop List' />
             <div className="container-fluid">
                 <div className="row px-xl-5">
                     <Sidebar />

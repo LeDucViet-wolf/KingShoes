@@ -1,11 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import RelatedProduct from './components/RelatedProduct'
 import Breadcrumb from '../../components/Breadcrumb'
 
-const ProductDetail = (props) => {
+import { getAxios } from '../../utils/request'
+import useScript from '../../hooks/useScript'
+
+const ProductDetail = () => {
+    useScript('../../../../public/js/product-quantity')
+    useScript('../../../../public/js/tab')
+
+    // useEffect(() => {
+    //     try {
+    //         getAxios(`/random-article/${cateId}/3`).then((res) => {
+    //             if (res.data && res.data.length) {
+    //                 setListData(res.data);
+    //             }
+    //         })
+    //     } catch (ex) {
+    //         console.log(ex);
+    //         return null;
+    //     }
+    // }, []);
+
     return (
         <>
-            <Breadcrumb />
+            <Breadcrumb pageUrl='/product-list' pageName='Shop' pageNameChild='Shop Detail' />
             <div className="container-fluid pb-5">
                 <div className="row px-xl-5">
                     <div className="col-lg-5 mb-30">

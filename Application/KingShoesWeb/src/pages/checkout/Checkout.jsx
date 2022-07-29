@@ -4,7 +4,7 @@ import Breadcrumb from '../../components/Breadcrumb'
 const Checkout = () => {
     return (
         <>
-            <Breadcrumb />
+            <Breadcrumb pageUrl='/product-list' pageName='Shop' pageNameChild='Checkout'/>
             <div className="container-fluid">
                 <div className="row px-xl-5">
                     <div className="col-lg-8">

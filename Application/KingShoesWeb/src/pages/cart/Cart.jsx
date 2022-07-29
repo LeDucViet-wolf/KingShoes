@@ -1,10 +1,13 @@
 import React from 'react'
 import Breadcrumb from '../../components/Breadcrumb'
+import useScript from '../../hooks/useScript'
 
 const Cart = () => {
+    useScript('../../../../public/js/product-quantity')
+
     return (
         <>
-            <Breadcrumb />
+            <Breadcrumb pageUrl='/product-list' pageName='Shop' pageNameChild='Shopping Cart' />
             <div className="container-fluid">
                 <div className="row px-xl-5">
                     <div className="col-lg-8 table-responsive mb-5">

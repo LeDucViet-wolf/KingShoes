@@ -1,6 +1,9 @@
 import React from 'react'
+import useScript from '../../../hooks/useScript'
 
 const RelatedProduct = () => {
+    useScript('../../../../public/js/related-carousel')
+
     return (
         <>
             <div className="container-fluid py-5">
