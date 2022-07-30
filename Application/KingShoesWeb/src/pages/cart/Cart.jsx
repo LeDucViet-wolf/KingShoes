@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import Breadcrumb from '../../components/Breadcrumb'
 import useScript from '../../hooks/useScript'
 
@@ -72,7 +73,7 @@ const Cart = () => {
                                     <h5>Total</h5>
                                     <h5>$160</h5>
                                 </div>
-                                <button className="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</button>
+                                <NavLink activeclassname="active" to="/checkout" className="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</NavLink>
                             </div>
                         </div>
                     </div>

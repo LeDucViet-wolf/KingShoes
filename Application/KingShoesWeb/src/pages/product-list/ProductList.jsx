@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import Sidebar from './components/Sidebar'
 import Breadcrumb from '../../components/Breadcrumb'
 import { getAxios } from '../../utils/request'
+import { NavLink } from 'react-router-dom'
 
 const ProductList = () => {
     return (
@@ -48,7 +49,7 @@ const ProductList = () => {
                                             <a className="btn btn-outline-dark btn-square" href=""><i className="fa fa-shopping-cart"></i></a>
                                             <a className="btn btn-outline-dark btn-square" href=""><i className="far fa-heart"></i></a>
                                             <a className="btn btn-outline-dark btn-square" href=""><i className="fa fa-sync-alt"></i></a>
-                                            <a className="btn btn-outline-dark btn-square" href=""><i className="fa fa-search"></i></a>
+                                            <NavLink to='/product-detail/1' className="btn btn-outline-dark btn-square" href=""><i className="fa fa-search"></i></NavLink>
                                         </div>
                                     </div>
                                     <div className="text-center py-4">

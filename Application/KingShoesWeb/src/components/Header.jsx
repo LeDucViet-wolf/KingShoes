@@ -2,11 +2,6 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 const Header = () => {
-    const getNavLinkClass = (path) => {
-        console.log(this.props.location.pathname)
-        return this.props.location.pathname === path ? 'active' : '';
-    }
-
     return (
         <>
             {/* Topbar */}
@@ -60,10 +55,10 @@ const Header = () => {
                 </div>
                 <div className="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                     <div className="col-lg-4">
-                        <a href="" className="text-decoration-none">
+                        <NavLink to='/'className="text-decoration-none">
                             <span className="h1 text-uppercase text-primary bg-dark px-2">Multi</span>
                             <span className="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Shop</span>
-                        </a>
+                        </NavLink>
                     </div>
                     <div className="col-lg-4 col-6 text-left">
                         <form action="">
@@ -132,14 +127,6 @@ const Header = () => {
                                 <div className="navbar-nav mr-auto py-0">
                                     <NavLink activeclassname="active" to="/" className="nav-item nav-link">Home</NavLink>
                                     <NavLink activeclassname="active" to="/product-list" className="nav-item nav-link">Shop</NavLink>
-                                    <NavLink activeclassname="active" to="/product-detail/1" className="nav-item nav-link ">Shop Detail</NavLink>
-                                    <div className="nav-item dropdown">
-                                        <a className="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i className="fa fa-angle-down mt-1"></i></a>
-                                        <div className="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                            <NavLink activeclassname="active" to="/cart" className="dropdown-item">Shopping Cart</NavLink>
-                                            <NavLink activeclassname="active" to="/checkout" className="dropdown-item">Checkout</NavLink>
-                                        </div>
-                                    </div>
                                     <NavLink activeclassname="active" to="/contact" className="nav-item nav-link">Contact</NavLink>
                                 </div>
                                 <div className="navbar-nav ml-auto py-0 d-none d-lg-block">
@@ -147,10 +134,10 @@ const Header = () => {
                                         <i className="fas fa-heart text-primary"></i>
                                         <span className="badge text-secondary border border-secondary rounded-circle" style={{ paddingBottom: '2px' }}>0</span>
                                     </a>
-                                    <a href="" className="btn px-0 ml-3">
+                                    <NavLink activeclassname="active" to="/cart" className="btn px-0 ml-3">
                                         <i className="fas fa-shopping-cart text-primary"></i>
                                         <span className="badge text-secondary border border-secondary rounded-circle" style={{ paddingBottom: '2px' }}>0</span>
-                                    </a>
+                                    </NavLink>
                                 </div>
                             </div>
                         </nav>
@@ -158,7 +145,6 @@ const Header = () => {
                 </div>
             </div>
         </>
-
     )
 }
 
