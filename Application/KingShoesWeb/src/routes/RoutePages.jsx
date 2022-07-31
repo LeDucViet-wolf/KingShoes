@@ -1,10 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
-import Home from '../pages/home/Home'
-import ProductList from '../pages/product-list/ProductList'
-import ProductDetail from '../pages/product-detail/ProductDetail'
-import Cart from '../pages/cart/Cart'
-import Checkout from '../pages/checkout/Checkout'
-import Contact from '../pages/contact/Contact'
+import { Home, ProductList, ProductDetail, Cart, Checkout, Contact } from '../pages'
 
 const RoutePages = () => {
   return (

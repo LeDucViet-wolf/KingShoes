@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Sidebar from './components/Sidebar'
-import Breadcrumb from '../../components/Breadcrumb'
-import { getAxios } from '../../utils/request'
+import { Breadcrumb } from '../../components'
 import { NavLink } from 'react-router-dom'
 
 const ProductList = () => {

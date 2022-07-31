@@ -1,5 +1,5 @@
 import React from 'react'
-import { Carousel, Featured, Categories, Products, Offer, Vendor } from './components/index'
+import { Carousel, Featured, Categories, Products, Offer, Vendor } from './components'
 
 const Home = () => {
     return (

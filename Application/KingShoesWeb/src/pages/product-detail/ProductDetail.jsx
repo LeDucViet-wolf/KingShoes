@@ -1,26 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import RelatedProduct from './components/RelatedProduct'
-import Breadcrumb from '../../components/Breadcrumb'
-
-import { getAxios } from '../../utils/request'
+import { Breadcrumb } from '../../components'
 import useScript from '../../hooks/useScript'
 
 const ProductDetail = () => {
     useScript('../../../../public/js/product-quantity')
     useScript('../../../../public/js/tab')
-
-    // useEffect(() => {
-    //     try {
-    //         getAxios(`/random-article/${cateId}/3`).then((res) => {
-    //             if (res.data && res.data.length) {
-    //                 setListData(res.data);
-    //             }
-    //         })
-    //     } catch (ex) {
-    //         console.log(ex);
-    //         return null;
-    //     }
-    // }, []);
 
     return (
         <>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import Breadcrumb from '../../components/Breadcrumb'
+import { Breadcrumb } from '../../components'
 import useScript from '../../hooks/useScript'
 
 const Cart = () => {
