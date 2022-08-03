@@ -1,10 +1,8 @@
 package entities;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +26,7 @@ public class Category {
 	@Column(name = "image")
 	private String image;
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
-	private List<Product> products;
+	private Set<Product> products;
 
 	public Category() {
 		super();
