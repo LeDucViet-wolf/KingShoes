@@ -5,7 +5,7 @@ import axios from "axios"
 // const token = accessToken
 
 //apply base url for axios
-const API_URL = "http://localhost:8080/KingShoesApi/api"
+const API_URL = import.meta.env.VITE_KingShoesAPI
 
 const axiosApi = axios.create({
   baseURL: API_URL,
@@ -19,7 +19,9 @@ axiosApi.interceptors.response.use(
 )
 
 export async function get(url, config = {}) {
-  return await axiosApi.get(url, { ...config }).then(response => response.data)
+  return await axiosApi
+    .get(url, { ...config })
+    .then(response => response.data)
 }
 
 export async function post(url, data, config = {}) {

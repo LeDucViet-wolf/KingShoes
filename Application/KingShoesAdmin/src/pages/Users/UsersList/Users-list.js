@@ -107,7 +107,6 @@ const ContactsList = props => {
   const { users } = useSelector(state => ({
     users: state.contacts.users,
   }))
-  console.log(users)
 
   const [userList, setUserList] = useState([])
   const [modal, setModal] = useState(false)

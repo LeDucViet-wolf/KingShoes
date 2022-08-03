@@ -1,9 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Sidebar from './components/Sidebar'
 import { Breadcrumb } from '../../components'
 import { NavLink } from 'react-router-dom'
+import { useSelector, useDispatch } from "react-redux"
+import { getAllProduct } from '../../store/product/action'
 
 const ProductList = () => {
+    const { products } = useSelector(state => ({
+        products: state.productReducer.products,
+    }))
+    // const productReducer = useSelector((productReducer) => productReducer)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getAllProduct())
+        console.log(products)
+    }, [dispatch])
+
+    
+
     return (
         <>
             <Breadcrumb pageUrl='/product-list' pageName='Shop' pageNameChild='Shop List' />

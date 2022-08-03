@@ -1,16 +1,23 @@
 import { call, put, takeEvery } from "redux-saga/effects"
 // import jwt_decode from "jwt-decode";
 
-import { getProductList } from "./action"
-import productReducer from "./reducer"
+import {
+    getAllProductSuccess,
+    getAllProductFail
+} from "./action"
+
+import {
+    getAllProductHelper
+} from '../../helpers'
+
 import { GET_ALL_PRODUCT } from "./actionType"
 
 function* fetchProductList() {
     try {
-        const response = yield call(getProductList)
-        yield put(getUsersSuccess(response))
+        const response = yield call(getAllProductHelper)
+        yield put(getAllProductSuccess(response))
     } catch (error) {
-        yield put(getUsersFail(error))
+        yield put(getAllProductFail(error))
     }
 }
 
