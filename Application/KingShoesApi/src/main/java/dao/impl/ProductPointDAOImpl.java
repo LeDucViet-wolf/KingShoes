@@ -6,7 +6,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import dao.ProductPointDAO;
-import entities.Category;
 import entities.ProductPoint;
 import utils.HibernateUtil;
 

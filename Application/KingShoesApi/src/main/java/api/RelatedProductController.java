@@ -14,32 +14,31 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
 
-import dao.impl.CategoryDAOImpl;
 import dao.impl.RelatedProductDAOImpl;
-import entities.Category;
 import entities.RelatedProduct;
-@Path(value = "/relatedProducts")
+
+@Path(value = "/related-products")
 public class RelatedProductController {
 	@GET
-    @Path("/get-all")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getAll() {
-        List<RelatedProduct> list = new RelatedProductDAOImpl().getAll();
-        Gson son = new Gson();
-        String data = son.toJson(list);
-        return data;
-    }
-	
+	@Path("/get-all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getAll() {
+		List<RelatedProduct> list = new RelatedProductDAOImpl().getAll();
+		Gson son = new Gson();
+		String data = son.toJson(list);
+		return data;
+	}
+
 	@GET
 	@Path("/get-by-id/{entityId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getById(@PathParam("entityId")int entityId) {
+	public String getById(@PathParam("entityId") int entityId) {
 		RelatedProduct relatedProduct = new RelatedProductDAOImpl().getById(entityId);
 		Gson son = new Gson();
 		String data = son.toJson(relatedProduct);
 		return data;
 	}
-	
+
 	@POST
 	@Path("/insert")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -50,7 +49,7 @@ public class RelatedProductController {
 		String data = son.toJson(result);
 		return data;
 	}
-	
+
 	@PUT
 	@Path("/update")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -61,11 +60,11 @@ public class RelatedProductController {
 		String data = son.toJson(result);
 		return data;
 	}
-	
+
 	@DELETE
 	@Path("/delete/{entityId}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String delete(@PathParam("entityId")int entityId) {
+	public String delete(@PathParam("entityId") int entityId) {
 		int result = new RelatedProductDAOImpl().delete(entityId);
 		Gson son = new Gson();
 		String data = son.toJson(result);
