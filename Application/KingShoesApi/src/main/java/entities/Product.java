@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tblProduct")
-public class Product {
+public class Product{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "entity_id")

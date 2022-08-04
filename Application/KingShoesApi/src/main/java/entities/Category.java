@@ -1,20 +1,15 @@
 package entities;
 
-import java.util.List;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "tblCategory")
-public class Category {
+public class Category{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "entity_id")
@@ -25,8 +20,6 @@ public class Category {
 	private Integer status;
 	@Column(name = "image")
 	private String image;
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
-	private Set<Product> products;
 
 	public Category() {
 		super();

@@ -6,18 +6,18 @@ import { useSelector, useDispatch } from "react-redux"
 import { getAllProduct } from '../../store/product/action'
 
 const ProductList = () => {
-    const { products } = useSelector(state => ({
+    const { products, product, error } = useSelector(state => ({
         products: state.productReducer.products,
+        product: state.productReducer.product,
+        error: state.productReducer.error,
     }))
-    // const productReducer = useSelector((productReducer) => productReducer)
+    
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(getAllProduct())
         console.log(products)
     }, [dispatch])
-
-    
 
     return (
         <>
@@ -55,6 +55,7 @@ const ProductList = () => {
                                     </div>
                                 </div>
                             </div>
+
                             <div className="col-lg-4 col-md-6 col-sm-6 pb-1">
                                 <div className="product-item bg-light mb-4">
                                     <div className="product-img position-relative overflow-hidden">
@@ -82,6 +83,7 @@ const ProductList = () => {
                                     </div>
                                 </div>
                             </div>
+                            
                             <div className="col-12">
                                 <nav>
                                     <ul className="pagination justify-content-center">

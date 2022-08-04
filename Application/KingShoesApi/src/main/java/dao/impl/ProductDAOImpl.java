@@ -92,4 +92,24 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		return 0;
 	}
+
+	@Override
+	public List<Product> getByCategoryId(int categoryId) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List<Product> list = session.createQuery("from Product p where p.categoryId = :categoryId", Product.class)
+					.setParameter("categoryId", categoryId)
+					.list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
 }
