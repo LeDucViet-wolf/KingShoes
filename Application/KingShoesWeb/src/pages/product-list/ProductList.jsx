@@ -6,17 +6,26 @@ import { useSelector, useDispatch } from "react-redux"
 import { getAllProduct } from '../../store/product/action'
 
 const ProductList = () => {
+    const dispatch = useDispatch()
+
     const { products, product, error } = useSelector(state => ({
         products: state.productReducer.products,
         product: state.productReducer.product,
         error: state.productReducer.error,
     }))
+
+    const onPaging = {
+        itemsPerPage: 0,
+        numberPage: 0,
+        currentPage: 0,
+        startIndexItem: 0,
+        endIndexItem: 0
+    }
     
-    const dispatch = useDispatch()
+    // const rowsPerPage = products.slice(startIndex, endIndex + 1)
 
     useEffect(() => {
         dispatch(getAllProduct())
-        console.log(products)
     }, [dispatch])
 
     return (
@@ -83,7 +92,7 @@ const ProductList = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="col-12">
                                 <nav>
                                     <ul className="pagination justify-content-center">

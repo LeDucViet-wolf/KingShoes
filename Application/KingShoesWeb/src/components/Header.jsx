@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 
 const Header = () => {
     return (
@@ -20,8 +20,8 @@ const Header = () => {
                             <div className="btn-group">
                                 <button type="button" className="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
                                 <div className="dropdown-menu dropdown-menu-right">
-                                    <button className="dropdown-item" type="button">Sign in</button>
-                                    <button className="dropdown-item" type="button">Sign up</button>
+                                    <Link to='/login' className="dropdown-item" type="button">Sign in</Link>
+                                    <Link to='/register' className="dropdown-item" type="button">Sign up</Link>
                                 </div>
                             </div>
                             <div className="btn-group mx-2">
@@ -55,7 +55,7 @@ const Header = () => {
                 </div>
                 <div className="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                     <div className="col-lg-4">
-                        <NavLink to='/'className="text-decoration-none">
+                        <NavLink to='/' className="text-decoration-none">
                             <span className="h1 text-uppercase text-primary bg-dark px-2">Multi</span>
                             <span className="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Shop</span>
                         </NavLink>
@@ -64,7 +64,7 @@ const Header = () => {
                         <form action="">
                             <div className="input-group">
                                 <input type="text" className="form-control" placeholder="Search for products" />
-                                <div className="input-group-append">
+                                <div className="input-group-append cursor-pointer">
                                     <span className="input-group-text bg-transparent text-primary">
                                         <i className="fa fa-search"></i>
                                     </span>

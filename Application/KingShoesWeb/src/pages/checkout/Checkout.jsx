@@ -20,19 +20,19 @@ const Checkout = () => {
                                     <input className="form-control" type="text" placeholder="Doe" />
                                 </div>
                                 <div className="col-md-6 form-group">
-                                    <label>E-mail</label>
+                                    <label>Birthday</label>
                                     <input className="form-control" type="text" placeholder="example@email.com" />
                                 </div>
                                 <div className="col-md-6 form-group">
-                                    <label>Mobile No</label>
+                                    <label>Gender</label>
                                     <input className="form-control" type="text" placeholder="+123 456 789" />
                                 </div>
                                 <div className="col-md-6 form-group">
-                                    <label>Address Line 1</label>
+                                    <label>Email</label>
                                     <input className="form-control" type="text" placeholder="123 Street" />
                                 </div>
                                 <div className="col-md-6 form-group">
-                                    <label>Address Line 2</label>
+                                    <label>Phone</label>
                                     <input className="form-control" type="text" placeholder="123 Street" />
                                 </div>
                                 <div className="col-md-6 form-group">
@@ -45,15 +45,15 @@ const Checkout = () => {
                                     </select>
                                 </div>
                                 <div className="col-md-6 form-group">
-                                    <label>City</label>
+                                    <label>Password</label>
                                     <input className="form-control" type="text" placeholder="New York" />
                                 </div>
                                 <div className="col-md-6 form-group">
-                                    <label>State</label>
+                                    <label>Address</label>
                                     <input className="form-control" type="text" placeholder="New York" />
                                 </div>
                                 <div className="col-md-6 form-group">
-                                    <label>ZIP Code</label>
+                                    <label>Code</label>
                                     <input className="form-control" type="text" placeholder="123" />
                                 </div>
                                 <div className="col-md-12 form-group">
