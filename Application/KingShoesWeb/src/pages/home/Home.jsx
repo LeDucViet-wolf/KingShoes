@@ -9,7 +9,6 @@ const Home = () => {
             <Categories />
             <Products />
             <Offer />
-            <Products />
             <Vendor />
         </>
     )

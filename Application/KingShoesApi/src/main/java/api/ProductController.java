@@ -32,6 +32,16 @@ public class ProductController {
     }
 	
 	@GET
+    @Path("/get-list-product-enable")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getListProductEnable() {
+        List<Product> list = new ProductDAOImpl().getListProductEnable();
+        Gson son = new Gson();
+        String data = son.toJson(list);
+        return data;
+    }
+	
+	@GET
 	@Path("/get-by-id/{entityId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getById(@PathParam("entityId")int entityId) {

@@ -27,6 +27,23 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		return null;
 	}
+	
+	public List<Product> getListProductEnable() {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List<Product> list = session.createQuery("from Product where status = 1", Product.class).list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
 
 	@Override
 	public Product getById(int entityId) {
