@@ -43,18 +43,12 @@ const Products = () => {
                         <a className="btn btn-outline-dark btn-square" href="">
                           <i className="far fa-heart"></i>
                         </a>
-                        <a className="btn btn-outline-dark btn-square" href="">
-                          <i className="fa fa-sync-alt"></i>
-                        </a>
-                        <a className="btn btn-outline-dark btn-square" href="">
-                          <i className="fa fa-search"></i>
-                        </a>
                       </div>
                     </div>
                     <div className="text-center py-4">
                       <a
                         className="h6 text-decoration-none text-truncate"
-                        href=""
+                        href={"/product-detail/" + item.entityId}
                       >
                         {item.name}
                       </a>
@@ -63,10 +57,7 @@ const Products = () => {
                         {item.sku}
                       </p>
                       <div className="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5>
-                        <h6 className="text-muted ml-2">
-                          <del>$123.00</del>
-                        </h6>
+                        <h5>{item.price} VND</h5>
                       </div>
                       <div className="d-flex align-items-center justify-content-center mb-1">
                         <small className="fa fa-star text-primary mr-1"></small>

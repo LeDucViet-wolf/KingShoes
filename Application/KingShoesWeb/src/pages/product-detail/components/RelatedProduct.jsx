@@ -7,16 +7,34 @@ const RelatedProduct = () => {
   let { id } = useParams();
   useScript("../../../../public/js/related-carousel");
 
-  const [product, getProduct] = useState([]);
+  const [products, getRelatedProducts] = useState([]);
   const fetchData = () => {
     var config = {
       method: "get",
-      url: "http://localhost:8080/KingShoesApi/api/related-products/get-by-product-id/" + id,
+      url: "http://localhost:8080/KingShoesApi/api/products/get-list-product-enable",
     };
     axios(config)
-      .then(function (response) {
-        getProduct(response.data);
-        console.log(response.data)
+      .then((response) => {
+        var config2 = {
+          method: "get",
+          url:
+            "http://localhost:8080/KingShoesApi/api/related-products/get-by-product-id/" +
+            id,
+        };
+        axios(config2)
+          .then((res) => {
+            var data = [];
+            response.data.forEach((e) => {
+              res.data.forEach((x) => {
+                if (e.entityId == x.relatedProductId) {
+                  data.push(e);
+                }
+              });
+            });
+            getRelatedProducts(data);
+            console.log(data);
+          })
+          .catch((err) => {});
       })
       .catch((err) => {});
   };
@@ -46,12 +64,6 @@ const RelatedProduct = () => {
                     </a>
                     <a className="btn btn-outline-dark btn-square" href="">
                       <i className="far fa-heart"></i>
-                    </a>
-                    <a className="btn btn-outline-dark btn-square" href="">
-                      <i className="fa fa-sync-alt"></i>
-                    </a>
-                    <a className="btn btn-outline-dark btn-square" href="">
-                      <i className="fa fa-search"></i>
                     </a>
                   </div>
                 </div>
