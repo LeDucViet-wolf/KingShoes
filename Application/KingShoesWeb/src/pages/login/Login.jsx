@@ -14,6 +14,9 @@ const Login = () => {
                                 <div className="col-md-6 form-group">
                                     <label>First Name</label>
                                     <input className="form-control" type="text" />
+                                    <div className="invalid-feedback">
+                                        Please provide a valid zip.
+                                    </div>
                                 </div>
                                 <div className="col-md-6 form-group">
                                     <label>Last Name</label>
@@ -32,7 +35,7 @@ const Login = () => {
                                 </div>
                              
                             </div>
-                            <button className="btn btn-block btn-primary font-weight-bold py-3">Log in</button>
+                            <button type='submit' className="btn btn-block btn-primary font-weight-bold py-3">Log in</button>
                         </div>
                     </div>
                 </div>

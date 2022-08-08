@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar'
 import { Breadcrumb } from '../../components'
 import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from "react-redux"
-import { getAllProduct } from '../../store/product/action'
+import { getAllProduct } from '../../stores/product/action'
 
 const ProductList = () => {
     const dispatch = useDispatch()
