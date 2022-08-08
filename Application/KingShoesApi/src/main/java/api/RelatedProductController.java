@@ -38,6 +38,16 @@ public class RelatedProductController {
 		String data = son.toJson(relatedProduct);
 		return data;
 	}
+	
+	@GET
+	@Path("/get-by-product-id/{productId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getByProductId(@PathParam("productId") int productId) {
+		List<RelatedProduct> list = new RelatedProductDAOImpl().getByProductId(productId);
+		Gson son = new Gson();
+		String data = son.toJson(list);
+		return data;
+	}
 
 	@POST
 	@Path("/insert")

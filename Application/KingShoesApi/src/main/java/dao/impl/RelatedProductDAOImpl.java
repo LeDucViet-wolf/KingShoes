@@ -42,6 +42,23 @@ public class RelatedProductDAOImpl implements RelatedProductDAO {
 		}
 		return null;
 	}
+	
+	public List<RelatedProduct> getByProductId(int productId) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List<RelatedProduct> list = session.createQuery("from RelatedProduct where productId = :productId", RelatedProduct.class).setParameter("productId", productId).list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
 
 	@Override
 	public Integer insert(RelatedProduct entity) {
