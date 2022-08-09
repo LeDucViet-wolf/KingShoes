@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react"
 import Sidebar from "./components/Sidebar"
 import { Breadcrumb } from "../../components"
-import { NavLink, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { getAllProduct } from '../../stores/product/action'
 
 const ProductList = () => {
   const dispatch = useDispatch()
 
-  const { products, product, error } = useSelector((state) => ({
+  const { products } = useSelector((state) => ({
     products: state.productReducer.products,
-    product: state.productReducer.product,
-    error: state.productReducer.error,
   }))
+  console.log(products)
 
   // Paging
   const [itemsPerPage, setItemsPerPage] = useState(10)
@@ -86,15 +85,9 @@ const ProductList = () => {
                         Sorting
                       </button>
                       <div className="dropdown-menu dropdown-menu-right">
-                        <a className="dropdown-item" href="#">
-                          Latest
-                        </a>
-                        <a className="dropdown-item" href="#">
-                          Popularity
-                        </a>
-                        <a className="dropdown-item" href="#">
-                          Best Rating
-                        </a>
+                        <Link to={``} className="dropdown-item">Latest</Link>
+                        <Link to={``} className="dropdown-item">Popularity</Link>
+                        <Link to={``} className="dropdown-item">Best Rating</Link>
                       </div>
                     </div>
                     <div className="btn-group ml-2">
@@ -106,15 +99,9 @@ const ProductList = () => {
                         Showing
                       </button>
                       <div className="dropdown-menu dropdown-menu-right">
-                        <a className="dropdown-item" onClick={handleShowing} href="#">
-                          10
-                        </a>
-                        <a className="dropdown-item" onClick={handleShowing} href="#">
-                          20
-                        </a>
-                        <a className="dropdown-item" onClick={handleShowing} href="#">
-                          30
-                        </a>
+                        <Link to={``} className="dropdown-item" onClick={handleShowing}>5</Link>
+                        <Link to={``} className="dropdown-item" onClick={handleShowing}>10</Link>
+                        <Link to={``} className="dropdown-item" onClick={handleShowing}>15</Link>
                       </div>
                     </div>
                   </div>
@@ -141,27 +128,19 @@ const ProductList = () => {
                           <a className="btn btn-outline-dark btn-square" href="">
                             <i className="fa fa-sync-alt"></i>
                           </a>
-                          <NavLink
-                            to="/product-detail/1"
+                          <Link
+                            to={`/product-detail/${item.entityId}`}
                             className="btn btn-outline-dark btn-square"
-                            href=""
                           >
                             <i className="fa fa-search"></i>
-                          </NavLink>
+                          </Link>
                         </div>
                       </div>
                       <div className="text-center py-4">
-                        <a
-                          className="h6 text-decoration-none text-truncate"
-                          href=""
-                        >
-                          {item.name}
-                        </a>
+                        <Link to={`/product-detail/${item.entityId}`} className="h6 text-decoration-none text-truncate">{item.name}</Link>
                         <div className="d-flex align-items-center justify-content-center mt-2">
-                          <h5>$123.00</h5>
-                          <h6 className="text-muted ml-2">
-                            <del>$123.00</del>
-                          </h6>
+                          <h5>{item.price} VND</h5>
+                          {/* <h6 className="text-muted ml-2"><del>$123.00</del></h6> */}
                         </div>
                         <div className="d-flex align-items-center justify-content-center mb-1">
                           <small className="fa fa-star text-primary mr-1"></small>
@@ -180,34 +159,9 @@ const ProductList = () => {
               <div className="col-12">
                 <nav>
                   <ul className="pagination justify-content-center">
-                    {/* <li className="page-item disabled">
-                      <a className="page-link" href="#">
-                        Previous
-                      </a>
-                    </li>
-                    <li className="page-item active">
-                      <a className="page-link" href="#">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        Next
-                      </a>
-                    </li> */}
                     {/* {...{disabled: currentPage === 1}} */}
                     <li onClick={handlePaging} className={`page-item ${parseInt(currentPage) === 1 ? 'disabled' : ''}`}>
-                      <Link to={''} className="page-link">
+                      <Link to={``} className="page-link">
                         Previous
                       </Link>
                     </li>
@@ -216,8 +170,8 @@ const ProductList = () => {
                         (currentPage == numberPage && (index + 1) > currentPage - 5) ||
                         ((index + 1) < currentPage + 3 && (index + 1) > currentPage - 3)) {
                         return (
-                          <li onClick={handlePaging} key={index} className="page-item" >
-                            <Link to={''} className="page-link">
+                          <li onClick={handlePaging} key={index} className={`page-item ${parseInt(currentPage) === (index + 1) ? 'active' : ''}`} >
+                            <Link to={``} className={`page-link`}>
                               {index + 1}
                             </Link>
                           </li>
@@ -225,7 +179,9 @@ const ProductList = () => {
                       }
                     })}
                     <li onClick={handlePaging} className={`page-item ${parseInt(currentPage) === parseInt(numberPage) ? 'disabled' : ''}`}>
-                      <Link to={''} className="page-link">
+                      <Link
+                        to={``}
+                        className="page-link">
                         Next
                       </Link>
                     </li>
