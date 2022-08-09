@@ -46,6 +46,15 @@ create table tblProductImage
 	foreign key (product_id) references tblProduct(entity_id)
 );
 
+create table tblCategoryImage
+(
+    entity_id int auto_increment primary key,
+	category_id int,
+	`value` varchar(256),
+	foreign key (product_id) references tblCategory(entity_id)
+);
+
+
 create table tblRelatedProduct
 (
 	entity_id int auto_increment primary key,
