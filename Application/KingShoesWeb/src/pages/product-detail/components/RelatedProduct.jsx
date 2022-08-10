@@ -32,7 +32,7 @@ const RelatedProduct = () => {
               });
             });
             getRelatedProducts(data);
-            console.log(data);
+            // console.log(data);
           })
           .catch((err) => {});
       })
