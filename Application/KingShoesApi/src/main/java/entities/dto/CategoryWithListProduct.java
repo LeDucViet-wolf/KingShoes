@@ -1,8 +1,6 @@
 package entities.dto;
 
 import java.util.List;
-
-
 import entities.Product;
 
 public class CategoryWithListProduct {
@@ -11,7 +9,7 @@ public class CategoryWithListProduct {
 	private Integer status;
 	private String image;
 	private List<Product> products;
-	
+
 	public CategoryWithListProduct(Integer entityId, String name, Integer status, String image,
 			List<Product> products) {
 		super();
@@ -21,6 +19,44 @@ public class CategoryWithListProduct {
 		this.image = image;
 		this.products = products;
 	}
-	
-	
+
+	public Integer getEntityId() {
+		return entityId;
+	}
+
+	public void setEntityId(Integer entityId) {
+		this.entityId = entityId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
 }

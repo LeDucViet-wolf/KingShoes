@@ -46,101 +46,101 @@ insert into tblProduct(`name`, `price`, `sku`, `size`, `quantity`, `description`
 ('Air Max AP', 3200000, 'air-max-ap-41', 41, 100, '', 1, 4),
 ('Air Max AP', 3200000, 'air-max-ap-42', 42, 100, '', 1, 4),
 
-('Pegasus 38', 3800000, 'pegasus-38', 38, 100, '', 1, 5),
-('Pegasus 38', 3800000, 'pegasus-39', 39, 100, '', 1, 5),
-('Pegasus 38', 3800000, 'pegasus-40', 40, 100, '', 1, 5),
-('Pegasus 38', 3800000, 'pegasus-41', 41, 100, '', 1, 5),
-('Pegasus 38', 3800000, 'pegasus-42', 42, 100, '', 1, 5),
+('Pegasus 38', 3800000, 'pegasus-38', 38, 100, '', 1, 1),
+('Pegasus 38', 3800000, 'pegasus-39', 39, 100, '', 1, 1),
+('Pegasus 38', 3800000, 'pegasus-40', 40, 100, '', 1, 1),
+('Pegasus 38', 3800000, 'pegasus-41', 41, 100, '', 1, 1),
+('Pegasus 38', 3800000, 'pegasus-42', 42, 100, '', 1, 1),
 
-('Court Legacy', 2200000, 'count-legacy-38', 38, 100, '', 1, 6),
-('Court Legacy', 2200000, 'count-legacy-39', 39, 100, '', 1, 6),
-('Court Legacy', 2200000, 'count-legacy-40', 40, 100, '', 1, 6),
-('Court Legacy', 2200000, 'count-legacy-41', 41, 100, '', 1, 6),
-('Court Legacy', 2200000, 'count-legacy-42', 42, 100, '', 1, 6),
+('Court Legacy', 2200000, 'count-legacy-38', 38, 100, '', 1, 2),
+('Court Legacy', 2200000, 'count-legacy-39', 39, 100, '', 1, 2),
+('Court Legacy', 2200000, 'count-legacy-40', 40, 100, '', 1, 2),
+('Court Legacy', 2200000, 'count-legacy-41', 41, 100, '', 1, 2),
+('Court Legacy', 2200000, 'count-legacy-42', 42, 100, '', 1, 2),
 
-('Zoom X Invicible', 3900000, 'zoom-x-invicible-38', 38, 100, '', 1, 7),
-('Zoom X Invicible', 3900000, 'zoom-x-invicible-39', 39, 100, '', 1, 7),
-('Zoom X Invicible', 3900000, 'zoom-x-invicible-40', 40, 100, '', 1, 7),
-('Zoom X Invicible', 3900000, 'zoom-x-invicible-41', 41, 100, '', 1, 7),
-('Zoom X Invicible', 3900000, 'zoom-x-invicible-42', 42, 100, '', 1, 7),
+('Zoom X Invicible', 3900000, 'zoom-x-invicible-38', 38, 100, '', 1, 3),
+('Zoom X Invicible', 3900000, 'zoom-x-invicible-39', 39, 100, '', 1, 3),
+('Zoom X Invicible', 3900000, 'zoom-x-invicible-40', 40, 100, '', 1, 3),
+('Zoom X Invicible', 3900000, 'zoom-x-invicible-41', 41, 100, '', 1, 3),
+('Zoom X Invicible', 3900000, 'zoom-x-invicible-42', 42, 100, '', 1, 3),
 
-('Air Max 97', 4200000, 'air-max-97-38', 38, 100, '', 1, 8),
-('Air Max 97', 4200000, 'air-max-97-39', 39, 100, '', 1, 8),
-('Air Max 97', 4200000, 'air-max-97-40', 40, 100, '', 1, 8),
-('Air Max 97', 4200000, 'air-max-97-41', 41, 100, '', 1, 8),
-('Air Max 97', 4200000, 'air-max-97-42', 42, 100, '', 1, 8),
+('Air Max 97', 4200000, 'air-max-97-38', 38, 100, '', 1, 4),
+('Air Max 97', 4200000, 'air-max-97-39', 39, 100, '', 1, 4),
+('Air Max 97', 4200000, 'air-max-97-40', 40, 100, '', 1, 4),
+('Air Max 97', 4200000, 'air-max-97-41', 41, 100, '', 1, 4),
+('Air Max 97', 4200000, 'air-max-97-42', 42, 100, '', 1, 4),
 
-('Air Zoom Pegasus 38', 3200000, 'air-zoom-pegasus-38-38', 38, 100, '', 1, 9),
-('Air Zoom Pegasus 38', 3200000, 'air-zoom-pegasus-38-39', 39, 100, '', 1, 9),
-('Air Zoom Pegasus 38', 3200000, 'air-zoom-pegasus-38-40', 40, 100, '', 1, 9),
-('Air Zoom Pegasus 38', 3200000, 'air-zoom-pegasus-38-41', 41, 100, '', 1, 9),
-('Air Zoom Pegasus 38', 3200000, 'air-zoom-pegasus-38-42', 42, 100, '', 1, 9),
+('Air Zoom Pegasus 38', 3200000, 'air-zoom-pegasus-38-38', 38, 100, '', 1, 1),
+('Air Zoom Pegasus 38', 3200000, 'air-zoom-pegasus-38-39', 39, 100, '', 1, 1),
+('Air Zoom Pegasus 38', 3200000, 'air-zoom-pegasus-38-40', 40, 100, '', 1, 1),
+('Air Zoom Pegasus 38', 3200000, 'air-zoom-pegasus-38-41', 41, 100, '', 1, 1),
+('Air Zoom Pegasus 38', 3200000, 'air-zoom-pegasus-38-42', 42, 100, '', 1, 1),
 
-('EQ21', 2600000, 'eq21-38', 38, 100, '', 1, 10),
-('EQ21', 2600000, 'eq21-39', 39, 100, '', 1, 10),
-('EQ21', 2600000, 'eq21-40', 40, 100, '', 1, 10),
-('EQ21', 2600000, 'eq21-41', 41, 100, '', 1, 10),
-('EQ21', 2600000, 'eq21-42', 42, 100, '', 1, 10),
+('EQ21', 2600000, 'eq21-38', 38, 100, '', 1, 2),
+('EQ21', 2600000, 'eq21-39', 39, 100, '', 1, 2),
+('EQ21', 2600000, 'eq21-40', 40, 100, '', 1, 2),
+('EQ21', 2600000, 'eq21-41', 41, 100, '', 1, 2),
+('EQ21', 2600000, 'eq21-42', 42, 100, '', 1, 2),
 
-('ZX 2K Boost', 3600000, 'zx-2k-boost-38', 38, 100, '', 1, 11),
-('ZX 2K Boost', 3600000, 'zx-2k-boost-39', 39, 100, '', 1, 11),
-('ZX 2K Boost', 3600000, 'zx-2k-boost-40', 40, 100, '', 1, 11),
-('ZX 2K Boost', 3600000, 'zx-2k-boost-41', 41, 100, '', 1, 11),
-('ZX 2K Boost', 3600000, 'zx-2k-boost-42', 42, 100, '', 1, 11),
+('ZX 2K Boost', 3600000, 'zx-2k-boost-38', 38, 100, '', 1, 3),
+('ZX 2K Boost', 3600000, 'zx-2k-boost-39', 39, 100, '', 1, 3),
+('ZX 2K Boost', 3600000, 'zx-2k-boost-40', 40, 100, '', 1, 3),
+('ZX 2K Boost', 3600000, 'zx-2k-boost-41', 41, 100, '', 1, 3),
+('ZX 2K Boost', 3600000, 'zx-2k-boost-42', 42, 100, '', 1, 3),
 
-('Forumn Low Green', 2900000, 'forumn-low-green-38', 38, 100, '', 1, 12),
-('Forumn Low Green', 2900000, 'forumn-low-green-39', 39, 100, '', 1, 12),
-('Forumn Low Green', 2900000, 'forumn-low-green-40', 40, 100, '', 1, 12),
-('Forumn Low Green', 2900000, 'forumn-low-green-41', 41, 100, '', 1, 12),
-('Forumn Low Green', 2900000, 'forumn-low-green-42', 42, 100, '', 1, 12),
+('Forumn Low Green', 2900000, 'forumn-low-green-38', 38, 100, '', 1, 4),
+('Forumn Low Green', 2900000, 'forumn-low-green-39', 39, 100, '', 1, 4),
+('Forumn Low Green', 2900000, 'forumn-low-green-40', 40, 100, '', 1, 4),
+('Forumn Low Green', 2900000, 'forumn-low-green-41', 41, 100, '', 1, 4),
+('Forumn Low Green', 2900000, 'forumn-low-green-42', 42, 100, '', 1, 4),
 
-('Ultraboost 20 Cloud White', 3200000, 'ultraboost-20-cloud-white-38', 38, 100, '', 1, 13),
-('Ultraboost 20 Cloud White', 3200000, 'ultraboost-20-cloud-white-39', 39, 100, '', 1, 13),
-('Ultraboost 20 Cloud White', 3200000, 'ultraboost-20-cloud-white-40', 40, 100, '', 1, 13),
-('Ultraboost 20 Cloud White', 3200000, 'ultraboost-20-cloud-white-41', 41, 100, '', 1, 13),
-('Ultraboost 20 Cloud White', 3200000, 'ultraboost-20-cloud-white-42', 42, 100, '', 1, 13),
+('Ultraboost 20 Cloud White', 3200000, 'ultraboost-20-cloud-white-38', 38, 100, '', 1, 1),
+('Ultraboost 20 Cloud White', 3200000, 'ultraboost-20-cloud-white-39', 39, 100, '', 1, 1),
+('Ultraboost 20 Cloud White', 3200000, 'ultraboost-20-cloud-white-40', 40, 100, '', 1, 1),
+('Ultraboost 20 Cloud White', 3200000, 'ultraboost-20-cloud-white-41', 41, 100, '', 1, 1),
+('Ultraboost 20 Cloud White', 3200000, 'ultraboost-20-cloud-white-42', 42, 100, '', 1, 1),
 
-('Ultraboost 20 Tech Purple', 3800000, 'ultraboost-20-tech-purple-38', 38, 100, '', 1, 14),
-('Ultraboost 20 Tech Purple', 3800000, 'ultraboost-20-tech-purple-39', 39, 100, '', 1, 14),
-('Ultraboost 20 Tech Purple', 3800000, 'ultraboost-20-tech-purple-40', 40, 100, '', 1, 14),
-('Ultraboost 20 Tech Purple', 3800000, 'ultraboost-20-tech-purple-41', 41, 100, '', 1, 14),
-('Ultraboost 20 Tech Purple', 3800000, 'ultraboost-20-tech-purple-42', 42, 100, '', 1, 14),
+('Ultraboost 20 Tech Purple', 3800000, 'ultraboost-20-tech-purple-38', 38, 100, '', 1, 2),
+('Ultraboost 20 Tech Purple', 3800000, 'ultraboost-20-tech-purple-39', 39, 100, '', 1, 2),
+('Ultraboost 20 Tech Purple', 3800000, 'ultraboost-20-tech-purple-40', 40, 100, '', 1, 2),
+('Ultraboost 20 Tech Purple', 3800000, 'ultraboost-20-tech-purple-41', 41, 100, '', 1, 2),
+('Ultraboost 20 Tech Purple', 3800000, 'ultraboost-20-tech-purple-42', 42, 100, '', 1, 2),
 
-('Forumn Low Blue', 2200000, 'forumn-low-blue-38', 38, 100, '', 1, 15),
-('Forumn Low Blue', 2200000, 'forumn-low-blue-39', 39, 100, '', 1, 15),
-('Forumn Low Blue', 2200000, 'forumn-low-blue-40', 40, 100, '', 1, 15),
-('Forumn Low Blue', 2200000, 'forumn-low-blue-41', 41, 100, '', 1, 15),
-('Forumn Low Blue', 2200000, 'forumn-low-blue-42', 42, 100, '', 1, 15),
+('Forumn Low Blue', 2200000, 'forumn-low-blue-38', 38, 100, '', 1, 3),
+('Forumn Low Blue', 2200000, 'forumn-low-blue-39', 39, 100, '', 1, 3),
+('Forumn Low Blue', 2200000, 'forumn-low-blue-40', 40, 100, '', 1, 3),
+('Forumn Low Blue', 2200000, 'forumn-low-blue-41', 41, 100, '', 1, 3),
+('Forumn Low Blue', 2200000, 'forumn-low-blue-42', 42, 100, '', 1, 3),
 
-('Continental 80', 3900000, 'continental-80-38', 38, 100, '', 1, 16),
-('Continental 80', 3900000, 'continental-80-39', 39, 100, '', 1, 16),
-('Continental 80', 3900000, 'continental-80-40', 40, 100, '', 1, 16),
-('Continental 80', 3900000, 'continental-80-41', 41, 100, '', 1, 16),
-('Continental 80', 3900000, 'continental-80-42', 42, 100, '', 1, 16),
+('Continental 80', 3900000, 'continental-80-38', 38, 100, '', 1, 4),
+('Continental 80', 3900000, 'continental-80-39', 39, 100, '', 1, 4),
+('Continental 80', 3900000, 'continental-80-40', 40, 100, '', 1, 4),
+('Continental 80', 3900000, 'continental-80-41', 41, 100, '', 1, 4),
+('Continental 80', 3900000, 'continental-80-42', 42, 100, '', 1, 4),
 
-('Superstar', 4200000, 'superstar-38', 38, 100, '', 1, 17),
-('Superstar', 4200000, 'superstar-39', 39, 100, '', 1, 17),
-('Superstar', 4200000, 'superstar-40', 40, 100, '', 1, 17),
-('Superstar', 4200000, 'superstar-41', 41, 100, '', 1, 17),
-('Superstar', 4200000, 'superstar-42', 42, 100, '', 1, 17),
+('Superstar', 4200000, 'superstar-38', 38, 100, '', 1, 1),
+('Superstar', 4200000, 'superstar-39', 39, 100, '', 1, 1),
+('Superstar', 4200000, 'superstar-40', 40, 100, '', 1, 1),
+('Superstar', 4200000, 'superstar-41', 41, 100, '', 1, 1),
+('Superstar', 4200000, 'superstar-42', 42, 100, '', 1, 1),
 
-('Supergrip', 3200000, 'supergrip-38-38', 38, 100, '', 1, 18),
-('Supergrip', 3200000, 'supergrip-38-39', 39, 100, '', 1, 18),
-('Supergrip', 3200000, 'supergrip-38-40', 40, 100, '', 1, 18),
-('Supergrip', 3200000, 'supergrip-38-41', 41, 100, '', 1, 18),
-('Supergrip', 3200000, 'supergrip-38-42', 42, 100, '', 1, 18),
+('Supergrip', 3200000, 'supergrip-38-38', 38, 100, '', 1, 2),
+('Supergrip', 3200000, 'supergrip-38-39', 39, 100, '', 1, 2),
+('Supergrip', 3200000, 'supergrip-38-40', 40, 100, '', 1, 2),
+('Supergrip', 3200000, 'supergrip-38-41', 41, 100, '', 1, 2),
+('Supergrip', 3200000, 'supergrip-38-42', 42, 100, '', 1, 2),
 
-('Jordan MA2', 2600000, 'jordan-ma2-38', 38, 100, '', 1, 19),
-('Jordan MA2', 2600000, 'jordan-ma2-39', 39, 100, '', 1, 19),
-('Jordan MA2', 2600000, 'jordan-ma2-40', 40, 100, '', 1, 19),
-('Jordan MA2', 2600000, 'jordan-ma2-41', 41, 100, '', 1, 19),
-('Jordan MA2', 2600000, 'jordan-ma2-42', 42, 100, '', 1, 19),
+('Jordan MA2', 2600000, 'jordan-ma2-38', 38, 100, '', 1, 3),
+('Jordan MA2', 2600000, 'jordan-ma2-39', 39, 100, '', 1, 3),
+('Jordan MA2', 2600000, 'jordan-ma2-40', 40, 100, '', 1, 3),
+('Jordan MA2', 2600000, 'jordan-ma2-41', 41, 100, '', 1, 3),
+('Jordan MA2', 2600000, 'jordan-ma2-42', 42, 100, '', 1, 3),
 
-('Jordan Series ES', 3600000, 'jordanseries-es-38', 38, 100, '', 1, 20),
-('Jordan Series ES', 3600000, 'jordanseries-es-39', 39, 100, '', 1, 20),
-('Jordan Series ES', 3600000, 'jordanseries-es-40', 40, 100, '', 1, 20),
-('Jordan Series ES', 3600000, 'jordanseries-es-41', 41, 100, '', 1, 20),
-('Jordan Series ES', 3600000, 'jordanseries-es-42', 42, 100, '', 1, 20);
+('Jordan Series ES', 3600000, 'jordanseries-es-38', 38, 100, '', 1, 4),
+('Jordan Series ES', 3600000, 'jordanseries-es-39', 39, 100, '', 1, 4),
+('Jordan Series ES', 3600000, 'jordanseries-es-40', 40, 100, '', 1, 4),
+('Jordan Series ES', 3600000, 'jordanseries-es-41', 41, 100, '', 1, 4),
+('Jordan Series ES', 3600000, 'jordanseries-es-42', 42, 100, '', 1, 4);
 
 insert into tblCustomer(`first_name`,`last_name`,`birthday`,`gender`,`email`,`phone`,`password`,`address`,`status`) values
 ('Nguyễn Ngọc','Thúy','1990-11-23',0,'nguyenngocthuy@gmail.com','0832536199','123','Khu tập thể A3 Nam Đồng, A1P49, Phố P. Hồ Đắc Di, Nam Đồng, Đống Đa, Hà Nội',1),
@@ -202,20 +202,23 @@ insert into tblCustomerPoint(`customer_id`,`value`) values
 (9,90),
 (10,100);
 
-insert into tblCategoryImage(`category_id`, `value`) values
-();
+-- insert into tblCategoryImage(`category_id`, `value`) values
+-- ();
 
-insert into tblProductImage(`product_id`,`value`) values
-();
+-- insert into tblProductImage(`product_id`,`value`) values
+-- ();
 
-insert into tblProductPoint(`product_id`,`value`) values
-();
+-- insert into tblProductPoint(`product_id`,`value`) values
+-- ();
 
 insert into tblRelatedProduct(`product_id`,`related_product_id`) values
-();
+(1,6),
+(1,11),
+(1,16),
+(1,21),;
 
-insert into tblOrder(`status`, `shipping_id`,`payment_id`,`grand_total`,`note`) values
-();
+-- insert into tblOrder(`status`, `shipping_id`,`payment_id`,`grand_total`,`note`) values
+-- ();
 
-insert into tblOrderItem(`order_id`,`product_id`,`quantity`,`row_total`) values
-();
+-- insert into tblOrderItem(`order_id`,`product_id`,`quantity`,`row_total`) values
+-- ();

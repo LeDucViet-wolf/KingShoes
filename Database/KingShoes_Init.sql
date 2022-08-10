@@ -51,7 +51,7 @@ create table tblCategoryImage
     entity_id int auto_increment primary key,
 	category_id int,
 	`value` varchar(256),
-	foreign key (product_id) references tblCategory(entity_id)
+	foreign key (category_id) references tblCategory(entity_id)
 );
 
 
