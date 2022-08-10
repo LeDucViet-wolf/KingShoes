@@ -13,3 +13,11 @@ export const URL_USER_GET_BY_ID = "users/get-by-id"
 export const URL_USER_INSERT = "users/insert"
 export const URL_USER_UPDATE = "users/update"
 export const URL_USER_DELETE = "users/delete"
+
+// Customer
+export const URL_CUSTOMER = "customers"
+export const URL_CUSTOMER_GET_ALL = "customers/get-all"
+export const URL_CUSTOMER_GET_BY_ID = "customers/get-by-id"
+export const URL_CUSTOMER_INSERT = "customers/insert"
+export const URL_CUSTOMER_UPDATE = "customers/update"
+export const URL_CUSTOMER_DELETE = "customers/delete"
