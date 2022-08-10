@@ -215,7 +215,7 @@ insert into tblRelatedProduct(`product_id`,`related_product_id`) values
 (1,6),
 (1,11),
 (1,16),
-(1,21),;
+(1,21);
 
 -- insert into tblOrder(`status`, `shipping_id`,`payment_id`,`grand_total`,`note`) values
 -- ();
