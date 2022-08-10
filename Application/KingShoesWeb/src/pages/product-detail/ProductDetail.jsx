@@ -11,14 +11,27 @@ const ProductDetail = () => {
   useScript("../../../../public/js/tab");
 
   const [product, getProduct] = useState([]);
+  const [productSize, getProductSize] = useState([]);
   const fetchData = () => {
-    var config = {
-      method: "get",
-      url: "http://localhost:8080/KingShoesApi/api/products/get-by-id/" + id,
-    };
-    axios(config)
+    var configGetProductData = {
+        method: "get",
+        url: "http://localhost:8080/KingShoesApi/api/products/get-by-id/" + id,
+      },
+      configGetProductSizeData = {
+        method: "get",
+        url:
+          "http://localhost:8080/KingShoesApi/api/productSizes/get-by-product-id/" +
+          id,
+      };
+    axios(configGetProductData)
       .then(function (response) {
         getProduct(response.data);
+      })
+      .catch((err) => {});
+    axios(configGetProductSizeData)
+      .then(function (response) {
+        getProductSize(response.data);
+        console.log(response.data);
       })
       .catch((err) => {});
   };
@@ -108,121 +121,24 @@ const ProductDetail = () => {
               <div className="d-flex mb-3">
                 <strong className="text-dark mr-3">Sizes:</strong>
                 <form>
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id="size-1"
-                      name="size"
-                    />
-                    <label className="custom-control-label" htmlFor="size-1">
-                      XS
-                    </label>
-                  </div>
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id="size-2"
-                      name="size"
-                    />
-                    <label className="custom-control-label" htmlFor="size-2">
-                      S
-                    </label>
-                  </div>
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id="size-3"
-                      name="size"
-                    />
-                    <label className="custom-control-label" htmlFor="size-3">
-                      M
-                    </label>
-                  </div>
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id="size-4"
-                      name="size"
-                    />
-                    <label className="custom-control-label" htmlFor="size-4">
-                      L
-                    </label>
-                  </div>
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id="size-5"
-                      name="size"
-                    />
-                    <label className="custom-control-label" htmlFor="size-5">
-                      XL
-                    </label>
-                  </div>
-                </form>
-              </div>
-              <div className="d-flex mb-4">
-                <strong className="text-dark mr-3">Colors:</strong>
-                <form>
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id="color-1"
-                      name="color"
-                    />
-                    <label className="custom-control-label" htmlFor="color-1">
-                      Black
-                    </label>
-                  </div>
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id="color-2"
-                      name="color"
-                    />
-                    <label className="custom-control-label" htmlFor="color-2">
-                      White
-                    </label>
-                  </div>
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id="color-3"
-                      name="color"
-                    />
-                    <label className="custom-control-label" htmlFor="color-3">
-                      Red
-                    </label>
-                  </div>
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id="color-4"
-                      name="color"
-                    />
-                    <label className="custom-control-label" htmlFor="color-4">
-                      Blue
-                    </label>
-                  </div>
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id="color-5"
-                      name="color"
-                    />
-                    <label className="custom-control-label" htmlFor="color-5">
-                      Green
-                    </label>
-                  </div>
+                  {productSize
+                    ? productSize.map((item, i) => (
+                        <div key={i} className="custom-control custom-radio custom-control-inline">
+                          <input
+                            type="radio"
+                            className="custom-control-input"
+                            id={item.value}
+                            name="size"
+                          />
+                          <label
+                            className="custom-control-label"
+                            htmlFor={item.value}
+                          >
+                            {item.value}
+                          </label>
+                        </div>
+                      ))
+                    : ""}
                 </form>
               </div>
               <div className="d-flex align-items-center mb-4 pt-2">
@@ -292,7 +208,11 @@ const ProductDetail = () => {
               <div className="tab-content">
                 <div className="tab-pane fade show active" id="tab-pane-1">
                   <h4 className="mb-3">Product Description</h4>
-                  <p>{product.description}</p>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: product.description,
+                    }}
+                  ></div>
                 </div>
                 <div className="tab-pane fade" id="tab-pane-2">
                   <div className="row">

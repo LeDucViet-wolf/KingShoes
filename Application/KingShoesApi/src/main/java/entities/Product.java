@@ -22,10 +22,6 @@ public class Product{
 	private Float price;
 	@Column(name = "sku")
 	private String sku;
-	@Column(name = "size")
-	private Integer size;
-	@Column(name = "quantity")
-	private Integer quantity;
 	@Column(name = "description")
 	private String description;
 	@Column(name = "status")
@@ -41,15 +37,13 @@ public class Product{
 		// TODO Auto-generated constructor stub
 	}
 
-	public Product(Integer entityId, String name, Float price, String sku, Integer size, Integer quantity,
+	public Product(Integer entityId, String name, Float price, String sku,
 			String description, Integer status, Integer categoryId) {
 		super();
 		this.entityId = entityId;
 		this.name = name;
 		this.price = price;
 		this.sku = sku;
-		this.size = size;
-		this.quantity = quantity;
 		this.description = description;
 		this.status = status;
 		this.categoryId = categoryId;
@@ -86,23 +80,6 @@ public class Product{
 	public void setSku(String sku) {
 		this.sku = sku;
 	}
-
-	public Integer getSize() {
-		return size;
-	}
-
-	public void setSize(Integer size) {
-		this.size = size;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
-
 	public String getDescription() {
 		return description;
 	}

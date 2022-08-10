@@ -2,8 +2,7 @@ create database KingShoes_DB;
 
 use KingShoes_DB;
 
-create table tblCustomer
-(
+create table tblCustomer (
 	entity_id int auto_increment primary key,
 	first_name varchar(256),
 	last_name varchar(256),
@@ -16,55 +15,54 @@ create table tblCustomer
 	status int(11) default(1)
 );
 
-create table tblCategory
-(
-    entity_id int auto_increment primary key,
-    `name` varchar(256),
-    `image` varchar(256),
-    `status` int(11) default(1)
+create table tblCategory (
+	entity_id int auto_increment primary key,
+	`name` varchar(256),
+	`image` varchar(256),
+	`status` int(11) default(1)
 );
 
-create table tblProduct
-(
-    entity_id int auto_increment primary key,
-    `name` varchar(256),
-    price float,
-    sku varchar(256),
-    `size` int,
-    quantity int default(0),
-	`description` varchar(256),
-    `status` int(11) default(1),
+create table tblProduct (
+	entity_id int auto_increment primary key,
+	`name` varchar(256),
+	price float,
+	sku varchar(256),
+	`description` text,
+	`status` int(11) default(1),
 	category_id int,
 	foreign key (category_id) references tblCategory(entity_id)
 );
 
-create table tblProductImage
-(
-    entity_id int auto_increment primary key,
+create table tblProductSize(
+	entity_id int auto_increment primary key,
+	product_id int,
+	`value` int,
+	quantity int default(0),
+	foreign key (product_id) references tblProduct(entity_id)
+);
+
+create table tblProductImage (
+	entity_id int auto_increment primary key,
 	product_id int,
 	`value` varchar(256),
 	foreign key (product_id) references tblProduct(entity_id)
 );
 
-create table tblCategoryImage
-(
-    entity_id int auto_increment primary key,
+create table tblCategoryImage (
+	entity_id int auto_increment primary key,
 	category_id int,
 	`value` varchar(256),
 	foreign key (category_id) references tblCategory(entity_id)
 );
 
-
-create table tblRelatedProduct
-(
+create table tblRelatedProduct (
 	entity_id int auto_increment primary key,
 	product_id int,
 	related_product_id varchar(256),
 	foreign key (product_id) references tblProduct(entity_id)
 );
 
-create table tblProductReview
-(
+create table tblProductReview (
 	entity_id int auto_increment primary key,
 	product_id int,
 	customer_id int,
@@ -74,17 +72,15 @@ create table tblProductReview
 	foreign key (customer_id) references tblCustomer(entity_id)
 );
 
-create table tblQuote
-(
+create table tblQuote (
 	entity_id int auto_increment primary key,
 	customer_id int,
 	is_paid int(11) default(1),
 	foreign key (customer_id) references tblCustomer(entity_id)
 );
 
-create table tblQuoteItem
-(
- 	entity_id int auto_increment primary key,
+create table tblQuoteItem (
+	entity_id int auto_increment primary key,
 	quote_id int,
 	product_id int,
 	quantity int,
@@ -93,25 +89,22 @@ create table tblQuoteItem
 	foreign key (product_id) references tblProduct(entity_id)
 );
 
-create table tblShippingMethod
-(
- 	entity_id int auto_increment primary key,
+create table tblShippingMethod (
+	entity_id int auto_increment primary key,
 	name varchar(256),
 	price float,
 	code varchar(256),
 	status int(11) default(1)
 );
 
-create table tblPaymentMethod
-(
+create table tblPaymentMethod (
 	entity_id int auto_increment primary key,
 	name varchar(256),
 	code varchar(256),
 	status int(11) default(1)
 );
 
-create table tblOrder
-(
+create table tblOrder (
 	entity_id int auto_increment primary key,
 	status int(11) default(1),
 	shipping_id int,
@@ -122,8 +115,7 @@ create table tblOrder
 	foreign key (payment_id) references tblPaymentMethod(entity_id)
 );
 
-create table tblOrderItem
-(
+create table tblOrderItem (
 	entity_id int auto_increment primary key,
 	order_id int,
 	product_id int,
@@ -133,32 +125,28 @@ create table tblOrderItem
 	foreign key (product_id) references tblProduct(entity_id)
 );
 
-create table tblCustomerPoint
-(
+create table tblCustomerPoint (
 	entity_id int auto_increment primary key,
 	customer_id int,
 	`value` int,
 	foreign key (customer_id) references tblCustomer(entity_id)
 );
 
-create table tblProductPoint
-(
+create table tblProductPoint (
 	entity_id int auto_increment primary key,
 	product_id int,
 	`value` varchar(256),
 	foreign key (product_id) references tblProduct(entity_id)
 );
 
-create table tblRole
-(
+create table tblRole (
 	entity_id int auto_increment primary key,
 	name varchar(256),
 	`resource` varchar(256),
 	is_admin int
 );
 
-create table tblUser
-(
+create table tblUser (
 	entity_id int auto_increment primary key,
 	first_name varchar(256),
 	last_name varchar(256),
