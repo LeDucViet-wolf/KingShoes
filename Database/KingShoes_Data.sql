@@ -142,10 +142,6 @@ insert into tblProduct(`name`, `price`, `sku`, `size`, `quantity`, `description`
 ('Jordan Series ES', 3600000, 'jordanseries-es-41', 41, 100, '', 1, 20),
 ('Jordan Series ES', 3600000, 'jordanseries-es-42', 42, 100, '', 1, 20);
 
-insert into tblProductImage(`product_id`,`value`) values
-(),
-();
-
 insert into tblCustomer(`first_name`,`last_name`,`birthday`,`gender`,`email`,`phone`,`password`,`address`,`status`) values
 ('Nguyễn Ngọc','Thúy','1990-11-23',0,'nguyenngocthuy@gmail.com','0832536199','123','Khu tập thể A3 Nam Đồng, A1P49, Phố P. Hồ Đắc Di, Nam Đồng, Đống Đa, Hà Nội',1),
 ('Đáo Đức','Thành','1991-11-23',1,'daoducthanh@gmail.com','0832536200','123','Tòa nhà C´Land, 156 Ng. Xã Đàn 2, Nam Đồng, Đống Đa, Hà Nội',0),
@@ -205,3 +201,21 @@ insert into tblCustomerPoint(`customer_id`,`value`) values
 (8,80),
 (9,90),
 (10,100);
+
+insert into tblCategoryImage(`category_id`, `value`) values
+();
+
+insert into tblProductImage(`product_id`,`value`) values
+();
+
+insert into tblProductPoint(`product_id`,`value`) values
+();
+
+insert into tblRelatedProduct(`product_id`,`related_product_id`) values
+();
+
+insert into tblOrder(`status`, `shipping_id`,`payment_id`,`grand_total`,`note`) values
+();
+
+insert into tblOrderItem(`order_id`,`product_id`,`quantity`,`row_total`) values
+();
