@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useScript from "../../../hooks/useScript";
 
-const RelatedProduct = () => {
-  let { id } = useParams();
+const RelatedProduct = ({...props}) => {
   useScript("../../../../public/js/related-carousel");
 
+  const { productId } = props;
   const [products, getRelatedProducts] = useState([]);
+
   const fetchData = () => {
     var config = {
       method: "get",
@@ -18,8 +19,7 @@ const RelatedProduct = () => {
         var config2 = {
           method: "get",
           url:
-            "http://localhost:8080/KingShoesApi/api/related-products/get-by-product-id/" +
-            id,
+            `http://localhost:8080/KingShoesApi/api/related-products/get-by-product-id/${productId}`,
         };
         axios(config2)
           .then((res) => {
@@ -32,11 +32,10 @@ const RelatedProduct = () => {
               });
             });
             getRelatedProducts(data);
-            // console.log(data);
           })
-          .catch((err) => {});
+          .catch((err) => { });
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
   useEffect(() => {
     fetchData();
@@ -51,57 +50,58 @@ const RelatedProduct = () => {
         <div className="row px-xl-5">
           {products
             ? products
-                .filter((x, index) => index < 4)
-                .map((item, i) => (
-                  <div key={i} className="col-lg-3 col-md-4 col-Fsm-6 pb-1">
-                    <div className="product-item bg-light mb-4">
-                      <div className="product-img position-relative overflow-hidden">
-                        <img
-                          className="img-fluid w-100"
-                          src="../public/img/cat-1.jpg"
-                          alt=""
-                        />
-                        <div className="product-action">
-                          <a
-                            className="btn btn-outline-dark btn-square"
-                            href=""
-                          >
-                            <i className="fa fa-shopping-cart"></i>
-                          </a>
-                          <a
-                            className="btn btn-outline-dark btn-square"
-                            href=""
-                          >
-                            <i className="far fa-heart"></i>
-                          </a>
-                        </div>
-                      </div>
-                      <div className="text-center py-4">
+              .filter((x, index) => index < 4)
+              .map((item, i) => (
+                <div key={i} className="col-lg-3 col-md-4 col-Fsm-6 pb-1">
+                  <div className="product-item bg-light mb-4">
+                    <div className="product-img position-relative overflow-hidden">
+                      <img
+                        className="img-fluid w-100"
+                        src={`/img/product-1.jpg`}
+                        alt=""
+                      />
+                      <div className="product-action">
                         <a
-                          className="h6 text-decoration-none text-truncate"
-                          href={"/product-detail/" + item.entityId}
+                          className="btn btn-outline-dark btn-square"
+                          href=""
                         >
-                          {item.name}
+                          <i className="fa fa-shopping-cart"></i>
                         </a>
-                        <p>
-                          <strong>SKU: </strong>
-                          {item.sku}
-                        </p>
-                        <div className="d-flex align-items-center justify-content-center mt-2">
-                          <h5>{item.price} VND</h5>
-                        </div>
-                        <div className="d-flex align-items-center justify-content-center mb-1">
-                          <small className="fa fa-star text-primary mr-1"></small>
-                          <small className="fa fa-star text-primary mr-1"></small>
-                          <small className="fa fa-star text-primary mr-1"></small>
-                          <small className="fa fa-star text-primary mr-1"></small>
-                          <small className="fa fa-star text-primary mr-1"></small>
-                          <small>(99)</small>
-                        </div>
+                        <a
+                          className="btn btn-outline-dark btn-square"
+                          href=""
+                        >
+                          <i className="far fa-heart"></i>
+                        </a>
+                      </div>
+                    </div>
+                    <div className="text-center py-4">
+                      <Link
+                      replace   
+                        to={`/product-detail?productId=${item.entityId}`}
+                        className="h6 text-decoration-none text-truncate"
+                      >
+                        {item.name}
+                      </Link>
+                      <p>
+                        <strong>SKU: </strong>
+                        {item.sku}
+                      </p>
+                      <div className="d-flex align-items-center justify-content-center mt-2">
+                        <h5>{item.price} VND</h5>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-center mb-1">
+                        <small className="fa fa-star text-primary mr-1"></small>
+                        <small className="fa fa-star text-primary mr-1"></small>
+                        <small className="fa fa-star text-primary mr-1"></small>
+                        <small className="fa fa-star text-primary mr-1"></small>
+                        <small className="fa fa-star text-primary mr-1"></small>
+                        <small>(99)</small>
                       </div>
                     </div>
                   </div>
-                ))
+                </div>
+              ))
             : ""}
         </div>
       </div>

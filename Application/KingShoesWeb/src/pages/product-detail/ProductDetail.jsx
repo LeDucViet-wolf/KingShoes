@@ -3,10 +3,12 @@ import axios from "axios";
 import RelatedProduct from "./components/RelatedProduct";
 import { Breadcrumb } from "../../components";
 import useScript from "../../hooks/useScript";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const ProductDetail = () => {
-  let { id } = useParams();
+  let [searchParams, setSearchParams] = useSearchParams();
+  const productId = searchParams.get('productId')
+
   useScript("../../../../public/js/product-quantity");
   useScript("../../../../public/js/tab");
 
@@ -14,26 +16,24 @@ const ProductDetail = () => {
   const [productSize, getProductSize] = useState([]);
   const fetchData = () => {
     var configGetProductData = {
-        method: "get",
-        url: "http://localhost:8080/KingShoesApi/api/products/get-by-id/" + id,
-      },
+      method: "get",
+      url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
+    },
       configGetProductSizeData = {
         method: "get",
         url:
-          "http://localhost:8080/KingShoesApi/api/productSizes/get-by-product-id/" +
-          id,
+          `http://localhost:8080/KingShoesApi/api/productSizes/get-by-product-id/${productId}`,
       };
     axios(configGetProductData)
       .then(function (response) {
         getProduct(response.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
     axios(configGetProductSizeData)
       .then(function (response) {
         getProductSize(response.data);
-        console.log(response.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
   useEffect(() => {
     fetchData();
@@ -123,21 +123,21 @@ const ProductDetail = () => {
                 <form>
                   {productSize
                     ? productSize.map((item, i) => (
-                        <div key={i} className="custom-control custom-radio custom-control-inline">
-                          <input
-                            type="radio"
-                            className="custom-control-input"
-                            id={item.value}
-                            name="size"
-                          />
-                          <label
-                            className="custom-control-label"
-                            htmlFor={item.value}
-                          >
-                            {item.value}
-                          </label>
-                        </div>
-                      ))
+                      <div key={i} className="custom-control custom-radio custom-control-inline">
+                        <input
+                          type="radio"
+                          className="custom-control-input"
+                          id={item.value}
+                          name="size"
+                        />
+                        <label
+                          className="custom-control-label"
+                          htmlFor={item.value}
+                        >
+                          {item.value}
+                        </label>
+                      </div>
+                    ))
                     : ""}
                 </form>
               </div>
@@ -306,7 +306,7 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-      <RelatedProduct />
+      <RelatedProduct productId={productId} />
     </>
   );
 };

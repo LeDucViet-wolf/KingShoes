@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 
 import dao.impl.ProductPointDAOImpl;
 import entities.ProductPoint;
-@Path(value = "/productPoints")
+@Path(value = "/product-points")
 public class ProductPointController {
 	@GET
     @Path("/get-all")

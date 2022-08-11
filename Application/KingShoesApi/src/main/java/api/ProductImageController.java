@@ -19,7 +19,7 @@ import dao.impl.ProductImageDAOImpl;
 
 import entities.ProductImage;
 
-@Path(value = "/productImages")
+@Path(value = "/product-images")
 public class ProductImageController {
 	@GET
     @Path("/get-all")

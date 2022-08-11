@@ -13,7 +13,7 @@ const App = () => {
         { path: 'login', element: <Page.Login /> },
         { path: 'register', element: <Page.Register /> },
         { path: 'product-list', element: <Page.ProductList /> },
-        { path: 'product-detail/:id', element: <Page.ProductDetail /> },
+        { path: 'product-detail', element: <Page.ProductDetail /> },
         { path: 'cart', element: <Page.Cart /> },
         { path: 'checkout', element: <Page.Checkout /> },
         { path: 'contact', element: <Page.Contact /> },

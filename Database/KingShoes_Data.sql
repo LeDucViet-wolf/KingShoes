@@ -54,10 +54,10 @@ values
 insert into
     tblCategory(`name`, `image`, `status`)
 values
-    ('Nike', 'nike.png', 1),
-    ('Adidas', 'adidas.png', 1),
-    ('Jordan', 'jordan.png', 1),
-    ('Yeezy', 'yeezy', 1);
+    ('Nike', 'nike.jpg', 1),
+    ('Adidas', 'adidas.jpg', 1),
+    ('Jordan', 'jordan.jpg', 1),
+    ('Yeezy', 'yeezy.jpg', 1);
 
 insert into
     tblProduct(
@@ -255,6 +255,119 @@ values
     (20, 39, 100),
     (20, 40, 100);
 
+-- insert into 
+	-- tblProductImage(`product_id`,`value`) 
+-- values
+	-- ();
+	
+insert into 
+	tblProductPoint(`product_id`,`value`) 
+values
+	(1,10),
+	(2,20),
+	(3,30),
+	(4,40),
+	(5,50),
+	(6,60),
+	(7,70),
+	(8,80),
+	(9,90),
+	(10,100),
+	(11,110),
+	(12,120),
+	(13,130),
+	(14,140),
+	(15,150),
+	(16,160),
+	(17,170),
+	(18,180),
+	(19,190),
+	(20,200);
+
+insert into
+    tblRelatedProduct(`product_id`, `related_product_id`)
+values
+    (1, 2),
+    (1, 3),
+    (1, 4),
+    (1, 5),
+	(2, 1),
+	(2, 3),
+	(2, 4),
+	(2, 5),
+    (3, 2),
+    (3, 4),
+    (3, 5),
+    (3, 6),
+    (4, 2),
+    (4, 3),
+    (4, 5),
+    (4, 6),
+    (5, 1),
+    (5, 2),
+    (5, 3),
+    (5, 4),
+    (6, 4),
+    (6, 5),
+    (6, 7),
+    (6, 8),
+    (7, 5),
+    (7, 6),
+    (7, 8),
+    (7, 9),
+    (8, 6),
+    (8, 7),
+    (8, 9),
+    (8, 10),
+    (9, 1),
+    (9, 3),
+    (9, 4),
+    (9, 5),
+    (10, 1),
+    (10, 3),
+    (10, 4),
+    (10, 5),
+    (11, 1),
+    (11, 3),
+    (11, 4),
+    (11, 5),
+    (12, 1),
+    (12, 3),
+    (12, 4),
+    (12, 5),
+    (13, 1),
+    (13, 3),
+    (13, 4),
+    (13, 5),
+    (14, 1),
+    (14, 3),
+    (14, 4),
+    (14, 5),
+    (15, 1),
+    (15, 3),
+    (15, 4),
+    (15, 5),
+    (16, 1),
+    (16, 3),
+    (16, 4),
+    (16, 5),
+    (17, 1),
+    (17, 3),
+    (17, 4),
+    (17, 5),
+    (18, 1),
+    (18, 3),
+    (18, 4),
+    (18, 5),
+    (19, 1),
+    (19, 3),
+    (19, 4),
+    (19, 5),
+    (20, 1),
+    (20, 3),
+    (20, 4),
+    (20, 5);
+
 insert into
     tblCustomer(
         `first_name`,
@@ -440,21 +553,12 @@ values
     (9, 90),
     (10, 100);
 
--- insert into tblCategoryImage(`category_id`, `value`) values
--- ();
--- insert into tblProductImage(`product_id`,`value`) values
--- ();
--- insert into tblProductPoint(`product_id`,`value`) values
--- ();
-insert into
-    tblRelatedProduct(`product_id`, `related_product_id`)
+insert into 
+	tblOrder(`status`, `shipping_id`,`payment_id`,`grand_total`,`note`) 
 values
-    (1, 6),
-    (1, 11),
-    (1, 16),
-    (1, 21);
-
--- insert into tblOrder(`status`, `shipping_id`,`payment_id`,`grand_total`,`note`) values
--- ();
--- insert into tblOrderItem(`order_id`,`product_id`,`quantity`,`row_total`) values
--- ();
+	(1,1,1,1000,'hello');
+	
+insert into 
+	tblOrderItem(`order_id`,`product_id`,`quantity`,`row_total`) 
+values
+	(1,1,1000,1000);

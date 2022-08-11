@@ -11,7 +11,6 @@ const ProductList = () => {
   const { products } = useSelector((state) => ({
     products: state.productReducer.products,
   }))
-  console.log(products)
 
   // Paging
   const [itemsPerPage, setItemsPerPage] = useState(10)
@@ -125,19 +124,11 @@ const ProductList = () => {
                           <a className="btn btn-outline-dark btn-square" href="">
                             <i className="far fa-heart"></i>
                           </a>
-                          <a className="btn btn-outline-dark btn-square" href="">
-                            <i className="fa fa-sync-alt"></i>
-                          </a>
-                          <Link
-                            to={`/product-detail/${item.entityId}`}
-                            className="btn btn-outline-dark btn-square"
-                          >
-                            <i className="fa fa-search"></i>
-                          </Link>
                         </div>
                       </div>
                       <div className="text-center py-4">
-                        <Link to={`/product-detail/${item.entityId}`} className="h6 text-decoration-none text-truncate">{item.name}</Link>
+                        <Link to={`/product-detail?productId=${item.entityId}`} className="h6 text-decoration-none text-truncate">{item.name}</Link>
+                        <p><strong>SKU: </strong>{item.sku}</p>
                         <div className="d-flex align-items-center justify-content-center mt-2">
                           <h5>{item.price} VND</h5>
                           {/* <h6 className="text-muted ml-2"><del>$123.00</del></h6> */}
