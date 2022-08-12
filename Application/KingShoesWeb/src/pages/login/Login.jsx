@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb } from '../../components'
+import { Breadcrumb } from '@/components'
 import { useSelector, useDispatch } from 'react-redux'
-import { getAllCustomer } from '../../stores/actions'
+import { getAllCustomer } from '@/stores/actions'
 
 const Login = () => {
     const dispatch = useDispatch()

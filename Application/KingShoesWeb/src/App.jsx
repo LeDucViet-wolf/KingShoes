@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRoutes } from 'react-router-dom'
-import DefaultLayout from './layouts/DefaultLayout'
-import * as Page from './pages'
+import DefaultLayout from '@/layouts/DefaultLayout'
+import * as Page from '@/pages'
 
 const App = () => {
   let element = useRoutes([

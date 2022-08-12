@@ -1,10 +1,10 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { Breadcrumb } from '../../components'
-import useScript from '../../hooks/useScript'
+import { Breadcrumb } from '@/components'
+import useScript from '@/hooks/useScript'
 
 const Cart = () => {
-    useScript('../../../../public/js/product-quantity')
+    useScript('public/js/product-quantity')
 
     return (
         <>

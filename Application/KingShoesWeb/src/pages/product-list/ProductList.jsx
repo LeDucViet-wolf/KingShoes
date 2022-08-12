@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import Sidebar from "./components/Sidebar"
-import { Breadcrumb } from "../../components"
+import { Breadcrumb } from "@/components"
 import { Link } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
-import { getAllProduct } from '../../stores/actions'
+import { getAllProduct } from '@/stores/actions'
 
 const ProductList = () => {
   const dispatch = useDispatch()
@@ -88,9 +88,8 @@ const ProductList = () => {
                         Sorting
                       </button>
                       <div className="dropdown-menu dropdown-menu-right">
-                        <Link to={``} className="dropdown-item">Latest</Link>
-                        <Link to={``} className="dropdown-item">Popularity</Link>
-                        <Link to={``} className="dropdown-item">Best Rating</Link>
+                        <Link to={``} className="dropdown-item">Lowest</Link>
+                        <Link to={``} className="dropdown-item">Highest</Link>
                       </div>
                     </div>
                     <div className="btn-group ml-2">

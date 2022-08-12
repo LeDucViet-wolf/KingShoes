@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import RelatedProduct from "./components/RelatedProduct";
-import { Breadcrumb } from "../../components";
-import useScript from "../../hooks/useScript";
+import { Breadcrumb } from "@/components";
+import useScript from "@/hooks/useScript";
 import { useSearchParams } from "react-router-dom";
 
 const ProductDetail = () => {
-  useScript("../../../../public/js/product-quantity");
-  useScript("../../../../public/js/tab");
+  useScript("public/js/product-quantity");
+  useScript("public/js/tab");
 
   const [searchParams, setSearchParams] = useSearchParams();
   const productId = searchParams.get('productId')

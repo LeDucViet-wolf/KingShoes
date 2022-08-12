@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import useScript from "../../../hooks/useScript";
+import useScript from "@/hooks/useScript";
 
 const RelatedProduct = ({ ...props }) => {
-  useScript("../../../../public/js/related-carousel");
+  useScript("public/js/related-carousel");
 
   const { setSearchParams, productId } = props;
   const [products, getRelatedProducts] = useState([]);
@@ -57,7 +57,7 @@ const RelatedProduct = ({ ...props }) => {
                     <div className="product-img position-relative overflow-hidden">
                       <img
                         className="img-fluid w-100"
-                        src={`/img/product-1.jpg`}
+                        src={`img/product-1.jpg`}
                         alt=""
                       />
                       <div className="product-action">

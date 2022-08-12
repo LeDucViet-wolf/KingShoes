@@ -1,8 +1,8 @@
 import React from 'react'
-import useScript from '../../../hooks/useScript'
+import useScript from '@/hooks/useScript'
 
 function Vendor() {
-    useScript('../../../../public/js/vendor-carousel')
+    useScript('public/js/vendor-carousel')
     
     return (
         <div className="container-fluid py-5">
