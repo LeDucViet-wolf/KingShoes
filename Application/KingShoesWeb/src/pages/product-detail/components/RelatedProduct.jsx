@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import useScript from "../../../hooks/useScript";
 
-const RelatedProduct = ({...props}) => {
+const RelatedProduct = ({ ...props }) => {
   useScript("../../../../public/js/related-carousel");
 
-  const { productId } = props;
+  const { setSearchParams, productId } = props;
   const [products, getRelatedProducts] = useState([]);
-
+  
   const fetchData = () => {
     var config = {
       method: "get",
@@ -37,9 +36,10 @@ const RelatedProduct = ({...props}) => {
       })
       .catch((err) => { });
   };
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [productId]);
 
   return (
     <>
@@ -76,17 +76,14 @@ const RelatedProduct = ({...props}) => {
                       </div>
                     </div>
                     <div className="text-center py-4">
-                      <Link
-                      replace   
-                        to={`/product-detail?productId=${item.entityId}`}
+                      <a
+                        onClick={(e) => { e.preventDefault(); setSearchParams({ productId: item.entityId }) }}
+                        href=""
                         className="h6 text-decoration-none text-truncate"
                       >
                         {item.name}
-                      </Link>
-                      <p>
-                        <strong>SKU: </strong>
-                        {item.sku}
-                      </p>
+                      </a>
+                      <p><strong>SKU: </strong>{item.sku}</p>
                       <div className="d-flex align-items-center justify-content-center mt-2">
                         <h5>{item.price} VND</h5>
                       </div>

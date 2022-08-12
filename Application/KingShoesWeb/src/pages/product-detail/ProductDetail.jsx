@@ -6,14 +6,14 @@ import useScript from "../../hooks/useScript";
 import { useSearchParams } from "react-router-dom";
 
 const ProductDetail = () => {
-  let [searchParams, setSearchParams] = useSearchParams();
-  const productId = searchParams.get('productId')
-
   useScript("../../../../public/js/product-quantity");
   useScript("../../../../public/js/tab");
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const productId = searchParams.get('productId')
   const [product, getProduct] = useState([]);
   const [productSize, getProductSize] = useState([]);
+
   const fetchData = () => {
     var configGetProductData = {
       method: "get",
@@ -35,9 +35,14 @@ const ProductDetail = () => {
       })
       .catch((err) => { });
   };
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [productId]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [productId])
 
   return (
     <>
@@ -306,7 +311,7 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-      <RelatedProduct productId={productId} />
+      <RelatedProduct setSearchParams={setSearchParams} productId={productId} />
     </>
   );
 };

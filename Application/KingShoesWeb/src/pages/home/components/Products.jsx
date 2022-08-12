@@ -48,7 +48,7 @@ const Products = () => {
                   </div>
                   <div className="text-center py-4">
                     <Link
-                      to={`/product-detail/${item.entityId}`}
+                      to={`/product-detail?productId=${item.entityId}`}
                       className="h6 text-decoration-none text-truncate"
                     >
                       {item.name}

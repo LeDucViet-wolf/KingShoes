@@ -12,6 +12,10 @@ const ProductList = () => {
     products: state.productReducer.products,
   }))
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   // Paging
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
