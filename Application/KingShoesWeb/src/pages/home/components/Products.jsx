@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { ProductItem } from "@/components"
 
 const Products = () => {
   const [products, getProducts] = useState([]);
@@ -29,48 +30,7 @@ const Products = () => {
           ? products
             .filter((x) => x.entityId <= 8)
             .map((item, i) => (
-              <div key={i} className="col-lg-3 col-md-4 col-sm-6 pb-1">
-                <div className="product-item bg-light mb-4">
-                  <div className="product-img position-relative overflow-hidden">
-                    <img
-                      className="img-fluid w-100"
-                      src="img/product-1.jpg"
-                      alt=""
-                    />
-                    <div className="product-action">
-                      <a className="btn btn-outline-dark btn-square" href="">
-                        <i className="fa fa-shopping-cart"></i>
-                      </a>
-                      <a className="btn btn-outline-dark btn-square" href="">
-                        <i className="far fa-heart"></i>
-                      </a>
-                    </div>
-                  </div>
-                  <div className="text-center py-4">
-                    <Link
-                      to={`/product-detail?productId=${item.entityId}`}
-                      className="h6 text-decoration-none text-truncate"
-                    >
-                      {item.name}
-                    </Link>
-                    <p>
-                      <strong>SKU: </strong>
-                      {item.sku}
-                    </p>
-                    <div className="d-flex align-items-center justify-content-center mt-2">
-                      <h5>{item.price} VND</h5>
-                    </div>
-                    <div className="d-flex align-items-center justify-content-center mb-1">
-                      <small className="fa fa-star text-primary mr-1"></small>
-                      <small className="fa fa-star text-primary mr-1"></small>
-                      <small className="fa fa-star text-primary mr-1"></small>
-                      <small className="fa fa-star text-primary mr-1"></small>
-                      <small className="fa fa-star text-primary mr-1"></small>
-                      <small>(99)</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ProductItem key={i} product={item} grid={{ lg: 3, md: 4, sm: 6 }} />
             ))
           : ""}
       </div>

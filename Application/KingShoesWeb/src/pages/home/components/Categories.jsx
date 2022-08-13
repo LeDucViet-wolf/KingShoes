@@ -36,11 +36,11 @@ const Categories = () => {
         console.log(err);
       });
   };
+  
   useEffect(() => {
     fetchData();
   }, []);
-  const imgUrl = new URL('./img.png', import.meta.url).href
-  console.log(imgUrl)
+
   return (
     <div className="container-fluid pt-5">
       <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4">

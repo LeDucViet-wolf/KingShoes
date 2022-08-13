@@ -9,6 +9,7 @@ const ProductDetail = () => {
   useScript("public/js/product-quantity");
   useScript("public/js/tab");
 
+  // Param url
   const [searchParams, setSearchParams] = useSearchParams();
   const productId = searchParams.get('productId')
   const [product, getProduct] = useState([]);
@@ -311,7 +312,7 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-      <RelatedProduct setSearchParams={setSearchParams} productId={productId} />
+      <RelatedProduct productId={productId} />
     </>
   );
 };

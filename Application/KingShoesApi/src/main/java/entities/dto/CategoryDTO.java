@@ -3,14 +3,14 @@ package entities.dto;
 import java.util.List;
 import entities.Product;
 
-public class CategoryWithListProduct {
+public class CategoryDTO {
 	private Integer entityId;
 	private String name;
 	private Integer status;
 	private String image;
 	private List<Product> products;
 
-	public CategoryWithListProduct(Integer entityId, String name, Integer status, String image,
+	public CategoryDTO(Integer entityId, String name, Integer status, String image,
 			List<Product> products) {
 		super();
 		this.entityId = entityId;

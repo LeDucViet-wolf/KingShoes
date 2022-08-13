@@ -255,10 +255,29 @@ values
     (20, 39, 100),
     (20, 40, 100);
 
--- insert into 
-	-- tblProductImage(`product_id`,`value`) 
--- values
-	-- ();
+insert into 
+	tblProductImage(`product_id`,`value`) 
+values
+	(1,'air-force-1-38/air-force-1-38'),
+    (2,'air-max-terrascape-90-38/air-max-terrascape-90-38'),
+    (3,'alphamagma/alphamagma'),
+    (4,'alphatorsion/alphatorsion'),
+    (5,'eq21/eq21'),
+    (6,'forum/forum'),
+    (7,'free-run-2-38/free-run-2-38'),
+    (8,'ozelia/ozelia'),
+    (9,'pureboost/pureboost'),
+    (10,'solematch_bounce/solematch_bounce'),
+    (11,'speedflow/speedflow'),
+    (12,'stan_smith/stan_smith'),
+    (13,'supernova/supernova'),
+    (14,'superstar/superstar'),
+    (15,'ultraboost_4.0_dna/ultraboost_4.0_dna'),
+    (16,'ultraboost_21_a/ultraboost_21_a'),
+    (17,'ultraboost_21_b/ultraboost_21_b'),
+    (18,'ultraboost_21_tokyo/ultraboost_21_tokyo'),
+    (19,'x_ghosted_3/x_ghosted_3'),
+    (20,'zx_2k_boost/zx_2k_boost');
 	
 insert into 
 	tblProductPoint(`product_id`,`value`) 

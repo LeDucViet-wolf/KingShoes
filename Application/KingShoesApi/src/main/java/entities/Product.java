@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -28,9 +26,9 @@ public class Product{
 	private Integer status;
 	@Column(name = "category_id")
 	private Integer categoryId;
-	@ManyToOne
-    @JoinColumn(name = "category_id", insertable = false, updatable = false)
-	private Category category;
+//	@ManyToOne
+//    @JoinColumn(name = "category_id", insertable = false, updatable = false)
+//	private Category category;
 	
 	public Product() {
 		super();

@@ -13,11 +13,11 @@ public class ProductPoint {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "entity_id")
-	public Integer entityId;
+	private Integer entityId;
 	@Column(name = "product_id")
-	public Integer productId;
+	private Integer productId;
 	@Column(name = "value")
-	public Integer value;
+	private Integer value;
 	
 	public ProductPoint() {
 		super();

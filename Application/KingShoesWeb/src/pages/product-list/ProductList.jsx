@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react"
 import Sidebar from "./components/Sidebar"
-import { Breadcrumb } from "@/components"
-import { Link } from "react-router-dom"
+import { Breadcrumb, ProductItem } from "@/components"
+import { Link, useSearchParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { getAllProduct } from '@/stores/actions'
+import Paging from "./components/Paging"
 
 const ProductList = () => {
   const dispatch = useDispatch()
@@ -12,9 +13,13 @@ const ProductList = () => {
     products: state.productReducer.products,
   }))
 
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+  // Param url
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [categoryParam, setCategoryParam] = useState(searchParams.get('category'))
+  const [priceParam, setPriceParam] = useState(searchParams.get('price'))
+  const [sizeParam, setSizeParam] = useState(searchParams.get('size'))
+  const [pageParam, setPageParam] = useState(searchParams.get('page'))
+  const [showParam, setShowParam] = useState(searchParams.get('showing'))
 
   // Paging
   const [itemsPerPage, setItemsPerPage] = useState(10)
@@ -24,26 +29,44 @@ const ProductList = () => {
   const endIndexItem = startIndexItem + itemsPerPage
   const rowsPerPage = (products && products.length != 0) ? products.slice(startIndexItem, endIndexItem) : []
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const handlePaging = (e) => {
     switch (e.target.text) {
       case 'Previous':
-        currentPage <= 1 ? setCurrentPage(1) : setCurrentPage(parseInt(currentPage) - 1)
+        currentPage <= 1 ? setCurrentPage(1) : setCurrentPage(currentPage - 1)
         break
       case 'Next':
-        currentPage >= numberPage ? setCurrentPage(parseInt(numberPage)) : setCurrentPage(parseInt(currentPage) + 1)
+        currentPage >= numberPage ? setCurrentPage(numberPage) : setCurrentPage(currentPage + 1)
         break
       default:
-        setCurrentPage(parseInt(e.target.text))
+        setCurrentPage(e.target.text)
         break
     }
   }
 
   const handleShowing = (e) => {
-    setItemsPerPage(parseInt(e.target.text))
+    setItemsPerPage(e.target.text)
   }
 
-  const handleSorting = {
+  const handleSorting = (e) => {
+    debugger
+    console.log(e.target.text.toLowerCase())
+    setSearchParams({ sort: e.target.text.toLowerCase() })
+    console.log(searchParams.get('sort'))
+    // switch (e.target.text) {
+    //   case 'Lowest':
+    //     console.log('hello')
+    //     break
+    //   case 'Highest':
+    //     console.log('good bye')
+    //     break
+    //   default:
 
+    //     break
+    // }
   }
 
   const handleFiltering = {
@@ -63,41 +86,26 @@ const ProductList = () => {
       />
       <div className="container-fluid">
         <div className="row px-xl-5">
-          <Sidebar />
+          <Sidebar setSearchParams={setSearchParams} />
 
           {/* Shop Product */}
           <div className="col-lg-9 col-md-8">
             <div className="row pb-3">
               <div className="col-12 pb-1">
                 <div className="d-flex align-items-center justify-content-between mb-4">
-                  <div>
-                    <button className="btn btn-sm btn-light">
-                      <i className="fa fa-th-large"></i>
-                    </button>
-                    <button className="btn btn-sm btn-light ml-2">
-                      <i className="fa fa-bars"></i>
-                    </button>
-                  </div>
+                  <div></div>
                   <div className="ml-2">
                     <div className="btn-group">
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-light dropdown-toggle"
-                        data-toggle="dropdown"
-                      >
+                      <button type="button" className="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
                         Sorting
                       </button>
                       <div className="dropdown-menu dropdown-menu-right">
-                        <Link to={``} className="dropdown-item">Lowest</Link>
-                        <Link to={``} className="dropdown-item">Highest</Link>
+                        <Link to={``} className="dropdown-item" onClick={handleSorting}>Lowest</Link>
+                        <Link to={``} className="dropdown-item" onClick={handleSorting}>Highest</Link>
                       </div>
                     </div>
                     <div className="btn-group ml-2">
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-light dropdown-toggle"
-                        data-toggle="dropdown"
-                      >
+                      <button type="button" className="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
                         Showing
                       </button>
                       <div className="dropdown-menu dropdown-menu-right">
@@ -112,76 +120,11 @@ const ProductList = () => {
 
               {rowsPerPage.map((item, index) => {
                 return (
-                  <div key={index} className="col-lg-4 col-md-6 col-sm-6 pb-1">
-                    <div className="product-item bg-light mb-4">
-                      <div className="product-img position-relative overflow-hidden">
-                        <img
-                          className="img-fluid w-100"
-                          src="img/product-1.jpg"
-                          alt=""
-                        />
-                        <div className="product-action">
-                          <a className="btn btn-outline-dark btn-square" href="">
-                            <i className="fa fa-shopping-cart"></i>
-                          </a>
-                          <a className="btn btn-outline-dark btn-square" href="">
-                            <i className="far fa-heart"></i>
-                          </a>
-                        </div>
-                      </div>
-                      <div className="text-center py-4">
-                        <Link to={`/product-detail?productId=${item.entityId}`} className="h6 text-decoration-none text-truncate">{item.name}</Link>
-                        <p><strong>SKU: </strong>{item.sku}</p>
-                        <div className="d-flex align-items-center justify-content-center mt-2">
-                          <h5>{item.price} VND</h5>
-                          {/* <h6 className="text-muted ml-2"><del>$123.00</del></h6> */}
-                        </div>
-                        <div className="d-flex align-items-center justify-content-center mb-1">
-                          <small className="fa fa-star text-primary mr-1"></small>
-                          <small className="fa fa-star text-primary mr-1"></small>
-                          <small className="fa fa-star text-primary mr-1"></small>
-                          <small className="fa fa-star text-primary mr-1"></small>
-                          <small className="fa fa-star text-primary mr-1"></small>
-                          <small>(99)</small>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <ProductItem key={index} product={item} grid={{ lg: 4, md: 6, sm: 6 }} />
                 )
               })}
 
-              <div className="col-12">
-                <nav>
-                  <ul className="pagination justify-content-center">
-                    {/* {...{disabled: currentPage === 1}} */}
-                    <li onClick={handlePaging} className={`page-item ${parseInt(currentPage) === 1 ? 'disabled' : ''}`}>
-                      <Link to={``} className="page-link">
-                        Previous
-                      </Link>
-                    </li>
-                    {[...Array(numberPage)].map((value, index) => {
-                      if ((currentPage == 1 && (index + 1) < currentPage + 5) ||
-                        (currentPage == numberPage && (index + 1) > currentPage - 5) ||
-                        ((index + 1) < currentPage + 3 && (index + 1) > currentPage - 3)) {
-                        return (
-                          <li onClick={handlePaging} key={index} className={`page-item ${parseInt(currentPage) === (index + 1) ? 'active' : ''}`} >
-                            <Link to={``} className={`page-link`}>
-                              {index + 1}
-                            </Link>
-                          </li>
-                        )
-                      }
-                    })}
-                    <li onClick={handlePaging} className={`page-item ${parseInt(currentPage) === parseInt(numberPage) ? 'disabled' : ''}`}>
-                      <Link
-                        to={``}
-                        className="page-link">
-                        Next
-                      </Link>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
+              <Paging currentPage={currentPage} numberPage={numberPage} handlePaging={handlePaging} />
             </div>
           </div>
         </div>
