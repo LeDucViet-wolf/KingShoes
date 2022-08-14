@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { NavLink, Link, useSearchParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux"
+import { getAllCategory } from '@/stores/actions'
 
 const Header = () => {
-  const [categories, getCategories] = useState([]);
+  const dispatch = useDispatch()
+
+  const { categories } = useSelector((state) => ({
+    categories: state.categoryReducer.categories,
+  }))
+
+  // const [categories, getCategories] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleFilterByCategory = (e) => {
@@ -11,20 +19,9 @@ const Header = () => {
     setSearchParams({ category })
   }
 
-  const fetchData = () => {
-    var config = {
-      method: "get",
-      url: "http://localhost:8080/KingShoesApi/api/categories/get-all",
-    };
-    axios(config)
-      .then(function (response) {
-        getCategories(response.data);
-      })
-      .catch((err) => { });
-  };
   useEffect(() => {
-    fetchData();
-  }, []);
+    dispatch(getAllCategory())
+  }, [dispatch]);
 
   return (
     <>
@@ -187,7 +184,7 @@ const Header = () => {
                 {
                   categories
                     ? categories.map((item, i) => (
-                      <Link key={i} to={`/product-list?category=${item.name}`}  className="nav-item nav-link">{item.name}</Link>
+                      <Link key={i} to={`/product-list?category=${item.name}`} className="nav-item nav-link">{item.name}</Link>
                     ))
                     : ""
                 }

@@ -2,27 +2,27 @@ import { call, put, takeEvery } from "redux-saga/effects"
 // import jwt_decode from "jwt-decode";
 
 import {
-    getAllProductSuccess,
-    getAllProductFail
+    getAllCategorySuccess,
+    getAllCategoryFail
 } from "./action"
 
 import {
-    getAllProductHelper
+    getAllCategoryHelper
 } from '../../helpers'
 
-import { GET_ALL_PRODUCT } from "./actionType"
+import { GET_ALL_CATEGORY } from "./actionType"
 
-function* fetchProductList() {
+function* fetchCategoryList() {
     try {
-        const response = yield call(getAllProductHelper)
-        yield put(getAllProductSuccess(response))
+        const response = yield call(getAllCategoryHelper)
+        yield put(getAllCategorySuccess(response))
     } catch (error) {
-        yield put(getAllProductFail(error))
+        yield put(getAllCategoryFail(error))
     }
 }
 
-function* productSaga() {
-    yield takeEvery(GET_ALL_PRODUCT, fetchProductList)
+function* categorySaga() {
+    yield takeEvery(GET_ALL_CATEGORY, fetchCategoryList)
 }
 
-export default productSaga
+export default categorySaga

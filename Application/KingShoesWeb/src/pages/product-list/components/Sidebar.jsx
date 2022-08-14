@@ -17,28 +17,18 @@ const Sidebar = ({ ...props }) => {
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" className="custom-control-input" id="price-1" />
-                            <label className="custom-control-label" htmlFor="price-1">$0 - $100</label>
+                            <label className="custom-control-label" htmlFor="price-1">0 - 1,000,000 (VND)</label>
                             <span className="badge border font-weight-normal">150</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" className="custom-control-input" id="price-2" />
-                            <label className="custom-control-label" htmlFor="price-2">$100 - $200</label>
+                            <label className="custom-control-label" htmlFor="price-2">1,000,000 - 3,000,000 (VND)</label>
                             <span className="badge border font-weight-normal">295</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-3" />
-                            <label className="custom-control-label" htmlFor="price-3">$200 - $300</label>
-                            <span className="badge border font-weight-normal">246</span>
-                        </div>
-                        <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-4" />
-                            <label className="custom-control-label" htmlFor="price-4">$300 - $400</label>
-                            <span className="badge border font-weight-normal">145</span>
-                        </div>
-                        <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" className="custom-control-input" id="price-5" />
-                            <label className="custom-control-label" htmlFor="price-5">$400 - $500</label>
-                            <span className="badge border font-weight-normal">168</span>
+                            <input type="checkbox" className="custom-control-input" id="price-2" />
+                            <label className="custom-control-label" htmlFor="price-2">3,000,000 - 5,000,000 (VND)</label>
+                            <span className="badge border font-weight-normal">295</span>
                         </div>
                     </form>
                 </div>
@@ -48,33 +38,23 @@ const Sidebar = ({ ...props }) => {
                     <form>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" className="custom-control-input" defaultChecked={true} id="price-all" />
-                            <label className="custom-control-label" htmlFor="price-all">All Price</label>
+                            <label className="custom-control-label" htmlFor="price-all">All Size</label>
                             <span className="badge border font-weight-normal">1000</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" className="custom-control-input" id="price-1" />
-                            <label className="custom-control-label" htmlFor="price-1">$0 - $100</label>
+                            <label className="custom-control-label" htmlFor="price-1">30-35</label>
                             <span className="badge border font-weight-normal">150</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-2" />
-                            <label className="custom-control-label" htmlFor="price-2">$100 - $200</label>
-                            <span className="badge border font-weight-normal">295</span>
+                            <input type="checkbox" className="custom-control-input" id="price-1" />
+                            <label className="custom-control-label" htmlFor="price-1">35-40</label>
+                            <span className="badge border font-weight-normal">150</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-3" />
-                            <label className="custom-control-label" htmlFor="price-3">$200 - $300</label>
-                            <span className="badge border font-weight-normal">246</span>
-                        </div>
-                        <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-4" />
-                            <label className="custom-control-label" htmlFor="price-4">$300 - $400</label>
-                            <span className="badge border font-weight-normal">145</span>
-                        </div>
-                        <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" className="custom-control-input" id="price-5" />
-                            <label className="custom-control-label" htmlFor="price-5">$400 - $500</label>
-                            <span className="badge border font-weight-normal">168</span>
+                            <input type="checkbox" className="custom-control-input" id="price-1" />
+                            <label className="custom-control-label" htmlFor="price-1">40-45</label>
+                            <span className="badge border font-weight-normal">150</span>
                         </div>
                     </form>
                 </div>

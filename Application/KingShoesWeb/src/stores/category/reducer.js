@@ -1,22 +1,22 @@
 import {
-  GET_ALL_PRODUCT_SUCCESS,
-  GET_ALL_PRODUCT_FAIL
+  GET_ALL_CATEGORY_SUCCESS,
+  GET_ALL_CATEGORY_FAIL
 } from "./actionType"
 
 const INIT_STATE = {
-  products: [],
-  product: {},
+  categories: [],
+  category: {},
   error: {}
 }
 
-const productReducer = (state = INIT_STATE, action) => {
+const categoryReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case GET_ALL_PRODUCT_SUCCESS:
+    case GET_ALL_CATEGORY_SUCCESS:
       return {
         ...state,
-        products: action.payload,
+        categories: action.payload,
       }
-    case GET_ALL_PRODUCT_FAIL:
+    case GET_ALL_CATEGORY_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -26,4 +26,4 @@ const productReducer = (state = INIT_STATE, action) => {
   }
 }
 
-export default productReducer
+export default categoryReducer
