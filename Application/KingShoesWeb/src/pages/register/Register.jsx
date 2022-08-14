@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "@/components";
 import bcrypt from "bcryptjs";
+import axios from "axios";
 
 const Register = () => {
-  // Input
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [birthday, setBirthday] = useState();
-  const [gender, setGender] = useState();
   const [phone, setPhone] = useState();
   const [address, setAddress] = useState();
+  const [gender, setGender] = useState("1");
 
-  // Validate
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isFirstNameValid, setIsFirstNameValid] = useState(true);
   const [isLastNameValid, setIsLastNameValid] = useState(true);
   const [isBirthdayValid, setIsBirthdayValid] = useState(true);
-  const [isGenderValid, setIsGenderValid] = useState(true);
   const [isPhoneValid, setIsPhoneValid] = useState(true);
   const [isAddressValid, setIsAddressValid] = useState(true);
+  const [isGenderValid, setIsGenderValid] = useState(true);
 
   const handleEmailChange = (e) => {
     if (e.target.value) {
@@ -29,6 +28,15 @@ const Register = () => {
       setIsEmailValid(true);
     } else {
       setIsEmailValid(false);
+    }
+  };
+
+  const handleGenderChange = (e) => {
+    if (e.target.value) {
+      setGender(e.target.value);
+      setIsGenderValid(true);
+    } else {
+      setIsGenderValid(false);
     }
   };
 
@@ -65,15 +73,6 @@ const Register = () => {
       setIsBirthdayValid(true);
     } else {
       setIsBirthdayValid(false);
-    }
-  };
-
-  const handleGenderChange = (e) => {
-    if (e.target.value) {
-      setGender(e.target.value);
-      setIsGenderValid(true);
-    } else {
-      setIsGenderValid(false);
     }
   };
 
@@ -120,7 +119,25 @@ const Register = () => {
 
     // hash password
     const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync());
-    console.log(hashedPassword);
+
+    const customer = {
+      firstName: firstName,
+      lastName: lastName,
+      birthday: birthday,
+      gender: gender,
+      email: email,
+      phone: phone,
+      address: address,
+      password: hashedPassword,
+      status: 1
+    };
+
+    axios
+      .post("http://localhost:8080/KingShoesApi/api/customers/insert", customer)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch((err) => {});
   };
 
   return (
@@ -181,6 +198,7 @@ const Register = () => {
                       defaultValue={1}
                       defaultChecked
                       type="radio"
+                      onChange={handleGenderChange}
                     />{" "}
                     Male
                     <input
@@ -188,6 +206,7 @@ const Register = () => {
                       name="gender"
                       defaultValue={0}
                       type="radio"
+                      onChange={handleGenderChange}
                     />{" "}
                     Female
                   </div>
