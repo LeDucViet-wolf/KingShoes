@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useSearchParams } from "react-router-dom";
 
 const Header = () => {
   const [categories, getCategories] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleFilterByCategory = (e) => {
+    let category = e.target.text.toLowerCase()
+    setSearchParams({ category })
+  }
+
   const fetchData = () => {
     var config = {
       method: "get",
@@ -13,12 +20,12 @@ const Header = () => {
       .then(function (response) {
         getCategories(response.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
   useEffect(() => {
     fetchData();
   }, []);
-  
+
   return (
     <>
       {/* Topbar */}
@@ -177,11 +184,13 @@ const Header = () => {
               style={{ width: "calc(100% - 30px)", zIndex: "999" }}
             >
               <div className="navbar-nav w-100">
-                {categories ? categories.map((item, i) => (
-                    <a key={i} href="" className="nav-item nav-link">
-                    {item.name}
-                  </a>
-                )) : ""}
+                {
+                  categories
+                    ? categories.map((item, i) => (
+                      <Link key={i} to={`/product-list?category=${item.name}`}  className="nav-item nav-link">{item.name}</Link>
+                    ))
+                    : ""
+                }
               </div>
             </nav>
           </div>

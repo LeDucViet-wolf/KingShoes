@@ -21,3 +21,11 @@ export const URL_CUSTOMER_GET_BY_ID = "customers/get-by-id"
 export const URL_CUSTOMER_INSERT = "customers/insert"
 export const URL_CUSTOMER_UPDATE = "customers/update"
 export const URL_CUSTOMER_DELETE = "customers/delete"
+
+// Category 
+export const URL_CATEGORY = "categories"
+export const URL_CATEGORY_GET_ALL = "categories/get-all"
+export const URL_CATEGORY_GET_BY_ID = "categories/get-by-id"
+export const URL_CATEGORY_INSERT = "categories/insert"
+export const URL_CATEGORY_UPDATE = "categories/update"
+export const URL_CATEGORY_DELETE = "categories/delete"

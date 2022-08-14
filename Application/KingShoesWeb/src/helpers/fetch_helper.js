@@ -21,3 +21,10 @@ export const getCustomerByIdHelper = id => get(url.URL_CUSTOMER_GET_BY_ID, { par
 export const insertCustomerHelper = data => post(url.URL_CUSTOMER_INSERT, data)
 export const updateCustomerHelper = data => put(url.URL_CUSTOMER_UPDATE, data)
 export const deleteCustomerHelper = id => del(url.URL_CUSTOMER_DELETE, { params: { id } })
+
+// Category
+export const getAllCategoryHelper = () => get(url.URL_CATEGORY_GET_ALL)
+export const getCategoryByIdHelper = id => get(url.URL_CATEGORY_GET_BY_ID, { params: { id } })
+export const insertCategoryHelper = data => post(url.URL_CATEGORY_INSERT, data)
+export const updateCategoryHelper = data => put(url.URL_CATEGORY_UPDATE, data)
+export const deleteCategoryHelper = id => del(url.URL_CATEGORY_DELETE, { params: { id } })
