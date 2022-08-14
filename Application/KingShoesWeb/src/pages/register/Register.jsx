@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "@/components";
-// import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const Register = () => {
   // Input
@@ -118,9 +118,9 @@ const Register = () => {
       setIsBirthdayValid(false);
     }
 
-    //hash password
-    // const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync());
-    // console.log(hashedPassword);
+    // hash password
+    const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync());
+    console.log(hashedPassword);
   };
 
   return (
