@@ -13,25 +13,16 @@ const ProductList = () => {
     products: state.productReducer.products,
   }))
 
-  // Param url
   const [searchParams, setSearchParams] = useSearchParams()
-  const [categoryParam, setCategoryParam] = useState(searchParams.get('category'))
-  const [priceParam, setPriceParam] = useState(searchParams.get('price'))
-  const [sizeParam, setSizeParam] = useState(searchParams.get('size'))
-  const [pageParam, setPageParam] = useState(searchParams.get('page'))
-  const [showParam, setShowParam] = useState(searchParams.get('showing'))
+  const [productsChange, setProductsChange] = useState(products)
 
   // Paging
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
-  const numberPage = (products && products.length != 0) ? Math.ceil(products.length / itemsPerPage) : 1
+  const numberPage = (productsChange && productsChange.length != 0) ? Math.ceil(productsChange.length / itemsPerPage) : 1
   const startIndexItem = (currentPage - 1) * itemsPerPage
   const endIndexItem = startIndexItem + itemsPerPage
-  const rowsPerPage = (products && products.length != 0) ? products.slice(startIndexItem, endIndexItem) : []
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+  const rowsPerPage = (productsChange && productsChange.length != 0) ? productsChange.slice(startIndexItem, endIndexItem) : []
 
   const handlePaging = (e) => {
     switch (e.target.innerText) {
@@ -62,8 +53,16 @@ const ProductList = () => {
   }
 
   useEffect(() => {
+    setProductsChange(products.filter(item => item.categoryId == searchParams.get('category')))
+  }, [searchParams.get('category')])
+
+  useEffect(() => {
     dispatch(getAllProduct())
   }, [dispatch])
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <>

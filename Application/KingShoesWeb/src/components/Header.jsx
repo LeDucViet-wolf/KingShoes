@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { NavLink, Link, useSearchParams } from "react-router-dom";
+import React, { useEffect } from "react"
+import { NavLink, Link, useLocation, useSearchParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { getAllCategory } from '@/stores/actions'
 
@@ -11,17 +10,21 @@ const Header = () => {
     categories: state.categoryReducer.categories,
   }))
 
-  // const [categories, getCategories] = useState([]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  // const [searchParams, setSearchParams] = useSearchParams()
+  // const location = useLocation()
 
-  const handleFilterByCategory = (e) => {
-    let category = e.target.text.toLowerCase()
-    setSearchParams({ category })
-  }
+  // useEffect(()=>{
+  //   if(location.pathname === '/product-list'){
+  //     setSearchParams({...searchParams.entries(), long:'hello'})
+  //   }
+  // },[])
+
+
+  // console.log({[...searchParams.entries()], ['category', 'long']})
 
   useEffect(() => {
     dispatch(getAllCategory())
-  }, [dispatch]);
+  }, [dispatch])
 
   return (
     <>
@@ -184,7 +187,9 @@ const Header = () => {
                 {
                   categories
                     ? categories.map((item, i) => (
-                      <Link key={i} to={`/product-list?category=${item.name}`} className="nav-item nav-link">{item.name}</Link>
+                      <Link key={i}
+                        to={`/product-list?category=${item.entityId}`}
+                        className="nav-item nav-link">{item.name}</Link>
                     ))
                     : ""
                 }
@@ -264,9 +269,9 @@ const Header = () => {
             </nav>
           </div>
         </div>
-      </div>
+      </div >
     </>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
