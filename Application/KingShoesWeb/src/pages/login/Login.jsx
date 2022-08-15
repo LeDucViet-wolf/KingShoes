@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "@/components";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllCustomer } from "@/stores/actions";
+import bcrypt from "bcryptjs";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -49,8 +50,7 @@ const Login = () => {
     }
     if (email && password) {
       let customer = customers.filter((c) => {
-        // const checkPassword = bcrypt.compareSync(password, u.password)
-        if (c.email === email && c.password === password) {
+        if (c.email === email && bcrypt.compareSync(password, c.password)) {
           return c;
         } else {
           return null;

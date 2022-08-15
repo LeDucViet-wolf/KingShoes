@@ -4,8 +4,12 @@ import bcrypt from "bcryptjs";
 import axios from "axios";
 
 const Register = () => {
+  const textRequire = "This is a required field.";
+  const [confirmPasswordMessage, setConfirmPasswordMessage] =
+    useState(textRequire);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [birthday, setBirthday] = useState();
@@ -15,129 +19,154 @@ const Register = () => {
 
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(true);
   const [isFirstNameValid, setIsFirstNameValid] = useState(true);
   const [isLastNameValid, setIsLastNameValid] = useState(true);
   const [isBirthdayValid, setIsBirthdayValid] = useState(true);
   const [isPhoneValid, setIsPhoneValid] = useState(true);
   const [isAddressValid, setIsAddressValid] = useState(true);
-  const [isGenderValid, setIsGenderValid] = useState(true);
 
   const handleEmailChange = (e) => {
-    if (e.target.value) {
-      setEmail(e.target.value);
-      setIsEmailValid(true);
-    } else {
-      setIsEmailValid(false);
-    }
+    setEmail(e.target.value);
   };
 
   const handleGenderChange = (e) => {
-    if (e.target.value) {
-      setGender(e.target.value);
-      setIsGenderValid(true);
-    } else {
-      setIsGenderValid(false);
-    }
+    setGender(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
-    if (e.target.value) {
-      setPassword(e.target.value);
-      setIsPasswordValid(true);
-    } else {
-      setIsPasswordValid(false);
-    }
+    setPassword(e.target.value);
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
   };
 
   const handleFirstNameChange = (e) => {
-    if (e.target.value) {
-      setFirstName(e.target.value);
-      setIsFirstNameValid(true);
-    } else {
-      setIsFirstNameValid(false);
-    }
+    setFirstName(e.target.value);
   };
 
   const handleLastNameChange = (e) => {
-    if (e.target.value) {
-      setLastName(e.target.value);
-      setIsLastNameValid(true);
-    } else {
-      setIsLastNameValid(false);
-    }
+    setLastName(e.target.value);
   };
 
   const handleBirthdayChange = (e) => {
-    if (e.target.value) {
-      setBirthday(e.target.value);
-      setIsBirthdayValid(true);
-    } else {
-      setIsBirthdayValid(false);
-    }
+    setBirthday(e.target.value);
   };
 
   const handlePhoneChange = (e) => {
-    if (e.target.value) {
-      setPhone(e.target.value);
-      setIsPhoneValid(true);
-    } else {
-      setIsPhoneValid(false);
-    }
+    setPhone(e.target.value);
   };
 
   const handleAddressChange = (e) => {
-    if (e.target.value) {
-      setAddress(e.target.value);
-      setIsAddressValid(true);
-    } else {
-      setIsAddressValid(false);
-    }
+    setAddress(e.target.value);
   };
 
   const handleSubmit = () => {
+    var valid = true;
     if (!email) {
       setIsEmailValid(false);
+      valid = false;
+    } else {
+      setIsEmailValid(true);
     }
+
     if (!password) {
       setIsPasswordValid(false);
+      valid = false;
+    } else {
+      setIsPasswordValid(true);
     }
+
+    if (!confirmPassword) {
+      setConfirmPasswordMessage(textRequire);
+      setIsConfirmPasswordValid(false);
+      valid = false;
+    } else {
+      if (confirmPassword == password) {
+        setIsConfirmPasswordValid(true);
+      } else {
+        setConfirmPasswordMessage("Please enter the same value again.");
+        setIsConfirmPasswordValid(false);
+        valid = false;
+      }
+    }
+
     if (!firstName) {
       setIsFirstNameValid(false);
+      valid = false;
+    } else {
+      setIsFirstNameValid(true);
     }
+
     if (!lastName) {
       setIsLastNameValid(false);
+      valid = false;
+    } else {
+      setIsLastNameValid(true);
     }
+
     if (!address) {
       setIsAddressValid(false);
+      valid = false;
+    } else {
+      setIsAddressValid(true);
     }
+
     if (!phone) {
       setIsPhoneValid(false);
+      valid = false;
+    } else {
+      setIsPhoneValid(true);
     }
+
     if (!birthday) {
       setIsBirthdayValid(false);
+      valid = false;
+    } else {
+      setIsBirthdayValid(true);
     }
 
-    // hash password
-    const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync());
+    if (valid) {
+      const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync());
 
-    const customer = {
-      firstName: firstName,
-      lastName: lastName,
-      birthday: birthday,
-      gender: gender,
-      email: email,
-      phone: phone,
-      address: address,
-      password: hashedPassword,
-      status: 1
-    };
+      const customer = {
+        firstName: firstName,
+        lastName: lastName,
+        birthday: birthday,
+        gender: gender,
+        email: email,
+        phone: phone,
+        address: address,
+        password: hashedPassword,
+        status: 1,
+      };
 
-    axios
-      .post("http://localhost:8080/KingShoesApi/api/customers/insert", customer)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch((err) => {});
+      axios
+        .post(
+          "http://localhost:8080/KingShoesApi/api/customers/insert",
+          customer
+        )
+        .then(function (response) {
+          if ((response.status = 200 && response.data)) {
+            axios
+              .get(
+                "http://localhost:8080/KingShoesApi/api/customers/get-by-id/" +
+                  response.data
+              )
+              .then(function (res) {
+                if (res.data) {
+                  localStorage.setItem(
+                    "customer-login",
+                    JSON.stringify([res.data])
+                  );
+                }
+              })
+              .catch((e) => {});
+          }
+        })
+        .catch((err) => {});
+    }
   };
 
   return (
@@ -160,9 +189,7 @@ const Register = () => {
                     onChange={handleFirstNameChange}
                     type="text"
                   />
-                  <div className="invalid-feedback">
-                    Please input your first name
-                  </div>
+                  <div className="invalid-feedback">{textRequire}</div>
                 </div>
                 <div className="col-md-6 form-group">
                   <label>Last Name</label>
@@ -173,9 +200,7 @@ const Register = () => {
                     onChange={handleLastNameChange}
                     type="text"
                   />
-                  <div className="invalid-feedback">
-                    Please input your last name
-                  </div>
+                  <div className="invalid-feedback">{textRequire}</div>
                 </div>
                 <div className="col-md-6 form-group">
                   <label>Birthday</label>
@@ -186,9 +211,7 @@ const Register = () => {
                     onChange={handleBirthdayChange}
                     type="date"
                   />
-                  <div className="invalid-feedback">
-                    Please input your birthday
-                  </div>
+                  <div className="invalid-feedback">{textRequire}</div>
                 </div>
                 <div className="col-md-6 form-group">
                   <label>Gender</label>
@@ -218,11 +241,9 @@ const Register = () => {
                       isEmailValid ? "" : "is-invalid"
                     }`}
                     onChange={handleEmailChange}
-                    type="text"
+                    type="email"
                   />
-                  <div className="invalid-feedback">
-                    Please input your email
-                  </div>
+                  <div className="invalid-feedback">{textRequire}</div>
                 </div>
                 <div className="col-md-6 form-group">
                   <label>Phone</label>
@@ -233,11 +254,9 @@ const Register = () => {
                     onChange={handlePhoneChange}
                     type="text"
                   />
-                  <div className="invalid-feedback">
-                    Please input your phone
-                  </div>
+                  <div className="invalid-feedback">{textRequire}</div>
                 </div>
-                <div className="col-md-6 form-group">
+                <div className="col-md-12 form-group">
                   <label>Address</label>
                   <textarea
                     className={`form-control ${
@@ -245,9 +264,7 @@ const Register = () => {
                     }`}
                     onChange={handleAddressChange}
                   />
-                  <div className="invalid-feedback">
-                    Please input your address
-                  </div>
+                  <div className="invalid-feedback">{textRequire}</div>
                 </div>
                 <div className="col-md-6 form-group">
                   <label>Password</label>
@@ -258,8 +275,19 @@ const Register = () => {
                     onChange={handlePasswordChange}
                     type="password"
                   />
+                  <div className="invalid-feedback">{textRequire}</div>
+                </div>
+                <div className="col-md-6 form-group">
+                  <label>Confirm Password</label>
+                  <input
+                    className={`form-control ${
+                      isConfirmPasswordValid ? "" : "is-invalid"
+                    }`}
+                    onChange={handleConfirmPasswordChange}
+                    type="password"
+                  />
                   <div className="invalid-feedback">
-                    Please input your password
+                    {confirmPasswordMessage}
                   </div>
                 </div>
               </div>
