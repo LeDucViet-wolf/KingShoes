@@ -1,8 +1,8 @@
 import React from 'react'
 
 const Sidebar = ({ ...props }) => {
-    const { setSearchParams } = props
-    
+    const { handleFilterByPrice, handleFilterBySize } = props
+
     return (
         <>
             {/* Shop Sidebar */}
@@ -11,23 +11,23 @@ const Sidebar = ({ ...props }) => {
                 <div className="bg-light p-4 mb-30">
                     <form>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" defaultChecked={true} id="price-all" />
+                            <input type="checkbox" onClick={handleFilterByPrice} className="custom-control-input" defaultChecked={true} id="price-all" />
                             <label className="custom-control-label" htmlFor="price-all">All Price</label>
                             <span className="badge border font-weight-normal">1000</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-1" />
+                            <input type="checkbox" onClick={handleFilterByPrice} className="custom-control-input" id="price-1" />
                             <label className="custom-control-label" htmlFor="price-1">0 - 1,000,000 (VND)</label>
                             <span className="badge border font-weight-normal">150</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-2" />
+                            <input type="checkbox" onClick={handleFilterByPrice} className="custom-control-input" id="price-2" />
                             <label className="custom-control-label" htmlFor="price-2">1,000,000 - 3,000,000 (VND)</label>
                             <span className="badge border font-weight-normal">295</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-2" />
-                            <label className="custom-control-label" htmlFor="price-2">3,000,000 - 5,000,000 (VND)</label>
+                            <input type="checkbox" onClick={handleFilterByPrice} className="custom-control-input" id="price-3" />
+                            <label className="custom-control-label" htmlFor="price-3">3,000,000 - 5,000,000 (VND)</label>
                             <span className="badge border font-weight-normal">295</span>
                         </div>
                     </form>
@@ -37,23 +37,23 @@ const Sidebar = ({ ...props }) => {
                 <div className="bg-light p-4 mb-30">
                     <form>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" defaultChecked={true} id="price-all" />
-                            <label className="custom-control-label" htmlFor="price-all">All Size</label>
+                            <input type="checkbox" onClick={handleFilterBySize} className="custom-control-input" defaultChecked={true} id="size-all" />
+                            <label className="custom-control-label" htmlFor="size-all">All Size</label>
                             <span className="badge border font-weight-normal">1000</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-1" />
-                            <label className="custom-control-label" htmlFor="price-1">30-35</label>
+                            <input type="checkbox" onClick={handleFilterBySize} className="custom-control-input" id="size-1" />
+                            <label className="custom-control-label" htmlFor="size-1">30-35</label>
                             <span className="badge border font-weight-normal">150</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-1" />
-                            <label className="custom-control-label" htmlFor="price-1">35-40</label>
+                            <input type="checkbox" onClick={handleFilterBySize} className="custom-control-input" id="size-2" />
+                            <label className="custom-control-label" htmlFor="size-2">35-40</label>
                             <span className="badge border font-weight-normal">150</span>
                         </div>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" className="custom-control-input" id="price-1" />
-                            <label className="custom-control-label" htmlFor="price-1">40-45</label>
+                            <input type="checkbox" onClick={handleFilterBySize} className="custom-control-input" id="size-3" />
+                            <label className="custom-control-label" htmlFor="size-3">40-45</label>
                             <span className="badge border font-weight-normal">150</span>
                         </div>
                     </form>

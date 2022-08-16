@@ -14,46 +14,76 @@ const ProductList = () => {
   }))
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const [productsChange, setProductsChange] = useState(products)
+  const currentPage = searchParams.get('page') ?? 1
+  
+  const [productsChange, setProductsChange] = useState([])
+  console.log(currentPage)
 
   // Paging
   const [itemsPerPage, setItemsPerPage] = useState(10)
-  const [currentPage, setCurrentPage] = useState(1)
   const numberPage = (productsChange && productsChange.length != 0) ? Math.ceil(productsChange.length / itemsPerPage) : 1
+  console.log('numberPage', numberPage);
   const startIndexItem = (currentPage - 1) * itemsPerPage
   const endIndexItem = startIndexItem + itemsPerPage
   const rowsPerPage = (productsChange && productsChange.length != 0) ? productsChange.slice(startIndexItem, endIndexItem) : []
 
+  useEffect(() => {
+      if(products.length) {
+        setProductsChange(products);
+      }
+  }, [products])
+
   const handlePaging = (e) => {
+    e.preventDefault()
     switch (e.target.innerText) {
       case 'Previous':
-        currentPage <= 1 ? setCurrentPage(1) : setCurrentPage(currentPage - 1)
+        currentPage <= 1
+          ? (searchParams.set('page', 1), setSearchParams(searchParams))
+          : (searchParams.set('page', parseInt(currentPage) - 1), setSearchParams(searchParams))
         break
       case 'Next':
-        currentPage >= numberPage ? setCurrentPage(numberPage) : setCurrentPage(currentPage + 1)
+        currentPage >= numberPage
+          ? (searchParams.set('page', numberPage), setSearchParams(searchParams))
+          : (searchParams.set('page', parseInt(currentPage) + 1), setSearchParams(searchParams))
         break
       default:
-        setCurrentPage(parseInt(e.target.innerText))
+        let page = parseInt(e.target.innerText)
+        searchParams.set('page', page)
+        setSearchParams(searchParams)
         break
     }
   }
 
   const handleShowing = (e) => {
-    setItemsPerPage(parseInt(e.target.text))
+    e.preventDefault()
+    let show = parseInt(e.target.text)
+    searchParams.set('show', show)
+    setSearchParams(searchParams)
   }
 
   const handleSorting = (e) => {
     e.preventDefault()
     let sort = e.target.text.toLowerCase()
-    setSearchParams({ ...searchParams.entries(), sort })
+    searchParams.set('sort', sort)
+    setSearchParams(searchParams)
   }
 
-  const handleFiltering = {
+  const handleFilterByPrice = (e) => {
+    let price = e.currentTarget.id
+    searchParams.set('price', price)
+    setSearchParams(searchParams)
+  }
 
+  const handleFilterBySize = (e) => {
+    let size = e.currentTarget.id
+    searchParams.set('size', size)
+    setSearchParams(searchParams)
   }
 
   useEffect(() => {
-    setProductsChange(products.filter(item => item.categoryId == searchParams.get('category')))
+    if (searchParams.get('category')) {
+      setProductsChange(products.filter(item => item.categoryId == searchParams.get('category')))
+    }
   }, [searchParams.get('category')])
 
   useEffect(() => {
@@ -73,7 +103,7 @@ const ProductList = () => {
       />
       <div className="container-fluid">
         <div className="row px-xl-5">
-          <Sidebar setSearchParams={setSearchParams} />
+          <Sidebar handleFilterByPrice={handleFilterByPrice} handleFilterBySize={handleFilterBySize} />
 
           {/* Shop Product */}
           <div className="col-lg-9 col-md-8">
