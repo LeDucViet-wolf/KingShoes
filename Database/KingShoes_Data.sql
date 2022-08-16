@@ -34,7 +34,7 @@ values
         'Đặng Tuấn',
         'Đạt',
         'dangtuandat',
-        'admin.123',
+        'admin123',
         '',
         1
     );
