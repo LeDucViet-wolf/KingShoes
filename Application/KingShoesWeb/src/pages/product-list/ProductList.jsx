@@ -14,24 +14,49 @@ const ProductList = () => {
   }))
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const currentPage = searchParams.get('page') ?? 1
-  
   const [productsChange, setProductsChange] = useState([])
-  console.log(currentPage)
 
   // Paging
+  const [paging, setPaging] = useState({
+    currentPage: 1,
+    itemsPerPage: 10,
+    numberPage: 1,
+    startIndexItem: 0,
+    endIndexItem: 10
+  })
+  
+  const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const numberPage = (productsChange && productsChange.length != 0) ? Math.ceil(productsChange.length / itemsPerPage) : 1
-  console.log('numberPage', numberPage);
   const startIndexItem = (currentPage - 1) * itemsPerPage
   const endIndexItem = startIndexItem + itemsPerPage
-  const rowsPerPage = (productsChange && productsChange.length != 0) ? productsChange.slice(startIndexItem, endIndexItem) : []
+  const [rowsPerPage, setRowsPerPage] = useState([])
+  console.log(rowsPerPage)
+  // const [startIndexItem, setStartIndexItem] = useState()
 
   useEffect(() => {
-      if(products.length) {
-        setProductsChange(products);
-      }
+    if (searchParams.get('page')) {
+      setCurrentPage(searchParams.get('page'))
+    }
+  }, [searchParams.get('page')])
+
+  useEffect(() => {
+    if (searchParams.get('show')) {
+      setItemsPerPage(searchParams.get('show'))
+    }
+  }, [searchParams.get('show')])
+
+  useEffect(() => {
+    if (products.length) {
+      setProductsChange(products)
+    }
   }, [products])
+
+  useEffect(() => {
+    if (productsChange.length) {
+      setRowsPerPage(productsChange.slice(startIndexItem, endIndexItem))
+    }
+  }, [productsChange])
 
   const handlePaging = (e) => {
     e.preventDefault()
@@ -59,6 +84,7 @@ const ProductList = () => {
     let show = parseInt(e.target.text)
     searchParams.set('show', show)
     setSearchParams(searchParams)
+    // setItemsPerPage(show)
   }
 
   const handleSorting = (e) => {
