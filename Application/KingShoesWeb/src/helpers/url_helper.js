@@ -6,6 +6,14 @@ export const URL_PRODUCT_INSERT = "products/insert"
 export const URL_PRODUCT_UPDATE = "products/update"
 export const URL_PRODUCT_DELETE = "products/delete"
 
+// Product Size
+export const URL_PRODUCT_SIZE = "product-sizes"
+export const URL_PRODUCT_SIZE_GET_ALL = "product-sizes/get-all"
+export const URL_PRODUCT_SIZE_GET_BY_ID = "product-sizes/get-by-id"
+export const URL_PRODUCT_SIZE_INSERT = "product-sizes/insert"
+export const URL_PRODUCT_SIZE_UPDATE = "product-sizes/update"
+export const URL_PRODUCT_SIZE_DELETE = "product-sizes/delete"
+
 // User
 export const URL_USER = "users"
 export const URL_USER_GET_ALL = "users/get-all"

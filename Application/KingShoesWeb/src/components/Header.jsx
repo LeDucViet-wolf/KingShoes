@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { NavLink, Link, useLocation, useSearchParams } from "react-router-dom"
+import { NavLink, Link } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { getAllCategory } from '@/stores/actions'
 
@@ -9,18 +9,6 @@ const Header = () => {
   const { categories } = useSelector((state) => ({
     categories: state.categoryReducer.categories,
   }))
-
-  // const [searchParams, setSearchParams] = useSearchParams()
-  // const location = useLocation()
-
-  // useEffect(()=>{
-  //   if(location.pathname === '/product-list'){
-  //     setSearchParams({...searchParams.entries(), long:'hello'})
-  //   }
-  // },[])
-
-
-  // console.log({[...searchParams.entries()], ['category', 'long']})
 
   useEffect(() => {
     dispatch(getAllCategory())

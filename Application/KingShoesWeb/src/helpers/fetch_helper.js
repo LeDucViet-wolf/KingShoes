@@ -8,6 +8,13 @@ export const insertProductHelper = data => post(url.URL_PRODUCT_INSERT, data)
 export const updateProductHelper = data => put(url.URL_PRODUCT_UPDATE, data)
 export const deleteProductHelper = id => del(url.URL_PRODUCT_DELETE, { params: { id } })
 
+// Product Size
+export const getAllProductSizeHelper = () => get(url.URL_PRODUCT_SIZE_GET_ALL)
+export const getProductSizeByIdHelper = id => get(url.URL_PRODUCT_SIZE_GET_BY_ID, { params: { id } })
+export const insertProductSizeHelper = data => post(url.URL_PRODUCT_SIZE_INSERT, data)
+export const updateProductSizeHelper = data => put(url.URL_PRODUCT_SIZE_UPDATE, data)
+export const deleteProductSizeHelper = id => del(url.URL_PRODUCT_SIZE_DELETE, { params: { id } })
+
 // User
 export const getAllUserHelper = () => get(url.URL_USER_GET_ALL)
 export const getUserByIdHelper = id => get(url.URL_USER_GET_BY_ID, { params: { id } })

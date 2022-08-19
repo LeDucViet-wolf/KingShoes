@@ -3,60 +3,34 @@ import Sidebar from "./components/Sidebar"
 import { Breadcrumb, ProductItem } from "@/components"
 import { Link, useSearchParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
-import { getAllProduct } from '@/stores/actions'
+import { getAllProduct, getAllProductSize } from '@/stores/actions'
 import Paging from "./components/Paging"
 
 const ProductList = () => {
   const dispatch = useDispatch()
 
-  const { products } = useSelector((state) => ({
+  const { products, productSizes } = useSelector((state) => ({
     products: state.productReducer.products,
+    productSizes: state.productSizeReducer.productSizes
   }))
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [productsChange, setProductsChange] = useState([])
 
-  // Paging
-  const [paging, setPaging] = useState({
-    currentPage: 1,
-    itemsPerPage: 10,
-    numberPage: 1,
-    startIndexItem: 0,
-    endIndexItem: 10
-  })
-  
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+  // #region PAGING
+  const currentPage = searchParams.get('page') ?? 1
+  const itemsPerPage = searchParams.get('show') ?? 10
   const numberPage = (productsChange && productsChange.length != 0) ? Math.ceil(productsChange.length / itemsPerPage) : 1
   const startIndexItem = (currentPage - 1) * itemsPerPage
-  const endIndexItem = startIndexItem + itemsPerPage
+  const endIndexItem = parseInt(startIndexItem) + parseInt(itemsPerPage)
   const [rowsPerPage, setRowsPerPage] = useState([])
-  console.log(rowsPerPage)
-  // const [startIndexItem, setStartIndexItem] = useState()
 
-  useEffect(() => {
-    if (searchParams.get('page')) {
-      setCurrentPage(searchParams.get('page'))
-    }
-  }, [searchParams.get('page')])
-
-  useEffect(() => {
-    if (searchParams.get('show')) {
-      setItemsPerPage(searchParams.get('show'))
-    }
-  }, [searchParams.get('show')])
-
-  useEffect(() => {
-    if (products.length) {
-      setProductsChange(products)
-    }
-  }, [products])
-
-  useEffect(() => {
-    if (productsChange.length) {
-      setRowsPerPage(productsChange.slice(startIndexItem, endIndexItem))
-    }
-  }, [productsChange])
+  const handleShowing = (e) => {
+    e.preventDefault()
+    let show = parseInt(e.target.text)
+    searchParams.set('show', show)
+    setSearchParams(searchParams)
+  }
 
   const handlePaging = (e) => {
     e.preventDefault()
@@ -64,12 +38,12 @@ const ProductList = () => {
       case 'Previous':
         currentPage <= 1
           ? (searchParams.set('page', 1), setSearchParams(searchParams))
-          : (searchParams.set('page', parseInt(currentPage) - 1), setSearchParams(searchParams))
+          : (searchParams.set('page', parseInt(currentPage - 1)), setSearchParams(searchParams))
         break
       case 'Next':
         currentPage >= numberPage
           ? (searchParams.set('page', numberPage), setSearchParams(searchParams))
-          : (searchParams.set('page', parseInt(currentPage) + 1), setSearchParams(searchParams))
+          : (searchParams.set('page', parseInt(currentPage + 1)), setSearchParams(searchParams))
         break
       default:
         let page = parseInt(e.target.innerText)
@@ -79,13 +53,38 @@ const ProductList = () => {
     }
   }
 
-  const handleShowing = (e) => {
-    e.preventDefault()
-    let show = parseInt(e.target.text)
-    searchParams.set('show', show)
+  useEffect(() => {
+    setRowsPerPage(productsChange.slice(startIndexItem, endIndexItem))
+  }, [productsChange, startIndexItem, endIndexItem])
+  // #endregion
+
+  // #region FILTERING 
+  const priceFilter = searchParams.get('price') ?? 'price-all'
+  const sizeFilter = searchParams.get('size') ?? 'size-all'
+
+  const handleFilterByPrice = (e) => {
+    [...e.target.form].map((input) => {
+      input.checked = false
+    })
+    e.target.checked = true
+    let price = e.currentTarget.id
+    searchParams.set('price', price)
     setSearchParams(searchParams)
-    // setItemsPerPage(show)
   }
+
+  const handleFilterBySize = (e) => {
+    [...e.target.form].map((input) => {
+      input.checked = false
+    })
+    e.target.checked = true
+    let size = e.currentTarget.id
+    searchParams.set('size', size)
+    setSearchParams(searchParams)
+  }
+  // #endregion
+
+  // #region SORTING
+  const sorting = searchParams.get('sort') ?? 'lowest'
 
   const handleSorting = (e) => {
     e.preventDefault()
@@ -93,27 +92,86 @@ const ProductList = () => {
     searchParams.set('sort', sort)
     setSearchParams(searchParams)
   }
+  // #endregion
 
-  const handleFilterByPrice = (e) => {
-    let price = e.currentTarget.id
-    searchParams.set('price', price)
-    setSearchParams(searchParams)
-  }
-
-  const handleFilterBySize = (e) => {
-    let size = e.currentTarget.id
-    searchParams.set('size', size)
-    setSearchParams(searchParams)
-  }
-
+  // #region LOAD PRODUCTS
+  const categoryId = searchParams.get('category') ?? 0
+  
   useEffect(() => {
-    if (searchParams.get('category')) {
-      setProductsChange(products.filter(item => item.categoryId == searchParams.get('category')))
+    if (products.length) {
+      let newListProducts = products
+      let newListProductSizes = productSizes
+
+      if (categoryId != 0) {
+        newListProducts = newListProducts.filter(item => item.categoryId == categoryId)
+      }
+
+      switch (sorting) {
+        case 'lowest':
+          newListProducts = [...newListProducts.sort((productFirst, productSecond) => (productFirst.price - productSecond.price))]
+          break
+        case 'highest':
+          newListProducts = [...newListProducts.sort((productFirst, productSecond) => (productSecond.price - productFirst.price))]
+          break
+      }
+
+      switch (priceFilter) {
+        case 'price-all':
+          newListProducts = newListProducts
+          break
+        case 'price-1':
+          newListProducts = newListProducts.filter(item => (item.price > 0 && item.price <= 1000000))
+          break
+        case 'price-2':
+          newListProducts = newListProducts.filter(item => (item.price >= 1000000 && item.price <= 3000000))
+          break
+        case 'price-3':
+          newListProducts = newListProducts.filter(item => (item.price >= 3000000 && item.price <= 5000000))
+          break
+      }
+
+      switch (sizeFilter) {
+        case 'size-all':
+          newListProducts = newListProducts
+          break
+        case 'size-1':
+          newListProductSizes = newListProductSizes.filter(item => (item.value >= 30 && item.value <= 35))
+          // newListProducts = newListProducts.filter(product => {
+          //   let productList = []
+          //   newListProductSizes.map()
+          //   return newListProductSizes.map(size => size.productId == product.entityId)
+          // })
+         
+          console.log(newListProductSizes)
+          break
+        case 'size-2':
+          newListProductSizes = newListProductSizes.filter(item => (item.value >= 35 && item.value <= 40))
+          let a = [];
+          newListProductSizes.forEach((item, index) => {
+              if(a.findIndex(x => x == item.productId) < 0) {
+                  a.push(item.productId);
+              }
+          })
+          console.log(a);
+          debugger;
+          console.log(newListProductSizes)
+          // newListProducts = newListProducts.filter(item => (item.price > 1000000 && item.price <= 3000000))
+          break
+        case 'size-3':
+          newListProductSizes = newListProductSizes.filter(item => (item.value >= 40 && item.value <= 45))
+          console.log(newListProductSizes)
+          // newListProducts = newListProducts.filter(item => (item.price > 3000000 && item.price <= 5000000))
+          break
+      }
+
+      setProductsChange(newListProducts)
     }
-  }, [searchParams.get('category')])
+  }, [searchParams.get('category'), searchParams.get('price'), searchParams.get('size'), searchParams.get('sort'), products, productSizes])
+  // #endregion
 
   useEffect(() => {
     dispatch(getAllProduct())
+    dispatch(getAllProductSize())
   }, [dispatch])
 
   useEffect(() => {
@@ -129,7 +187,11 @@ const ProductList = () => {
       />
       <div className="container-fluid">
         <div className="row px-xl-5">
-          <Sidebar handleFilterByPrice={handleFilterByPrice} handleFilterBySize={handleFilterBySize} />
+          <Sidebar
+            priceFilter={priceFilter}
+            sizeFilter={sizeFilter}
+            handleFilterByPrice={handleFilterByPrice}
+            handleFilterBySize={handleFilterBySize} />
 
           {/* Shop Product */}
           <div className="col-lg-9 col-md-8">
@@ -167,7 +229,10 @@ const ProductList = () => {
                 )
               })}
 
-              <Paging currentPage={currentPage} numberPage={numberPage} handlePaging={handlePaging} />
+              <Paging
+                currentPage={currentPage}
+                numberPage={numberPage}
+                handlePaging={handlePaging} />
             </div>
           </div>
         </div>

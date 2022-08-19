@@ -18,7 +18,7 @@ import dao.impl.ProductSizeDAOImpl;
 
 import entities.ProductSize;
 
-@Path(value = "/productSizes")
+@Path(value = "/product-sizes")
 public class ProductSizeController {
 	@GET
 	@Path("/get-all")
