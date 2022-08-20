@@ -3,15 +3,16 @@ import Sidebar from "./components/Sidebar"
 import { Breadcrumb, ProductItem } from "@/components"
 import { Link, useSearchParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
-import { getAllProduct, getAllProductSize } from '@/stores/actions'
+import { getAllProduct, getAllProductSize, getAllCategory } from '@/stores/actions'
 import Paging from "./components/Paging"
 
 const ProductList = () => {
   const dispatch = useDispatch()
 
-  const { products, productSizes } = useSelector((state) => ({
+  const { products, productSizes, categories } = useSelector((state) => ({
     products: state.productReducer.products,
-    productSizes: state.productSizeReducer.productSizes
+    productSizes: state.productSizeReducer.productSizes,
+    categories: state.categoryReducer.categories,
   }))
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -59,8 +60,19 @@ const ProductList = () => {
   // #endregion
 
   // #region FILTERING 
+  const categoryFilter = searchParams.get('category') ?? 0
   const priceFilter = searchParams.get('price') ?? 'price-all'
   const sizeFilter = searchParams.get('size') ?? 'size-all'
+
+  const handleFilterByCategory = (e) => {
+    [...e.target.form].map((input) => {
+      input.checked = false
+    })
+    e.target.checked = true
+    let categoryId = e.currentTarget.id
+    searchParams.set('category', categoryId)
+    setSearchParams(searchParams)
+  }
 
   const handleFilterByPrice = (e) => {
     [...e.target.form].map((input) => {
@@ -96,11 +108,12 @@ const ProductList = () => {
 
   // #region LOAD PRODUCTS
   const categoryId = searchParams.get('category') ?? 0
-  
+
   useEffect(() => {
     if (products.length) {
       let newListProducts = products
       let newListProductSizes = productSizes
+      let listIdProductSize = []
 
       if (categoryId != 0) {
         newListProducts = newListProducts.filter(item => item.categoryId == categoryId)
@@ -136,31 +149,30 @@ const ProductList = () => {
           break
         case 'size-1':
           newListProductSizes = newListProductSizes.filter(item => (item.value >= 30 && item.value <= 35))
-          // newListProducts = newListProducts.filter(product => {
-          //   let productList = []
-          //   newListProductSizes.map()
-          //   return newListProductSizes.map(size => size.productId == product.entityId)
-          // })
-         
-          console.log(newListProductSizes)
+          newListProductSizes.forEach((item) => {
+            if (listIdProductSize.findIndex(x => x == item.productId) < 0) {
+              listIdProductSize.push(item.productId);
+            }
+          })
+          newListProducts = newListProducts.filter(item => listIdProductSize.findIndex(x => x == item.entityId) >= 0)
           break
         case 'size-2':
           newListProductSizes = newListProductSizes.filter(item => (item.value >= 35 && item.value <= 40))
-          let a = [];
-          newListProductSizes.forEach((item, index) => {
-              if(a.findIndex(x => x == item.productId) < 0) {
-                  a.push(item.productId);
-              }
+          newListProductSizes.forEach((item) => {
+            if (listIdProductSize.findIndex(x => x == item.productId) < 0) {
+              listIdProductSize.push(item.productId);
+            }
           })
-          console.log(a);
-          debugger;
-          console.log(newListProductSizes)
-          // newListProducts = newListProducts.filter(item => (item.price > 1000000 && item.price <= 3000000))
+          newListProducts = newListProducts.filter(item => listIdProductSize.findIndex(x => x == item.entityId) >= 0)
           break
         case 'size-3':
           newListProductSizes = newListProductSizes.filter(item => (item.value >= 40 && item.value <= 45))
-          console.log(newListProductSizes)
-          // newListProducts = newListProducts.filter(item => (item.price > 3000000 && item.price <= 5000000))
+          newListProductSizes.forEach((item) => {
+            if (listIdProductSize.findIndex(x => x == item.productId) < 0) {
+              listIdProductSize.push(item.productId);
+            }
+          })
+          newListProducts = newListProducts.filter(item => listIdProductSize.findIndex(x => x == item.entityId) >= 0)
           break
       }
 
@@ -172,6 +184,7 @@ const ProductList = () => {
   useEffect(() => {
     dispatch(getAllProduct())
     dispatch(getAllProductSize())
+    dispatch(getAllCategory())
   }, [dispatch])
 
   useEffect(() => {
@@ -188,8 +201,11 @@ const ProductList = () => {
       <div className="container-fluid">
         <div className="row px-xl-5">
           <Sidebar
+            categories={categories}
+            categoryFilter={categoryFilter}
             priceFilter={priceFilter}
             sizeFilter={sizeFilter}
+            handleFilterByCategory={handleFilterByCategory}
             handleFilterByPrice={handleFilterByPrice}
             handleFilterBySize={handleFilterBySize} />
 
@@ -224,15 +240,10 @@ const ProductList = () => {
               </div>
 
               {rowsPerPage.map((item, index) => {
-                return (
-                  <ProductItem key={index} product={item} grid={{ lg: 4, md: 6, sm: 6 }} />
-                )
+                return (<ProductItem key={index} product={item} grid={{ lg: 4, md: 6, sm: 6 }} />)
               })}
 
-              <Paging
-                currentPage={currentPage}
-                numberPage={numberPage}
-                handlePaging={handlePaging} />
+              <Paging currentPage={currentPage} numberPage={numberPage} handlePaging={handlePaging} />
             </div>
           </div>
         </div>

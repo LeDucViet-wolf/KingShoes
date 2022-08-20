@@ -52,8 +52,8 @@ const RelatedProduct = ({ ...props }) => {
           {products
             ? products
               .filter((x, index) => index < 4)
-              .map((item, i) => (
-                <ProductItem product={item} grid={{ lg: 3, md: 4, sm: 6 }} />
+              .map((item) => (
+                <ProductItem key={item.entityId} product={item} grid={{ lg: 3, md: 4, sm: 6 }} />
               ))
             : ""}
         </div>

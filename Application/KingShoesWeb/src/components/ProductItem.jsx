@@ -10,7 +10,7 @@ const ProductItem = ({ ...props }) => {
                 <div className="product-img position-relative overflow-hidden">
                     <img
                         className="img-fluid w-100"
-                        src="img/product-1.jpg"
+                        src="img/test/air-force-1-38(1).jpg"
                         alt=""
                     />
                     <div className="product-action">

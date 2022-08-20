@@ -3,9 +3,11 @@ import { Breadcrumb } from "@/components";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllCustomer } from "@/stores/actions";
 import bcrypt from "bcryptjs";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { customers } = useSelector((state) => ({
     customers: state.customerReducer.customers,
@@ -58,6 +60,8 @@ const Login = () => {
       });
       if (customer && customer.length > 0) {
         localStorage.setItem("customer-login", JSON.stringify(customer));
+        navigate("/");
+        alert("Login success!");
       } else {
         alert("Email or Password is not match!");
       }

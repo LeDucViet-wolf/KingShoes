@@ -1,12 +1,50 @@
 import React from 'react'
 
 const Sidebar = ({ ...props }) => {
-    const { priceFilter, sizeFilter, handleFilterByPrice, handleFilterBySize } = props
+    const {
+        categories,
+        categoryFilter,
+        priceFilter,
+        sizeFilter,
+        handleFilterByCategory,
+        handleFilterByPrice,
+        handleFilterBySize } = props
 
     return (
         <>
             {/* Shop Sidebar */}
             <div className="col-lg-3 col-md-4">
+                <h5 className="section-title position-relative text-uppercase mb-3">
+                    <span className="bg-secondary pr-3">Filter by category</span>
+                </h5>
+                <div className="bg-light p-4 mb-30">
+                    <form>
+                        <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input
+                                type="checkbox"
+                                onClick={handleFilterByCategory}
+                                className="custom-control-input"
+                                {...{ defaultChecked: (categoryFilter == 0) ? true : false }}
+                                id={0} />
+                            <label className="custom-control-label" htmlFor={0}>All Category</label>
+                        </div>
+                        {
+                            categories
+                                ? categories.map(item => (
+                                    <div key={item.entityId} className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                                        <input
+                                            type="checkbox"
+                                            onClick={handleFilterByCategory}
+                                            className="custom-control-input"
+                                            {...{ defaultChecked: categoryFilter == item.entityId ? true : false }}
+                                            id={item.entityId} />
+                                        <label className="custom-control-label" htmlFor={item.entityId}>{item.name}</label>
+                                    </div>))
+                                : ""
+                        }
+                    </form>
+                </div>
+
                 <h5 className="section-title position-relative text-uppercase mb-3">
                     <span className="bg-secondary pr-3">Filter by price</span>
                 </h5>
@@ -51,7 +89,9 @@ const Sidebar = ({ ...props }) => {
                     </form>
                 </div>
 
-                <h5 className="section-title position-relative text-uppercase mb-3"><span className="bg-secondary pr-3">Filter by size</span></h5>
+                <h5 className="section-title position-relative text-uppercase mb-3">
+                    <span className="bg-secondary pr-3">Filter by size</span>
+                </h5>
                 <div className="bg-light p-4 mb-30">
                     <form>
                         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">

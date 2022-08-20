@@ -407,7 +407,7 @@ values
         0,
         'nguyenngocthuy@gmail.com',
         '0832536199',
-        '123',
+        '$2a$10$RUTh77wcxEOd7QgdhRajLuGiAsIKxkBhU1zUkx9zTCTuZt/YNcNpC', -- 123
         'Khu tập thể A3 Nam Đồng, A1P49, Phố P. Hồ Đắc Di, Nam Đồng, Đống Đa, Hà Nội',
         1
     ),
@@ -418,7 +418,7 @@ values
         1,
         'daoducthanh@gmail.com',
         '0832536200',
-        '123',
+        '$2a$10$RUTh77wcxEOd7QgdhRajLuGiAsIKxkBhU1zUkx9zTCTuZt/YNcNpC', -- 123
         'Tòa nhà C´Land, 156 Ng. Xã Đàn 2, Nam Đồng, Đống Đa, Hà Nội',
         0
     ),

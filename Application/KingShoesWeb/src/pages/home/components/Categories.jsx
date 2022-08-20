@@ -56,9 +56,9 @@ const Categories = () => {
                     <div className="cat-item d-flex align-items-center mb-4">
                       <div
                         className="overflow-hidden"
-                        style={{ width: "100px", height: "100px" }}
+                        style={{ width: "150px", height: "auto" }}
                       >
-                        <img className="img-fluid" src="" alt="" />
+                        <img className="img-fluid" src="/img/test/adidas.jpg" alt="" />
                       </div>
                       <div className="flex-fill pl-3">
                         <h6>{item.name}</h6>
