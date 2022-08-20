@@ -9,7 +9,7 @@ import dao.ProductReviewDAO;
 import entities.ProductReview;
 import utils.HibernateUtil;
 
-public class ProductReviewDAOImpl implements ProductReviewDAO{
+public class ProductReviewDAOImpl implements ProductReviewDAO {
 	@Override
 	public List<ProductReview> getAll() {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -17,6 +17,25 @@ public class ProductReviewDAOImpl implements ProductReviewDAO{
 		try {
 			session.beginTransaction();
 			List<ProductReview> list = session.createQuery("from ProductReview", ProductReview.class).list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+
+	public List<ProductReview> getByProductId(int productId) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List<ProductReview> list = session
+					.createQuery("from ProductReview where productId = :productId", ProductReview.class)
+					.setParameter("productId", productId).list();
 			session.getTransaction().commit();
 			return list;
 		} catch (Exception e) {
@@ -36,7 +55,7 @@ public class ProductReviewDAOImpl implements ProductReviewDAO{
 			return productReview;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return null;
@@ -53,7 +72,7 @@ public class ProductReviewDAOImpl implements ProductReviewDAO{
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return 0;
@@ -70,7 +89,7 @@ public class ProductReviewDAOImpl implements ProductReviewDAO{
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return 0;
@@ -87,7 +106,7 @@ public class ProductReviewDAOImpl implements ProductReviewDAO{
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return 0;

@@ -11,30 +11,68 @@ const ProductDetail = () => {
 
   // Param url
   const [searchParams, setSearchParams] = useSearchParams();
-  const productId = searchParams.get('productId')
+  const productId = searchParams.get("productId");
   const [product, getProduct] = useState([]);
   const [productSize, getProductSize] = useState([]);
+  const [productReview, getProductReview] = useState([]);
+  const [productReviewCount, getProductReviewCount] = useState([]);
+  const [overallReview, getOverallReview] = useState([]);
 
   const fetchData = () => {
     var configGetProductData = {
-      method: "get",
-      url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
-    },
+        method: "get",
+        url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
+      },
       configGetProductSizeData = {
         method: "get",
-        url:
-          `http://localhost:8080/KingShoesApi/api/productSizes/get-by-product-id/${productId}`,
+        url: `http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id/${productId}`,
+      },
+      configGetProductReviewData = {
+        method: "get",
+        url: `http://localhost:8080/KingShoesApi/api/product-reviews/get-by-product-id/${productId}`,
       };
     axios(configGetProductData)
       .then(function (response) {
         getProduct(response.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
     axios(configGetProductSizeData)
       .then(function (response) {
         getProductSize(response.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
+    axios(configGetProductReviewData)
+      .then((response) => {
+        var configGetCustomerData = {
+          method: "get",
+          url: `http://localhost:8080/KingShoesApi/api/customers/get-all`,
+        };
+        axios(configGetCustomerData)
+          .then(function (res) {
+            var data = [],
+              overall = 0;
+            response.data.forEach((e) => {
+              overall += parseInt(e.point);
+              data.push({
+                entityId: e.entityId,
+                productId: e.productId,
+                customerId: e.customerId,
+                comment: e.comment,
+                point: e.point,
+                customer: res.data.filter((x) => x.entityId == e.customerId)[0],
+              });
+            });
+            getOverallReview(Number((overall / data.length).toFixed(0)));
+            getProductReview(data);
+            getProductReviewCount(data.length);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -42,8 +80,8 @@ const ProductDetail = () => {
   }, [productId]);
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [productId])
+    window.scrollTo(0, 0);
+  }, [productId]);
 
   return (
     <>
@@ -112,13 +150,16 @@ const ProductDetail = () => {
               <h3>{product.name}</h3>
               <div className="d-flex mb-3">
                 <div className="text-primary mr-2">
-                  <small className="fas fa-star"></small>
-                  <small className="fas fa-star"></small>
-                  <small className="fas fa-star"></small>
-                  <small className="fas fa-star-half-alt"></small>
-                  <small className="far fa-star"></small>
+                  {[...Array(overallReview)].map((item, i) => (
+                    <small key={i} className="fas fa-star"></small>
+                  ))}
+                  {overallReview < 5
+                    ? [...Array(5 - overallReview)].map((item, i) => (
+                        <small key={i} className="far fa-star"></small>
+                      ))
+                    : ""}
                 </div>
-                <small className="pt-1">(99 Reviews)</small>
+                <small className="pt-1">({productReviewCount} Reviews)</small>
               </div>
               <h3 className="font-weight-semi-bold mb-4">
                 {product.price} VND
@@ -129,21 +170,24 @@ const ProductDetail = () => {
                 <form>
                   {productSize
                     ? productSize.map((item, i) => (
-                      <div key={i} className="custom-control custom-radio custom-control-inline">
-                        <input
-                          type="radio"
-                          className="custom-control-input"
-                          id={item.value}
-                          name="size"
-                        />
-                        <label
-                          className="custom-control-label"
-                          htmlFor={item.value}
+                        <div
+                          key={i}
+                          className="custom-control custom-radio custom-control-inline"
                         >
-                          {item.value}
-                        </label>
-                      </div>
-                    ))
+                          <input
+                            type="radio"
+                            className="custom-control-input"
+                            id={item.value}
+                            name="size"
+                          />
+                          <label
+                            className="custom-control-label"
+                            htmlFor={item.value}
+                          >
+                            {item.value}
+                          </label>
+                        </div>
+                      ))
                     : ""}
                 </form>
               </div>
@@ -208,7 +252,7 @@ const ProductDetail = () => {
                   datatoggle="tab"
                   href="#tab-pane-2"
                 >
-                  Reviews (0)
+                  Reviews ({productReviewCount})
                 </a>
               </div>
               <div className="tab-content">
@@ -223,36 +267,46 @@ const ProductDetail = () => {
                 <div className="tab-pane fade" id="tab-pane-2">
                   <div className="row">
                     <div className="col-md-6">
-                      <h4 className="mb-4">1 review for "Product Name"</h4>
-                      <div className="media mb-4">
-                        <img
-                          src="../../../public/img/user.jpg"
-                          alt="Image"
-                          className="img-fluid mr-3 mt-1"
-                          style={{ width: "45px" }}
-                        />
-                        <div className="media-body">
-                          <h6>
-                            John Doe
-                            <small>
-                              {" "}
-                              - <i>01 Jan 2045</i>
-                            </small>
-                          </h6>
-                          <div className="text-primary mb-2">
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star-half-alt"></i>
-                            <i className="far fa-star"></i>
-                          </div>
-                          <p>
-                            Diam amet duo labore stet elitr ea clita ipsum,
-                            tempor labore accusam ipsum et no at. Kasd diam
-                            tempor rebum magna dolores sed sed eirmod ipsum.
-                          </p>
-                        </div>
-                      </div>
+                      <h4 className="mb-4">
+                        {productReviewCount} review for "{product.name}"
+                      </h4>
+                      {productReview
+                        ? productReview.map((item, i) => (
+                            <div key={i} className="media mb-4">
+                              <img
+                                src="../../../public/img/user.jpg"
+                                alt="Image"
+                                className="img-fluid mr-3 mt-1"
+                                style={{ width: "45px" }}
+                              />
+                              <div className="media-body">
+                                <h6>
+                                  {item.customer.firstName +
+                                    " " +
+                                    item.customer.lastName}
+                                </h6>
+                                <div className="text-primary mb-2">
+                                  {[...Array(parseInt(item.point))].map(
+                                    (item, i) => (
+                                      <i key={i} className="fas fa-star"></i>
+                                    )
+                                  )}
+                                  {parseInt(item.point) < 5
+                                    ? [...Array(5 - parseInt(item.point))].map(
+                                        (item, i) => (
+                                          <i
+                                            key={i}
+                                            className="far fa-star"
+                                          ></i>
+                                        )
+                                      )
+                                    : ""}
+                                </div>
+                                <p>{item.comment}</p>
+                              </div>
+                            </div>
+                          ))
+                        : ""}
                     </div>
                     <div className="col-md-6">
                       <h4 className="mb-4">Leave a review</h4>

@@ -20,25 +20,35 @@ import entities.ProductReview;
 @Path(value = "/product-reviews")
 public class ProductReviewController {
 	@GET
-    @Path("/get-all")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getAll() {
-        List<ProductReview> list = new ProductReviewDAOImpl().getAll();
-        Gson son = new Gson();
-        String data = son.toJson(list);
-        return data;
-    }
-	
+	@Path("/get-all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getAll() {
+		List<ProductReview> list = new ProductReviewDAOImpl().getAll();
+		Gson son = new Gson();
+		String data = son.toJson(list);
+		return data;
+	}
+
+	@GET
+	@Path("/get-by-product-id/{productId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getByProductId(@PathParam("productId") int productId) {
+		List<ProductReview> list = new ProductReviewDAOImpl().getByProductId(productId);
+		Gson son = new Gson();
+		String data = son.toJson(list);
+		return data;
+	}
+
 	@GET
 	@Path("/get-by-id/{entityId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getById(@PathParam("entityId")int entityId) {
+	public String getById(@PathParam("entityId") int entityId) {
 		ProductReview productReview = new ProductReviewDAOImpl().getById(entityId);
 		Gson son = new Gson();
 		String data = son.toJson(productReview);
 		return data;
 	}
-	
+
 	@POST
 	@Path("/insert")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -49,7 +59,7 @@ public class ProductReviewController {
 		String data = son.toJson(result);
 		return data;
 	}
-	
+
 	@PUT
 	@Path("/update")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -60,11 +70,11 @@ public class ProductReviewController {
 		String data = son.toJson(result);
 		return data;
 	}
-	
+
 	@DELETE
 	@Path("/delete/{entityId}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String delete(@PathParam("entityId")int entityId) {
+	public String delete(@PathParam("entityId") int entityId) {
 		int result = new ProductReviewDAOImpl().delete(entityId);
 		Gson son = new Gson();
 		String data = son.toJson(result);
