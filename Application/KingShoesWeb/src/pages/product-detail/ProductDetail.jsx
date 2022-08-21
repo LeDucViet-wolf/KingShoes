@@ -17,6 +17,19 @@ const ProductDetail = () => {
   const [productReview, getProductReview] = useState([]);
   const [productReviewCount, getProductReviewCount] = useState([]);
   const [overallReview, getOverallReview] = useState([]);
+  const [qty, setQty] = useState();
+  const [isQtyValid, setIsQtyValid] = useState(true);
+  const qtyMessage = "Please enter a valid number in this field.";
+
+  const handleQty = (e) => {
+    var qty = e.target.value;
+    if (Math.floor(qty) == qty && $.isNumeric(qty) && Math.floor(qty) > 0) {
+      setQty(parseInt(e.target.value));
+      setIsQtyValid(true);
+    } else {
+      setIsQtyValid(false);
+    }
+  };
 
   const fetchData = () => {
     var configGetProductData = {
@@ -203,7 +216,10 @@ const ProductDetail = () => {
                   </div>
                   <input
                     type="text"
-                    className="form-control bg-secondary border-0 text-center"
+                    onChange={handleQty}
+                    className={`form-control bg-secondary border-0 text-center ${
+                      isQtyValid ? "" : "is-invalid"
+                    }`}
                     defaultValue="1"
                   />
                   <div className="input-group-btn">
@@ -216,22 +232,10 @@ const ProductDetail = () => {
                   <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
                 </button>
               </div>
-              <div className="d-flex pt-2">
-                <strong className="text-dark mr-2">Share on:</strong>
-                <div className="d-inline-flex">
-                  <a className="text-dark px-2" href="">
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a className="text-dark px-2" href="">
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                  <a className="text-dark px-2" href="">
-                    <i className="fab fa-linkedin-in"></i>
-                  </a>
-                  <a className="text-dark px-2" href="">
-                    <i className="fab fa-pinterest"></i>
-                  </a>
-                </div>
+              <div
+                className={`invalid-feedback ${isQtyValid ? "" : "d-block"}`}
+              >
+                {qtyMessage}
               </div>
             </div>
           </div>
