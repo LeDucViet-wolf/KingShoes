@@ -1,7 +1,12 @@
-import React from "react"
-import { NavLink, Link } from "react-router-dom"
+import React from "react";
+import { NavLink, Link } from "react-router-dom";
 
 const Header = () => {
+  const customer = localStorage.getItem("customer-login");
+  const logOut = (e) => {
+    localStorage.removeItem("customer-login");
+  };
+
   return (
     <>
       {/* Topbar */}
@@ -34,12 +39,31 @@ const Header = () => {
                   My Account
                 </button>
                 <div className="dropdown-menu dropdown-menu-right">
-                  <Link to="/login" className="dropdown-item" type="button">
-                    Sign in
-                  </Link>
-                  <Link to="/register" className="dropdown-item" type="button">
-                    Sign up
-                  </Link>
+                  {!customer ? (
+                    <>
+                      <Link to="/login" className="dropdown-item" type="button">
+                        Sign in
+                      </Link>
+                      <Link
+                        to="/register"
+                        className="dropdown-item"
+                        type="button"
+                      >
+                        Sign up
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <a
+                        href=""
+                        className="dropdown-item"
+                        type="button"
+                        onClick={logOut}
+                      >
+                        Logout
+                      </a>
+                    </>
+                  )}
                 </div>
               </div>
               <div className="btn-group mx-2">
@@ -215,9 +239,9 @@ const Header = () => {
             </nav>
           </div>
         </div>
-      </div >
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

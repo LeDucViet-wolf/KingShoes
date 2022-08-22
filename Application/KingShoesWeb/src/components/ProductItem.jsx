@@ -26,7 +26,7 @@ const ProductItem = ({ ...props }) => {
                     <Link to={`/product-detail?productId=${product.entityId}`} className="h6 text-decoration-none text-truncate">{product.name}</Link>
                     <p><strong>SKU: </strong>{product.sku}</p>
                     <div className="d-flex align-items-center justify-content-center mt-2">
-                        <h5>{product.price} VND</h5>
+                        <h5>{product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} VND</h5>
                     </div>
                     <div className="d-flex align-items-center justify-content-center mb-1">
                         <small className="fa fa-star text-primary mr-1"></small>

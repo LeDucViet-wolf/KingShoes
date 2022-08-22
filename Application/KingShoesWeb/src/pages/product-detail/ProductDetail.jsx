@@ -3,7 +3,7 @@ import axios from "axios";
 import RelatedProduct from "./components/RelatedProduct";
 import { Breadcrumb } from "@/components";
 import useScript from "@/hooks/useScript";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,8 +18,8 @@ const ProductDetail = () => {
   useScript("public/js/product-quantity");
   useScript("public/js/tab");
 
-  const navigate = useNavigate()
-  const customer = localStorage.getItem('customer-login');
+  const navigate = useNavigate();
+  const customer = localStorage.getItem("customer-login");
 
   // Param url
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,28 +30,86 @@ const ProductDetail = () => {
   const [productReview, getProductReview] = useState([]);
   const [productReviewCount, getProductReviewCount] = useState([]);
   const [overallReview, getOverallReview] = useState([]);
-  const [qty, setQty] = useState();
+  const [qty, setQty] = useState(1);
+  const [review, setReview] = useState("");
   const [isQtyValid, setIsQtyValid] = useState(true);
+  const [isReviewValid, setIsReviewValid] = useState(true);
+  const [isPointValid, setIsPointValid] = useState(true);
   const qtyMessage = "Please enter a valid number in this field.";
 
   // #region Rating
-  const stars = 5
+  const stars = 5;
   const [objRating, setObjRating] = useState({
     stars: 5,
     rating: 0,
     hovered: 0,
-    selectedClass: 'fas',
-    deselectedClass: "far"
-  })
+    selectedClass: "fas",
+    deselectedClass: "far",
+  });
+
+  const handleReiewChange = (e) => {
+    if (e.target.value) {
+      setReview(e.target.value);
+      setIsReviewValid(true);
+    } else {
+      setIsReviewValid(false);
+    }
+  };
+
+  const addToCart = (e) => {
+    console.log(qty);
+  };
 
   const hoverRating = (rating) => {
-    setObjRating({ ...objRating, hovered: rating })
-  }
+    setObjRating({ ...objRating, hovered: rating });
+  };
 
   const changeRating = (rating) => {
-    setObjRating({ ...objRating, rating: rating })
-  }
+    setIsPointValid(true);
+    setObjRating({ ...objRating, rating: rating });
+  };
   //  #endregion
+
+  const submitReview = (e) => {
+    e.preventDefault();
+    var valid = true;
+    if (objRating.rating < 1) {
+      setIsPointValid(false);
+      valid = false;
+    }
+
+    if (!review) {
+      setIsReviewValid(false);
+      valid = false;
+    }
+
+    if (valid) {
+      var customerData = JSON.parse(customer)[0];
+
+      const productReview = {
+        productId: parseInt(productId),
+        customerId: customerData.entityId,
+        comment: review,
+        point: objRating.rating,
+      };
+
+      axios
+        .post(
+          "http://localhost:8080/KingShoesApi/api/product-reviews/insert",
+          productReview
+        )
+        .then(function (response) {
+          if ((response.status = 200 && response.data)) {
+            fetchData();
+            changeRating(0);
+            setReview("");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
   const handleQty = (e) => {
     var qty = e.target.value;
@@ -65,9 +123,9 @@ const ProductDetail = () => {
 
   const fetchData = () => {
     var configGetProductData = {
-      method: "get",
-      url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
-    },
+        method: "get",
+        url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
+      },
       configGetProductSizeData = {
         method: "get",
         url: `http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id/${productId}`,
@@ -80,12 +138,14 @@ const ProductDetail = () => {
       .then(function (response) {
         getProduct(response.data);
       })
-      .catch((err) => { navigate('/product-list') });
+      .catch((err) => {
+        console.log(err);
+      });
     axios(configGetProductSizeData)
       .then(function (response) {
         getProductSize(response.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
     axios(configGetProductReviewData)
       .then((response) => {
         var configGetCustomerData = {
@@ -138,14 +198,22 @@ const ProductDetail = () => {
       <div className="container-fluid pb-5">
         <div className="row px-xl-5">
           <div className="col-lg-5 mb-30">
-            <Swiper navigation={true} modules={[Navigation]} className="bg-light mySwiper">
-              <SwiperSlide><img className="w-100 h-100" src="img/product-1.jpg" /></SwiperSlide>
-              <SwiperSlide><img className="w-100 h-100" src="img/product-2.jpg" /></SwiperSlide>
+            <Swiper
+              navigation={true}
+              modules={[Navigation]}
+              className="bg-light mySwiper"
+            >
+              <SwiperSlide>
+                <img className="w-100 h-100" src="img/product-1.jpg" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <img className="w-100 h-100" src="img/product-2.jpg" />
+              </SwiperSlide>
             </Swiper>
           </div>
           <div className="col-lg-7 h-auto mb-30">
             <div className="h-100 bg-light p-30">
-              <h3>{product.name}</h3>
+              <h3>{product.name ? product.name : null}</h3>
               <div className="d-flex mb-3">
                 <div className="text-primary mr-2">
                   {[...Array(overallReview)].map((item, i) => (
@@ -153,14 +221,19 @@ const ProductDetail = () => {
                   ))}
                   {overallReview < 5
                     ? [...Array(5 - overallReview)].map((item, i) => (
-                      <small key={i} className="far fa-star"></small>
-                    ))
+                        <small key={i} className="far fa-star"></small>
+                      ))
                     : ""}
                 </div>
                 <small className="pt-1">({productReviewCount} Reviews)</small>
               </div>
               <h3 className="font-weight-semi-bold mb-4">
-                {product.price} VND
+                {product.price
+                  ? product.price
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  : null}{" "}
+                VND
               </h3>
               <p className="mb-4">SKU: {product.sku}</p>
               <div className="d-flex mb-3">
@@ -168,24 +241,24 @@ const ProductDetail = () => {
                 <form>
                   {productSize
                     ? productSize.map((item, i) => (
-                      <div
-                        key={i}
-                        className="custom-control custom-radio custom-control-inline"
-                      >
-                        <input
-                          type="radio"
-                          className="custom-control-input"
-                          id={item.value}
-                          name="size"
-                        />
-                        <label
-                          className="custom-control-label"
-                          htmlFor={item.value}
+                        <div
+                          key={i}
+                          className="custom-control custom-radio custom-control-inline"
                         >
-                          {item.value}
-                        </label>
-                      </div>
-                    ))
+                          <input
+                            type="radio"
+                            className="custom-control-input"
+                            id={item.value}
+                            name="size"
+                          />
+                          <label
+                            className="custom-control-label"
+                            htmlFor={item.value}
+                          >
+                            {item.value}
+                          </label>
+                        </div>
+                      ))
                     : ""}
                 </form>
               </div>
@@ -202,8 +275,9 @@ const ProductDetail = () => {
                   <input
                     type="text"
                     onChange={handleQty}
-                    className={`form-control bg-secondary border-0 text-center ${isQtyValid ? "" : "is-invalid"
-                      }`}
+                    className={`form-control bg-secondary border-0 text-center ${
+                      isQtyValid ? "" : "is-invalid"
+                    }`}
                     defaultValue="1"
                   />
                   <div className="input-group-btn">
@@ -212,7 +286,7 @@ const ProductDetail = () => {
                     </button>
                   </div>
                 </div>
-                <button className="btn btn-primary px-3">
+                <button className="btn btn-primary px-3" onClick={addToCart}>
                   <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
                 </button>
               </div>
@@ -260,82 +334,108 @@ const ProductDetail = () => {
                       </h4>
                       {productReview
                         ? productReview.map((item, i) => (
-                          <div key={i} className="media mb-4">
-                            <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
-                            <div className="media-body">
-                              <h6>{`${item.customer.firstName} ${item.customer.lastName}`}</h6>
-                              <div className="text-primary mb-2">
-                                {[...Array(parseInt(item.point))].map(
-                                  (item, i) => (
-                                    <i key={i} className="fas fa-star"></i>
-                                  )
-                                )}
-                                {parseInt(item.point) < 5
-                                  ? [...Array(5 - parseInt(item.point))].map(
+                            <div key={i} className="media mb-4">
+                              <img
+                                src="img/user.jpg"
+                                className="img-fluid mr-3 mt-1"
+                                style={{ width: "45px" }}
+                              />
+                              <div className="media-body">
+                                <h6>{`${item.customer.firstName} ${item.customer.lastName}`}</h6>
+                                <div className="text-primary mb-2">
+                                  {[...Array(parseInt(item.point))].map(
                                     (item, i) => (
-                                      <i
-                                        key={i}
-                                        className="far fa-star"
-                                      ></i>
+                                      <i key={i} className="fas fa-star"></i>
                                     )
-                                  )
-                                  : ""}
+                                  )}
+                                  {parseInt(item.point) < 5
+                                    ? [...Array(5 - parseInt(item.point))].map(
+                                        (item, i) => (
+                                          <i
+                                            key={i}
+                                            className="far fa-star"
+                                          ></i>
+                                        )
+                                      )
+                                    : ""}
+                                </div>
+                                <p>{item.comment}</p>
                               </div>
-                              <p>{item.comment}</p>
                             </div>
-                          </div>
-                        ))
+                          ))
                         : ""}
                     </div>
-                    <div className="col-md-6">
-                      <h4 className="mb-4">Leave a review</h4>
-                      <small>
-                        Your email address will not be published. Required
-                        fields are marked *
-                      </small>
-                      <div className="d-flex my-3">
-                        <p className="mb-0 mr-2">Your Rating * :</p>
-                        <div className="text-primary">
-                          {[...Array(objRating.stars)].map((item, index) => {
-                            let star = index + 1
-                            return (
-                              <i
-                                onClick={() => changeRating(star)}
-                                onMouseEnter={() => hoverRating(star)}
-                                onMouseLeave={() => hoverRating(0)}
-                                key={index + 1}
-                                className={
-                                  `${objRating.rating < star
-                                    ? objRating.hovered < star
-                                      ? objRating.deselectedClass
+                    {customer ? (
+                      <div className="col-md-6">
+                        <h4 className="mb-4">Leave a review</h4>
+                        <small>
+                          Your email address will not be published. Required
+                          fields are marked *
+                        </small>
+                        <div className="d-flex my-3">
+                          <p className="mb-0 mr-2">Your Rating * :</p>
+                          <div className="text-primary">
+                            {[...Array(objRating.stars)].map((item, index) => {
+                              let star = index + 1;
+                              return (
+                                <i
+                                  onClick={() => changeRating(star)}
+                                  onMouseEnter={() => hoverRating(star)}
+                                  onMouseLeave={() => hoverRating(0)}
+                                  key={index + 1}
+                                  className={`${
+                                    objRating.rating < star
+                                      ? objRating.hovered < star
+                                        ? objRating.deselectedClass
+                                        : objRating.selectedClass
                                       : objRating.selectedClass
-                                    : objRating.selectedClass} 
-                                  fa-star`
-                                }>
-                              </i>
-                            )
-                          })}
+                                  } 
+                                  fa-star`}
+                                ></i>
+                              );
+                            })}
+                          </div>
                         </div>
+                        <div
+                          className={`invalid-feedback ${
+                            isPointValid ? "" : "d-block"
+                          }`}
+                        >
+                          Please choose your rating.
+                        </div>
+                        <form>
+                          <div className="form-group">
+                            <label htmlFor="message">Your Review *</label>
+                            <textarea
+                              onChange={handleReiewChange}
+                              id="message"
+                              cols="30"
+                              rows="5"
+                              className={`form-control ${
+                                isReviewValid ? "" : "is-invalid"
+                              }`}
+                              value={review}
+                            ></textarea>
+                            <div className="invalid-feedback">
+                              Please enter your review.
+                            </div>
+                          </div>
+                          <div className="form-group mb-0">
+                            <input
+                              onClick={submitReview}
+                              type="submit"
+                              defaultValue="Leave Your Review"
+                              className="btn btn-primary px-3"
+                            />
+                          </div>
+                        </form>
                       </div>
-                      <form>
-                        <div className="form-group">
-                          <label htmlFor="message">Your Review *</label>
-                          <textarea
-                            id="message"
-                            cols="30"
-                            rows="5"
-                            className="form-control"
-                          ></textarea>
-                        </div>
-                        <div className="form-group mb-0">
-                          <input
-                            type="submit"
-                            defaultValue="Leave Your Review"
-                            className="btn btn-primary px-3"
-                          />
-                        </div>
-                      </form>
-                    </div>
+                    ) : (
+                      <div>
+                        Please <Link to={"/login"}>Login</Link> or{" "}
+                        <Link to={"/register"}>Register</Link> to review
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
