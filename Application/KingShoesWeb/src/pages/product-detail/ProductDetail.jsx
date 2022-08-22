@@ -31,11 +31,14 @@ const ProductDetail = () => {
   const [productReviewCount, getProductReviewCount] = useState([]);
   const [overallReview, getOverallReview] = useState([]);
   const [qty, setQty] = useState(1);
+  const [size, setSize] = useState();
   const [review, setReview] = useState("");
   const [isQtyValid, setIsQtyValid] = useState(true);
   const [isReviewValid, setIsReviewValid] = useState(true);
   const [isPointValid, setIsPointValid] = useState(true);
-  const qtyMessage = "Please enter a valid number in this field.";
+  const [isSizeValid, setIsSizeValid] = useState(true);
+  const qtyMessage =
+    "Please enter a valid number in this field and quantity must bigger than 0.";
 
   // #region Rating
   const stars = 5;
@@ -57,7 +60,84 @@ const ProductDetail = () => {
   };
 
   const addToCart = (e) => {
-    console.log(qty);
+    e.preventDefault();
+    var valid = true;
+    if (!size) {
+      setIsSizeValid(false);
+      valid = false;
+    } else {
+      setIsSizeValid(true);
+    }
+
+    if (!qty) {
+      setIsQtyValid(false);
+      valid = false;
+    } else {
+      setIsQtyValid(true);
+    }
+
+    if (valid) {
+      var cart = localStorage.getItem("cart")
+        ? JSON.parse(localStorage.getItem("cart"))
+        : [];
+      if (cart.length > 0) {
+        var existProductInCart = cart.filter(
+          (x) => x.productId == productId && x.size == parseInt(size)
+        );
+        if (existProductInCart.length > 0) {
+          var cartItem = {
+            productId: parseInt(productId),
+            product: product,
+            size: parseInt(size),
+            qty: existProductInCart[0].qty + parseInt(qty),
+          };
+
+          cart.forEach((item, index) => {
+            if (
+              item.productId === parseInt(productId) &&
+              item.size === parseInt(size)
+            ) {
+              cart[index] = cartItem;
+            }
+          });
+        } else {
+          var cartItem = {
+            productId: parseInt(productId),
+            product: product,
+            size: parseInt(size),
+            qty: parseInt(qty),
+          };
+          cart.push(cartItem);
+        }
+
+        localStorage.setItem("cart", cart);
+      } else {
+        var cartItem = {
+          productId: parseInt(productId),
+          product: product,
+          size: parseInt(size),
+          qty: parseInt(qty),
+        };
+
+        cart.push(cartItem);
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  };
+
+  const handleSizeChange = (e) => {
+    setSize(e.target.value);
+    setIsSizeValid(true);
+  };
+
+  const minusQty = (e) => {
+    if (qty > 0) {
+      setQty(qty - 1);
+    }
+  };
+
+  const plusQty = (e) => {
+    setQty(qty + 1);
   };
 
   const hoverRating = (rating) => {
@@ -148,32 +228,41 @@ const ProductDetail = () => {
       .catch((err) => {});
     axios(configGetProductReviewData)
       .then((response) => {
-        var configGetCustomerData = {
-          method: "get",
-          url: `http://localhost:8080/KingShoesApi/api/customers/get-all`,
-        };
-        axios(configGetCustomerData)
-          .then(function (res) {
-            var data = [],
-              overall = 0;
-            response.data.forEach((e) => {
-              overall += parseInt(e.point);
-              data.push({
-                entityId: e.entityId,
-                productId: e.productId,
-                customerId: e.customerId,
-                comment: e.comment,
-                point: e.point,
-                customer: res.data.filter((x) => x.entityId == e.customerId)[0],
+        if (response.data.length > 0) {
+          var configGetCustomerData = {
+            method: "get",
+            url: `http://localhost:8080/KingShoesApi/api/customers/get-all`,
+          };
+          axios(configGetCustomerData)
+            .then(function (res) {
+              var data = [],
+                overall = 0;
+              response.data.forEach((e) => {
+                overall += parseInt(e.point);
+                data.push({
+                  entityId: e.entityId,
+                  productId: e.productId,
+                  customerId: e.customerId,
+                  comment: e.comment,
+                  point: e.point,
+                  customer: res.data.filter(
+                    (x) => x.entityId == e.customerId
+                  )[0],
+                });
               });
+              getOverallReview(Number((overall / data.length).toFixed(0)));
+              getProductReview(data);
+              getProductReviewCount(data.length);
+            })
+            .catch((err) => {
+              console.log(err);
             });
-            getOverallReview(Number((overall / data.length).toFixed(0)));
-            getProductReview(data);
-            getProductReviewCount(data.length);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        } else {
+          var data = [];
+          getOverallReview(0);
+          getProductReview(data);
+          getProductReviewCount(data.length);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -249,7 +338,9 @@ const ProductDetail = () => {
                             type="radio"
                             className="custom-control-input"
                             id={item.value}
+                            value={item.value}
                             name="size"
+                            onChange={handleSizeChange}
                           />
                           <label
                             className="custom-control-label"
@@ -262,13 +353,21 @@ const ProductDetail = () => {
                     : ""}
                 </form>
               </div>
+              <div
+                className={`invalid-feedback ${isSizeValid ? "" : "d-block"}`}
+              >
+                Please choose your size.
+              </div>
               <div className="d-flex align-items-center mb-4 pt-2">
                 <div
                   className="input-group quantity mr-3"
                   style={{ width: "130px" }}
                 >
                   <div className="input-group-btn">
-                    <button className="btn btn-primary btn-minus">
+                    <button
+                      className="btn btn-primary btn-minus"
+                      onClick={minusQty}
+                    >
                       <i className="fa fa-minus"></i>
                     </button>
                   </div>
@@ -281,7 +380,10 @@ const ProductDetail = () => {
                     defaultValue="1"
                   />
                   <div className="input-group-btn">
-                    <button className="btn btn-primary btn-plus">
+                    <button
+                      className="btn btn-primary btn-plus"
+                      onClick={plusQty}
+                    >
                       <i className="fa fa-plus"></i>
                     </button>
                   </div>
