@@ -18,6 +18,37 @@ const ProductList = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [productsChange, setProductsChange] = useState([])
 
+  const productLength = products.length
+
+  const productPriceLength01 = products.filter(item => (item.price > 0 && item.price <= 1000000)).length
+  const productPriceLength13 = products.filter(item => (item.price >= 1000000 && item.price <= 3000000)).length
+  const productPriceLength35 = products.filter(item => (item.price >= 3000000 && item.price <= 5000000)).length
+
+  const idProductSize3035 = []
+  productSizes.filter(item => (item.value >= 30 && item.value <= 35)).map((item) => {
+    if (idProductSize3035.findIndex(x => x == item.productId) < 0) {
+      idProductSize3035.push(item.productId);
+    }
+  })
+  const productSizeLength3035 = idProductSize3035.length
+
+  const idProductSize3540 = []
+  productSizes.filter(item => (item.value >= 35 && item.value <= 40)).map((item) => {
+    if (idProductSize3540.findIndex(x => x == item.productId) < 0) {
+      idProductSize3540.push(item.productId);
+    }
+  })
+  const productSizeLength3540 = idProductSize3540.length
+
+  const idProductSize4045 = []
+  productSizes.filter(item => (item.value >= 40 && item.value <= 45)).map((item) => {
+    if (idProductSize4045.findIndex(x => x == item.productId) < 0) {
+      idProductSize4045.push(item.productId);
+    }
+  })
+  const productSizeLength4045 = idProductSize4045.length
+
+
   // #region PAGING
   const currentPage = searchParams.get('page') ?? 1
   const itemsPerPage = searchParams.get('show') ?? 10
@@ -201,6 +232,14 @@ const ProductList = () => {
       <div className="container-fluid">
         <div className="row px-xl-5">
           <Sidebar
+            products={products}
+            productLength={productLength}
+            productPriceLength01={productPriceLength01}
+            productPriceLength13={productPriceLength13}
+            productPriceLength35={productPriceLength35}
+            productSizeLength3035={productSizeLength3035}
+            productSizeLength3540={productSizeLength3540}
+            productSizeLength4045={productSizeLength4045}
             categories={categories}
             categoryFilter={categoryFilter}
             priceFilter={priceFilter}

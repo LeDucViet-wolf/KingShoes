@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Categories = () => {
   const [categories, getCategories] = useState([]);
@@ -36,7 +37,7 @@ const Categories = () => {
         console.log(err);
       });
   };
-  
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -49,25 +50,25 @@ const Categories = () => {
       <div className="row px-xl-5 pb-3">
         {categories
           ? categories
-              .filter((x) => x.entityId <= 8)
-              .map((item, i) => (
-                <div key={i} className="col-lg-3 col-md-4 col-sm-6 pb-1">
-                  <a className="text-decoration-none" href="">
-                    <div className="cat-item d-flex align-items-center mb-4">
-                      <div
-                        className="overflow-hidden"
-                        style={{ width: "150px", height: "auto" }}
-                      >
-                        <img className="img-fluid" src="/img/test/adidas.jpg" alt="" />
-                      </div>
-                      <div className="flex-fill pl-3">
-                        <h6>{item.name}</h6>
-                        <small className="text-body">{item.count} Products</small>
-                      </div>
+            .filter((x) => x.entityId <= 8)
+            .map((item, i) => (
+              <div key={i} className="col-lg-3 col-md-4 col-sm-6 pb-1">
+                <Link to={`product-list?category=${item.entityId}`} className="text-decoration-none">
+                  <div className="cat-item d-flex align-items-center mb-4">
+                    <div
+                      className="overflow-hidden"
+                      style={{ width: "150px", height: "auto" }}
+                    >
+                      <img className="img-fluid" src="/img/test/adidas.jpg" />
                     </div>
-                  </a>
-                </div>
-              ))
+                    <div className="flex-fill pl-3">
+                      <h6>{item.name}</h6>
+                      <small className="text-body">{item.count} Products</small>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))
           : ""}
       </div>
     </div>

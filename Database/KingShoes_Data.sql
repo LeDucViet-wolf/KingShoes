@@ -88,7 +88,7 @@ values
         'DC9450-100',
         '',
         1,
-        2
+        1
     ),
     (3, 'FREE RUN 2', 2900000, 'DM8915-600', '', 1, 3),
     (4, 'AIR MAX AP', 3200000, 'CU4870-104', '', 1, 4),
@@ -514,16 +514,16 @@ values
 insert into
     tblProductReview(`product_id`, `customer_id`, `comment`, `point`)
 values
-    (1, 1, 'Tuyệt vời', 10),
-    (2, 2, 'Tuyệt vời', 20),
-    (3, 3, 'Tuyệt vời', 30),
-    (4, 4, 'Tuyệt vời', 40),
-    (5, 5, 'Tuyệt vời', 50),
-    (6, 6, 'Tuyệt vời', 60),
-    (7, 7, 'Tuyệt vời', 70),
-    (8, 8, 'Tuyệt vời', 80),
-    (9, 9, 'Tuyệt vời', 90),
-    (10, 10, 'Tuyệt vời', 10);
+    (1, 1, 'Chất lượng quá kém, đi được 2 ngày thì rách', 1),
+    (2, 2, 'Sản phẩm không giống với trên mạng', 2),
+    (3, 3, 'Hộp bọc không được đẹp', 3),
+    (4, 4, 'Đi khá êm, nhưng giá thành hơi cao', 4),
+    (5, 5, 'Tuyệt vời, tôi thích nó', 5),
+    (6, 6, 'Chất lượng quá kém, đi được 2 ngày thì rách', 1),
+    (7, 7, 'Sản phẩm không giống với trên mạng', 2),
+    (8, 8, 'Hộp bọc không được đẹp', 3),
+    (9, 9, 'Đi khá êm, nhưng giá thành hơi cao', 4),
+    (10, 10, 'Tuyệt vời, tôi thích nó', 5);
 
 insert into
     tblQuote(`customer_id`, `is_paid`)

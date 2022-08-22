@@ -3,11 +3,22 @@ import axios from "axios";
 import RelatedProduct from "./components/RelatedProduct";
 import { Breadcrumb } from "@/components";
 import useScript from "@/hooks/useScript";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "@/assets/css/product-detail.css";
+// Import required modules
+import { Navigation } from "swiper";
 
 const ProductDetail = () => {
   useScript("public/js/product-quantity");
   useScript("public/js/tab");
+
+  const navigate = useNavigate()
 
   // Param url
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,9 +44,9 @@ const ProductDetail = () => {
 
   const fetchData = () => {
     var configGetProductData = {
-        method: "get",
-        url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
-      },
+      method: "get",
+      url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
+    },
       configGetProductSizeData = {
         method: "get",
         url: `http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id/${productId}`,
@@ -48,12 +59,12 @@ const ProductDetail = () => {
       .then(function (response) {
         getProduct(response.data);
       })
-      .catch((err) => {});
+      .catch((err) => { navigate('/product-list') });
     axios(configGetProductSizeData)
       .then(function (response) {
         getProductSize(response.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
     axios(configGetProductReviewData)
       .then((response) => {
         var configGetCustomerData = {
@@ -106,56 +117,10 @@ const ProductDetail = () => {
       <div className="container-fluid pb-5">
         <div className="row px-xl-5">
           <div className="col-lg-5 mb-30">
-            <div
-              id="product-carousel"
-              className="carousel slide"
-              dataride="carousel"
-            >
-              <div className="carousel-inner bg-light">
-                <div className="carousel-item active">
-                  <img
-                    className="w-100 h-100"
-                    src="../../../public/img/product-1.jpg"
-                    alt="Image"
-                  />
-                </div>
-                <div className="carousel-item">
-                  <img
-                    className="w-100 h-100"
-                    src="../../../public/img/product-2.jpg"
-                    alt="Image"
-                  />
-                </div>
-                <div className="carousel-item">
-                  <img
-                    className="w-100 h-100"
-                    src="../../../public/img/product-3.jpg"
-                    alt="Image"
-                  />
-                </div>
-                <div className="carousel-item">
-                  <img
-                    className="w-100 h-100"
-                    src="../../../public/img/product-4.jpg"
-                    alt="Image"
-                  />
-                </div>
-              </div>
-              <a
-                className="carousel-control-prev"
-                href="#product-carousel"
-                dataslide="prev"
-              >
-                <i className="fa fa-2x fa-angle-left text-dark"></i>
-              </a>
-              <a
-                className="carousel-control-next"
-                href="#product-carousel"
-                dataslide="next"
-              >
-                <i className="fa fa-2x fa-angle-right text-dark"></i>
-              </a>
-            </div>
+            <Swiper navigation={true} modules={[Navigation]} className="bg-light mySwiper">
+              <SwiperSlide><img className="w-100 h-100" src="img/product-1.jpg" /></SwiperSlide>
+              <SwiperSlide><img className="w-100 h-100" src="img/product-2.jpg" /></SwiperSlide>
+            </Swiper>
           </div>
 
           <div className="col-lg-7 h-auto mb-30">
@@ -168,8 +133,8 @@ const ProductDetail = () => {
                   ))}
                   {overallReview < 5
                     ? [...Array(5 - overallReview)].map((item, i) => (
-                        <small key={i} className="far fa-star"></small>
-                      ))
+                      <small key={i} className="far fa-star"></small>
+                    ))
                     : ""}
                 </div>
                 <small className="pt-1">({productReviewCount} Reviews)</small>
@@ -183,24 +148,24 @@ const ProductDetail = () => {
                 <form>
                   {productSize
                     ? productSize.map((item, i) => (
-                        <div
-                          key={i}
-                          className="custom-control custom-radio custom-control-inline"
+                      <div
+                        key={i}
+                        className="custom-control custom-radio custom-control-inline"
+                      >
+                        <input
+                          type="radio"
+                          className="custom-control-input"
+                          id={item.value}
+                          name="size"
+                        />
+                        <label
+                          className="custom-control-label"
+                          htmlFor={item.value}
                         >
-                          <input
-                            type="radio"
-                            className="custom-control-input"
-                            id={item.value}
-                            name="size"
-                          />
-                          <label
-                            className="custom-control-label"
-                            htmlFor={item.value}
-                          >
-                            {item.value}
-                          </label>
-                        </div>
-                      ))
+                          {item.value}
+                        </label>
+                      </div>
+                    ))
                     : ""}
                 </form>
               </div>
@@ -217,9 +182,8 @@ const ProductDetail = () => {
                   <input
                     type="text"
                     onChange={handleQty}
-                    className={`form-control bg-secondary border-0 text-center ${
-                      isQtyValid ? "" : "is-invalid"
-                    }`}
+                    className={`form-control bg-secondary border-0 text-center ${isQtyValid ? "" : "is-invalid"
+                      }`}
                     defaultValue="1"
                   />
                   <div className="input-group-btn">
@@ -276,40 +240,31 @@ const ProductDetail = () => {
                       </h4>
                       {productReview
                         ? productReview.map((item, i) => (
-                            <div key={i} className="media mb-4">
-                              <img
-                                src="../../../public/img/user.jpg"
-                                alt="Image"
-                                className="img-fluid mr-3 mt-1"
-                                style={{ width: "45px" }}
-                              />
-                              <div className="media-body">
-                                <h6>
-                                  {item.customer.firstName +
-                                    " " +
-                                    item.customer.lastName}
-                                </h6>
-                                <div className="text-primary mb-2">
-                                  {[...Array(parseInt(item.point))].map(
+                          <div key={i} className="media mb-4">
+                            <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
+                            <div className="media-body">
+                              <h6>{`${item.customer.firstName} ${item.customer.lastName}`}</h6>
+                              <div className="text-primary mb-2">
+                                {[...Array(parseInt(item.point))].map(
+                                  (item, i) => (
+                                    <i key={i} className="fas fa-star"></i>
+                                  )
+                                )}
+                                {parseInt(item.point) < 5
+                                  ? [...Array(5 - parseInt(item.point))].map(
                                     (item, i) => (
-                                      <i key={i} className="fas fa-star"></i>
+                                      <i
+                                        key={i}
+                                        className="far fa-star"
+                                      ></i>
                                     )
-                                  )}
-                                  {parseInt(item.point) < 5
-                                    ? [...Array(5 - parseInt(item.point))].map(
-                                        (item, i) => (
-                                          <i
-                                            key={i}
-                                            className="far fa-star"
-                                          ></i>
-                                        )
-                                      )
-                                    : ""}
-                                </div>
-                                <p>{item.comment}</p>
+                                  )
+                                  : ""}
                               </div>
+                              <p>{item.comment}</p>
                             </div>
-                          ))
+                          </div>
+                        ))
                         : ""}
                     </div>
                     <div className="col-md-6">
@@ -324,7 +279,7 @@ const ProductDetail = () => {
                           <i className="far fa-star"></i>
                           <i className="far fa-star"></i>
                           <i className="far fa-star"></i>
-                          <i className="far fa-star"></i>
+                          <i className="fas fa-star"></i>
                           <i className="far fa-star"></i>
                         </div>
                       </div>
@@ -337,22 +292,6 @@ const ProductDetail = () => {
                             rows="5"
                             className="form-control"
                           ></textarea>
-                        </div>
-                        <div className="form-group">
-                          <label htmlFor="name">Your Name *</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label htmlFor="email">Your Email *</label>
-                          <input
-                            type="email"
-                            className="form-control"
-                            id="email"
-                          />
                         </div>
                         <div className="form-group mb-0">
                           <input

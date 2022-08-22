@@ -13,6 +13,10 @@ const useScript = url => {
       document.body.removeChild(script)
     }
   }, [url])
-};
+}
 
+/**
+ * Hook reload script js after render react module
+ * @param {string} url path js file
+ */
 export default useScript
