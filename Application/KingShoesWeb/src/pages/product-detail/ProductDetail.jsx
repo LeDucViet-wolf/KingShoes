@@ -19,10 +19,12 @@ const ProductDetail = () => {
   useScript("public/js/tab");
 
   const navigate = useNavigate()
+  const customer = localStorage.getItem('customer-login');
 
   // Param url
   const [searchParams, setSearchParams] = useSearchParams();
   const productId = searchParams.get("productId");
+
   const [product, getProduct] = useState([]);
   const [productSize, getProductSize] = useState([]);
   const [productReview, getProductReview] = useState([]);
@@ -31,6 +33,25 @@ const ProductDetail = () => {
   const [qty, setQty] = useState();
   const [isQtyValid, setIsQtyValid] = useState(true);
   const qtyMessage = "Please enter a valid number in this field.";
+
+  // #region Rating
+  const stars = 5
+  const [objRating, setObjRating] = useState({
+    stars: 5,
+    rating: 0,
+    hovered: 0,
+    selectedClass: 'fas',
+    deselectedClass: "far"
+  })
+
+  const hoverRating = (rating) => {
+    setObjRating({ ...objRating, hovered: rating })
+  }
+
+  const changeRating = (rating) => {
+    setObjRating({ ...objRating, rating: rating })
+  }
+  //  #endregion
 
   const handleQty = (e) => {
     var qty = e.target.value;
@@ -122,7 +143,6 @@ const ProductDetail = () => {
               <SwiperSlide><img className="w-100 h-100" src="img/product-2.jpg" /></SwiperSlide>
             </Swiper>
           </div>
-
           <div className="col-lg-7 h-auto mb-30">
             <div className="h-100 bg-light p-30">
               <h3>{product.name}</h3>
@@ -276,11 +296,25 @@ const ProductDetail = () => {
                       <div className="d-flex my-3">
                         <p className="mb-0 mr-2">Your Rating * :</p>
                         <div className="text-primary">
-                          <i className="far fa-star"></i>
-                          <i className="far fa-star"></i>
-                          <i className="far fa-star"></i>
-                          <i className="fas fa-star"></i>
-                          <i className="far fa-star"></i>
+                          {[...Array(objRating.stars)].map((item, index) => {
+                            let star = index + 1
+                            return (
+                              <i
+                                onClick={() => changeRating(star)}
+                                onMouseEnter={() => hoverRating(star)}
+                                onMouseLeave={() => hoverRating(0)}
+                                key={index + 1}
+                                className={
+                                  `${objRating.rating < star
+                                    ? objRating.hovered < star
+                                      ? objRating.deselectedClass
+                                      : objRating.selectedClass
+                                    : objRating.selectedClass} 
+                                  fa-star`
+                                }>
+                              </i>
+                            )
+                          })}
                         </div>
                       </div>
                       <form>
