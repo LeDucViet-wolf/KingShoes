@@ -1,8 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
+import { getAllProductImage, getAllProductReview } from '@/stores/actions'
 
 const ProductItem = ({ ...props }) => {
     const { product, grid } = props
+    const dispatch = useDispatch()
+
+    const { productImages, productReviews } = useSelector((state) => ({
+        productImages: state.productImageReducer.productImages,
+        productReviews: state.productReviewReducer.productReviews
+    }))
+
+    const productImage = productImages.filter(pi => pi.productId == product.entityId)
+    const productReview = productReviews.filter(pr => pr.productId == product.entityId)
+    const productRatingAverage = Math.floor(parseFloat(productReview.reduce((item1, item2) => (item1 + item2.point), 0)) / productReview.length)
+
+    useEffect(() => {
+        dispatch(getAllProductImage())
+        dispatch(getAllProductReview())
+    }, [dispatch])
 
     return (
         <div className={`col-lg-${grid.lg} col-md-${grid.md} col-sm-${grid.sm} pb-1`}>
@@ -10,8 +27,7 @@ const ProductItem = ({ ...props }) => {
                 <div className="product-img position-relative overflow-hidden">
                     <img
                         className="img-fluid w-100"
-                        src="img/test/air-force-1-38(1).jpg"
-                        alt=""
+                        src={`${(productImage != null && productImage.length != 0) ? `/img/product/${productImage[0].value}` : ''}`}
                     />
                     <div className="product-action">
                         <a className="btn btn-outline-dark btn-square" href="#">
@@ -29,12 +45,15 @@ const ProductItem = ({ ...props }) => {
                         <h5>{product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} VND</h5>
                     </div>
                     <div className="d-flex align-items-center justify-content-center mb-1">
+                        {
+
+                        }
                         <small className="fa fa-star text-primary mr-1"></small>
                         <small className="fa fa-star text-primary mr-1"></small>
                         <small className="fa fa-star text-primary mr-1"></small>
                         <small className="fa fa-star text-primary mr-1"></small>
                         <small className="fa fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
+                        <small>{`(${productReview.length})`}</small>
                     </div>
                 </div>
             </div>

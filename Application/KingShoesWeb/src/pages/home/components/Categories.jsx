@@ -20,9 +20,7 @@ const Categories = () => {
             var cateData = [];
             response.data.forEach((e) => {
               cateData.push({
-                entityId: e.entityId,
-                name: e.name,
-                status: e.status,
+                ...e,
                 count: res.data.filter((x) => x.categoryId == e.entityId)
                   .length,
               });
@@ -42,6 +40,7 @@ const Categories = () => {
     fetchData();
   }, []);
 
+  console.log(categories)
   return (
     <div className="container-fluid pt-5">
       <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4">
@@ -59,7 +58,7 @@ const Categories = () => {
                       className="overflow-hidden"
                       style={{ width: "150px", height: "auto" }}
                     >
-                      <img className="img-fluid" src="/img/test/adidas.jpg" />
+                      <img className="img-fluid" src={`img/category/${item.image}`} />
                     </div>
                     <div className="flex-fill pl-3">
                       <h6>{item.name}</h6>

@@ -14,6 +14,22 @@ export const URL_PRODUCT_SIZE_INSERT = "product-sizes/insert"
 export const URL_PRODUCT_SIZE_UPDATE = "product-sizes/update"
 export const URL_PRODUCT_SIZE_DELETE = "product-sizes/delete"
 
+// Product Review
+export const URL_PRODUCT_REVIEW = "product-reviews"
+export const URL_PRODUCT_REVIEW_GET_ALL = "product-reviews/get-all"
+export const URL_PRODUCT_REVIEW_GET_BY_ID = "product-reviews/get-by-id"
+export const URL_PRODUCT_REVIEW_INSERT = "productreviewss/insert"
+export const URL_PRODUCT_REVIEW_UPDATE = "product-reviews/update"
+export const URL_PRODUCT_REVIEW_DELETE = "product-reviews/delete"
+
+// Product Image
+export const URL_PRODUCT_IMAGE = "product-images"
+export const URL_PRODUCT_IMAGE_GET_ALL = "product-images/get-all"
+export const URL_PRODUCT_IMAGE_GET_BY_ID = "product-images/get-by-id"
+export const URL_PRODUCT_IMAGE_INSERT = "product-images/insert"
+export const URL_PRODUCT_IMAGE_UPDATE = "product-images/update"
+export const URL_PRODUCT_IMAGE_DELETE = "product-images/delete"
+
 // User
 export const URL_USER = "users"
 export const URL_USER_GET_ALL = "users/get-all"

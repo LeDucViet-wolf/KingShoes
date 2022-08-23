@@ -1,5 +1,7 @@
 export * from "./product/actionType"
 export * from "./product-size/actionType"
+export * from "./product-review/actionType"
+export * from "./product-image/actionType"
 export * from "./user/actionType"
 export * from "./customer/actionType"
 export * from "./category/actionType"

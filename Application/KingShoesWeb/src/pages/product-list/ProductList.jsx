@@ -5,6 +5,7 @@ import { Link, useSearchParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { getAllProduct, getAllProductSize, getAllCategory } from '@/stores/actions'
 import Paging from "./components/Paging"
+import * as Sentry from "@sentry/react"
 
 const ProductList = () => {
   const dispatch = useDispatch()
@@ -291,4 +292,4 @@ const ProductList = () => {
   )
 }
 
-export default ProductList
+export default Sentry.withProfiler(ProductList)

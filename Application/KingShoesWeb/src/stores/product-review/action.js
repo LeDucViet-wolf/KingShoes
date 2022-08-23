@@ -1,19 +1,19 @@
 import {
-    GET_ALL_PRODUCT_SIZE,
-    GET_ALL_PRODUCT_SIZE_SUCCESS,
-    GET_ALL_PRODUCT_SIZE_FAIL
+    GET_ALL_PRODUCT_REVIEW,
+    GET_ALL_PRODUCT_REVIEW_SUCCESS,
+    GET_ALL_PRODUCT_REVIEW_FAIL
 } from "./actionType"
 
-export const getAllProductSize = () => ({
-    type: GET_ALL_PRODUCT_SIZE,
+export const getAllProductReview = () => ({
+    type: GET_ALL_PRODUCT_REVIEW,
 })
 
-export const getAllProductSizeSuccess = (productSizes) => ({
-    type: GET_ALL_PRODUCT_SIZE_SUCCESS,
-    payload: productSizes
+export const getAllProductReviewSuccess = (productReviews) => ({
+    type: GET_ALL_PRODUCT_REVIEW_SUCCESS,
+    payload: productReviews
 })
 
-export const getAllProductSizeFail = (error) => ({
-    type: GET_ALL_PRODUCT_SIZE_FAIL,
+export const getAllProductReviewFail = (error) => ({
+    type: GET_ALL_PRODUCT_REVIEW_FAIL,
     payload: error
 })

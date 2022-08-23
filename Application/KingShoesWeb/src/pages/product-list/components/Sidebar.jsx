@@ -18,10 +18,10 @@ const Sidebar = ({ ...props }) => {
         handleFilterByPrice,
         handleFilterBySize } = props
 
-    const convertCategory = []
+    const convertCategories = []
 
     categories.forEach((c) => {
-        convertCategory.push({
+        convertCategories.push({
             ...c,
             productCount: products.filter((p) => p.categoryId == c.entityId).length,
         })
@@ -47,8 +47,8 @@ const Sidebar = ({ ...props }) => {
                             <span className="badge border font-weight-normal">{`${productLength} shoes`}</span>
                         </div>
                         {
-                            convertCategory
-                                ? convertCategory.map(item => (
+                            convertCategories
+                                ? convertCategories.map(item => (
                                     <div key={item.entityId} className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                                         <input
                                             type="checkbox"

@@ -1,22 +1,22 @@
 import {
-  GET_ALL_PRODUCT_SIZE_SUCCESS,
-  GET_ALL_PRODUCT_SIZE_FAIL
+  GET_ALL_PRODUCT_REVIEW_SUCCESS,
+  GET_ALL_PRODUCT_REVIEW_FAIL
 } from "./actionType"
 
 const INIT_STATE = {
-  productSizes: [],
-  productSize: {},
+  productReviews: [],
+  productReview: {},
   error: {}
 }
 
-const productSizeReducer = (state = INIT_STATE, action) => {
+const productReviewReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case GET_ALL_PRODUCT_SIZE_SUCCESS:
+    case GET_ALL_PRODUCT_REVIEW_SUCCESS:
       return {
         ...state,
-        productSizes: action.payload,
+        productReviews: action.payload,
       }
-    case GET_ALL_PRODUCT_SIZE_FAIL:
+    case GET_ALL_PRODUCT_REVIEW_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -26,4 +26,4 @@ const productSizeReducer = (state = INIT_STATE, action) => {
   }
 }
 
-export default productSizeReducer
+export default productReviewReducer
