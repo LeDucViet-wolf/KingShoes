@@ -46,13 +46,17 @@ const ProductItem = ({ ...props }) => {
                     </div>
                     <div className="d-flex align-items-center justify-content-center mb-1">
                         {
-
+                            [...Array(productRatingAverage)].map((item, i) => (
+                                <small key={i} className="fas fa-star text-primary mr-1"></small>
+                            ))
                         }
-                        <small className="fa fa-star text-primary mr-1"></small>
-                        <small className="fa fa-star text-primary mr-1"></small>
-                        <small className="fa fa-star text-primary mr-1"></small>
-                        <small className="fa fa-star text-primary mr-1"></small>
-                        <small className="fa fa-star text-primary mr-1"></small>
+                        {
+                            productRatingAverage < 5
+                                ? [...Array(5 - productRatingAverage)].map((item, i) => (
+                                    <small key={i} className="far fa-star text-primary mr-1"></small>
+                                ))
+                                : ""
+                        }
                         <small>{`(${productReview.length})`}</small>
                     </div>
                 </div>
