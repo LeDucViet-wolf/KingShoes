@@ -14,10 +14,14 @@ const ProductItem = ({ ...props }) => {
 
     const productImage = productImages.filter(pi => pi.productId == product.entityId)
     const productReview = productReviews.filter(pr => pr.productId == product.entityId)
-    const productRatingAverage = (productReview && productReview.length != 0)
+
+    const isProductImageEmpty = !(productImage.length === 0)
+    const isProductReviewEmpty = !(productReview.length === 0)
+
+    const productRatingAverage = isProductReviewEmpty
         ? Math.floor(parseFloat(productReview.reduce((item1, item2) => (item1 + item2.point), 0)) / productReview.length)
         : 0
-        
+
     useEffect(() => {
         dispatch(getAllProductImage())
         dispatch(getAllProductReview())
@@ -29,7 +33,7 @@ const ProductItem = ({ ...props }) => {
                 <div className="product-img position-relative overflow-hidden">
                     <img
                         className="img-fluid w-100"
-                        src={`${(productImage != null && productImage.length != 0) ? `/img/product/${productImage[0].value}` : ''}`}
+                        src={`${isProductImageEmpty ? `/img/product/${productImage[0].value}` : ''}`}
                     />
                     <div className="product-action">
                         <a className="btn btn-outline-dark btn-square" href="#">
@@ -47,14 +51,18 @@ const ProductItem = ({ ...props }) => {
                         <h5>{product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} VND</h5>
                     </div>
                     <div className="d-flex align-items-center justify-content-center mb-1">
-                        {[...Array(productRatingAverage)].map((item, i) => (
-                            <small key={i} className="fas fa-star text-primary mr-1"></small>
-                        ))}
-                        {productRatingAverage < 5
-                            ? [...Array(5 - productRatingAverage)].map((item, i) => (
-                                <small key={i} className="far fa-star text-primary mr-1"></small>
+                        {
+                            [...Array(productRatingAverage)].map((item, i) => (
+                                <small key={i} className="fas fa-star text-primary mr-1"></small>
                             ))
-                            : ""}
+                        }
+                        {
+                            productRatingAverage < 5
+                                ? [...Array(5 - productRatingAverage)].map((item, i) => (
+                                    <small key={i} className="far fa-star text-primary mr-1"></small>
+                                ))
+                                : ""
+                        }
                         <small>{`(${productReview.length})`}</small>
                     </div>
                 </div>

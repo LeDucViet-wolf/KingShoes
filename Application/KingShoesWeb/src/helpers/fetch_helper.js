@@ -17,7 +17,7 @@ export const deleteProductSizeHelper = id => del(url.URL_PRODUCT_SIZE_DELETE, { 
 
 // Product Review
 export const getAllProductReviewHelper = () => get(url.URL_PRODUCT_REVIEW_GET_ALL)
-export const getProductReviewByIdHelper = id => get(url.URL_PRODUCT_REVIEW_GET_BY_ID, { params: { id } })
+export const getProductReviewByIdHelper = id => get(`${url.URL_PRODUCT_REVIEW_GET_BY_ID}/${id}`)
 export const insertProductReviewHelper = data => post(url.URL_PRODUCT_REVIEW_INSERT, data)
 export const updateProductReviewHelper = data => put(url.URL_PRODUCT_REVIEW_UPDATE, data)
 export const deleteProductReviewHelper = id => del(url.URL_PRODUCT_REVIEW_DELETE, { params: { id } })

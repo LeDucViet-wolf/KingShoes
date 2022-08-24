@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import Sidebar from "./components/Sidebar"
 import { Breadcrumb, ProductItem } from "@/components"
 import { Link, useSearchParams } from "react-router-dom"
@@ -49,7 +49,6 @@ const ProductList = () => {
   })
   const productSizeLength4045 = idProductSize4045.length
 
-
   // #region PAGING
   const currentPage = searchParams.get('page') ?? 1
   const itemsPerPage = searchParams.get('show') ?? 10
@@ -58,9 +57,12 @@ const ProductList = () => {
   const endIndexItem = parseInt(startIndexItem) + parseInt(itemsPerPage)
   const [rowsPerPage, setRowsPerPage] = useState([])
 
+  const buttonShow = useRef()
+
   const handleShowing = (e) => {
     e.preventDefault()
     let show = parseInt(e.target.text)
+    buttonShow.current.innerHTML = e.target.text
     searchParams.set('show', show)
     setSearchParams(searchParams)
   }
@@ -129,10 +131,12 @@ const ProductList = () => {
 
   // #region SORTING
   const sorting = searchParams.get('sort') ?? 'lowest'
+  const buttonSort = useRef()
 
   const handleSorting = (e) => {
     e.preventDefault()
     let sort = e.target.text.toLowerCase()
+    buttonSort.current.innerHTML = e.target.text
     searchParams.set('sort', sort)
     setSearchParams(searchParams)
   }
@@ -257,7 +261,7 @@ const ProductList = () => {
                   <div></div>
                   <div className="ml-2">
                     <div className="btn-group">
-                      <button type="button" className="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                      <button type="button" ref={buttonSort} className="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
                         Sorting
                       </button>
                       <div className="dropdown-menu dropdown-menu-right">
@@ -266,7 +270,7 @@ const ProductList = () => {
                       </div>
                     </div>
                     <div className="btn-group ml-2">
-                      <button type="button" className="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                      <button type="button" ref={buttonShow} className="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
                         Showing
                       </button>
                       <div className="dropdown-menu dropdown-menu-right">

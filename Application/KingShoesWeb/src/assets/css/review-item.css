@@ -1,0 +1,15 @@
+.reply--child {
+    width: 100%;
+    display: flex;
+    float: left;
+    align-items: start;
+    padding-top: 10px;
+}
+
+.reply--child form {
+    width: 100%;
+}
+
+/* .reply--child .reply--child__done{
+    justify-content: a;
+} */

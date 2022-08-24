@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import RelatedProduct from "./components/RelatedProduct";
+import ReviewItem from "./components/ReviewItem";
 import { Breadcrumb } from "@/components";
 import useScript from "@/hooks/useScript";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
@@ -60,7 +61,7 @@ const ProductDetail = () => {
     deselectedClass: "far",
   });
 
-  const handleReiewChange = (e) => {
+  const handleReviewChange = (e) => {
     if (e.target.value) {
       setReview(e.target.value);
       setIsReviewValid(true);
@@ -309,7 +310,7 @@ const ProductDetail = () => {
               {
                 (productImage != null && productImage.length != 0)
                   ? productImage.map(item => (
-                    <SwiperSlide>
+                    <SwiperSlide key={item.entityId}>
                       <img className="w-100 h-100" src={`img/product/${item.value}`} />
                     </SwiperSlide>
                   ))
@@ -408,9 +409,7 @@ const ProductDetail = () => {
                   <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
                 </button>
               </div>
-              <div
-                className={`invalid-feedback ${isQtyValid ? "" : "d-block"}`}
-              >
+              <div className={`invalid-feedback ${isQtyValid ? "" : "d-block"}`}>
                 {qtyMessage}
               </div>
             </div>
@@ -438,11 +437,7 @@ const ProductDetail = () => {
               <div className="tab-content">
                 <div className="tab-pane fade show active" id="tab-pane-1">
                   <h4 className="mb-3">Product Description</h4>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description,
-                    }}
-                  ></div>
+                  <div dangerouslySetInnerHTML={{__html: product.description}}></div>
                 </div>
                 <div className="tab-pane fade" id="tab-pane-2">
                   <div className="row">
@@ -450,38 +445,13 @@ const ProductDetail = () => {
                       <h4 className="mb-4">
                         {productReviewCount} review for "{product.name}"
                       </h4>
-                      {productReview
-                        ? productReview.map((item, i) => (
-                          <div key={i} className="media mb-4">
-                            <img
-                              src="img/user.jpg"
-                              className="img-fluid mr-3 mt-1"
-                              style={{ width: "45px" }}
-                            />
-                            <div className="media-body">
-                              <h6>{`${item.customer.firstName} ${item.customer.lastName}`}</h6>
-                              <div className="text-primary mb-2">
-                                {[...Array(parseInt(item.point))].map(
-                                  (item, i) => (
-                                    <i key={i} className="fas fa-star"></i>
-                                  )
-                                )}
-                                {parseInt(item.point) < 5
-                                  ? [...Array(5 - parseInt(item.point))].map(
-                                    (item, i) => (
-                                      <i
-                                        key={i}
-                                        className="far fa-star"
-                                      ></i>
-                                    )
-                                  )
-                                  : ""}
-                              </div>
-                              <p>{item.comment}</p>
-                            </div>
-                          </div>
-                        ))
-                        : ""}
+                      {
+                        productReview
+                          ? productReview.map((item, i) => (
+                            <ReviewItem key={item.entityId} review={item} />
+                          ))
+                          : ""
+                      }
                     </div>
                     {customer ? (
                       <div className="col-md-6">
@@ -523,7 +493,7 @@ const ProductDetail = () => {
                           <div className="form-group">
                             <label htmlFor="message">Your Review *</label>
                             <textarea
-                              onChange={handleReiewChange}
+                              onChange={handleReviewChange}
                               id="message"
                               cols="30"
                               rows="5"

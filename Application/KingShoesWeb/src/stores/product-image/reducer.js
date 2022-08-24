@@ -1,6 +1,8 @@
 import {
   GET_ALL_PRODUCT_IMAGE_SUCCESS,
-  GET_ALL_PRODUCT_IMAGE_FAIL
+  GET_ALL_PRODUCT_IMAGE_FAIL,
+  GET_BY_ID_PRODUCT_IMAGE_SUCCESS,
+  GET_BY_ID_PRODUCT_IMAGE_FAIL
 } from "./actionType"
 
 const INIT_STATE = {
@@ -17,6 +19,16 @@ const productImageReducer = (state = INIT_STATE, action) => {
         productImages: action.payload,
       }
     case GET_ALL_PRODUCT_IMAGE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      }
+    case GET_BY_ID_PRODUCT_IMAGE_SUCCESS:
+      return {
+        ...state,
+        productImage: action.payload,
+      }
+    case GET_BY_ID_PRODUCT_IMAGE_FAIL:
       return {
         ...state,
         error: action.payload,
