@@ -40,7 +40,6 @@ const Categories = () => {
     fetchData();
   }, []);
 
-  console.log(categories)
   return (
     <div className="container-fluid pt-5">
       <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4">
