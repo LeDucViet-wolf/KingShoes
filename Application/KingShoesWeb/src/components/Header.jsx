@@ -151,7 +151,6 @@ const Header = () => {
             </NavLink>
           </div>
           <div className="col-lg-4 col-6 text-left">
-            <form action="">
               <div className="input-group">
                 <input
                   type="text"
@@ -165,7 +164,6 @@ const Header = () => {
                   </span>
                 </div>
               </div>
-            </form>
           </div>
           <div className="col-lg-4 col-6 text-right">
             <p className="m-0">Customer Service</p>

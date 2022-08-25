@@ -1,8 +1,35 @@
-import React from "react"
+import React, { useRef, useState } from "react"
 import "@/assets/css/review-item.css"
 
 const ReviewItem = ({ ...props }) => {
-    const { review } = props
+    const { review, customer } = props
+    const customerObj = JSON.parse(customer)
+    const boxReply = useRef()
+
+    const [inputReply, setInputReply] = useState()
+    const [isInputReplyValid, setIsInputReplyValid] = useState(true)
+
+    const toggleReply = (e) => {
+        e.preventDefault()
+        boxReply.current.classList.toggle('d-none')
+    }
+
+    const inputReplyChange = (e) => {
+        if (e.target.value) {
+            // if(e.target.value < 200)
+            setInputReply(e.target.value)
+            setIsInputReplyValid(true)
+        } else {
+            setIsInputReplyValid(false)
+        }
+    }
+
+    const handleSubmitReply = (e) => {
+        e.preventDefault()
+        if (!inputReply) {
+            setIsInputReplyValid(false)
+        }
+    }
 
     return (
         <div className="media mb-4">
@@ -37,13 +64,29 @@ const ReviewItem = ({ ...props }) => {
                                 <p>{review.comment}</p>
                             </div>
                         </div>
-                        <div className="reply--child">
+
+                        <div ref={boxReply} className="reply--child d-none">
                             <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
-                            <form><textarea id="message" cols="30" rows="5" className={`form-control`}></textarea></form>
+                            <form>
+                                <div className="form-group">
+                                    <textarea onChange={inputReplyChange} id="message" cols="30" rows="5" className={`form-control ${isInputReplyValid ? '' : 'is-invalid'}`}></textarea>
+                                    <div className="invalid-feedback">
+                                        Please enter your reply.
+                                    </div>
+                                </div>
+                                <div className="form-group mb-0">
+                                    <input
+                                        onClick={handleSubmitReply}
+                                        type="submit"
+                                        defaultValue="Leave Your Review"
+                                        className="btn btn-primary px-3"
+                                    />
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div className="media-body--right col-3">
-                        <a href="#"><i className="fa fa-reply"></i></a>
+                        <a onClick={toggleReply} href="#"><i className="fa fa-reply"></i></a>
                     </div>
                 </div>
             </div>

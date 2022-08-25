@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import RelatedProduct from "./components/RelatedProduct";
 import ReviewItem from "./components/ReviewItem";
@@ -60,6 +60,18 @@ const ProductDetail = () => {
     selectedClass: "fas",
     deselectedClass: "far",
   });
+
+  const hoverRating = (rating) => {
+    setObjRating({ ...objRating, hovered: rating });
+  };
+
+  const changeRating = (rating) => {
+    setIsPointValid(true);
+    setObjRating({ ...objRating, rating: rating });
+  };
+  //  #endregion
+
+  const inputReview = useRef()
 
   const handleReviewChange = (e) => {
     if (e.target.value) {
@@ -151,27 +163,17 @@ const ProductDetail = () => {
     setQty(qty + 1);
   };
 
-  const hoverRating = (rating) => {
-    setObjRating({ ...objRating, hovered: rating });
-  };
-
-  const changeRating = (rating) => {
-    setIsPointValid(true);
-    setObjRating({ ...objRating, rating: rating });
-  };
-  //  #endregion
-
   const submitReview = (e) => {
     e.preventDefault();
-    var valid = true;
+    let valid = true
     if (objRating.rating < 1) {
       setIsPointValid(false);
-      valid = false;
+      valid = false
     }
 
     if (!review) {
       setIsReviewValid(false);
-      valid = false;
+      valid = false
     }
 
     if (valid) {
@@ -193,7 +195,7 @@ const ProductDetail = () => {
           if ((response.status = 200 && response.data)) {
             fetchData();
             changeRating(0);
-            setReview("");
+            inputReview.current.value = "";
           }
         })
         .catch((err) => {
@@ -437,7 +439,7 @@ const ProductDetail = () => {
               <div className="tab-content">
                 <div className="tab-pane fade show active" id="tab-pane-1">
                   <h4 className="mb-3">Product Description</h4>
-                  <div dangerouslySetInnerHTML={{__html: product.description}}></div>
+                  <div dangerouslySetInnerHTML={{ __html: product.description }}></div>
                 </div>
                 <div className="tab-pane fade" id="tab-pane-2">
                   <div className="row">
@@ -448,7 +450,7 @@ const ProductDetail = () => {
                       {
                         productReview
                           ? productReview.map((item, i) => (
-                            <ReviewItem key={item.entityId} review={item} />
+                            <ReviewItem key={item.entityId} customer={customer} review={item} />
                           ))
                           : ""
                       }
@@ -493,13 +495,13 @@ const ProductDetail = () => {
                           <div className="form-group">
                             <label htmlFor="message">Your Review *</label>
                             <textarea
+                              ref={inputReview}
                               onChange={handleReviewChange}
                               id="message"
                               cols="30"
                               rows="5"
                               className={`form-control ${isReviewValid ? "" : "is-invalid"
                                 }`}
-                              value={review}
                             ></textarea>
                             <div className="invalid-feedback">
                               Please enter your review.
