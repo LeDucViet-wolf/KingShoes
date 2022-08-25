@@ -1,15 +1,25 @@
-import React from "react";
-import { NavLink, Link } from "react-router-dom";
+import React, { useRef } from "react"
+import { NavLink, Link, useNavigate } from "react-router-dom"
+import "@/assets/css/header.css"
 
 const Header = () => {
-  const customer = localStorage.getItem("customer-login");
+  const navigate = useNavigate()
+
+  const customer = localStorage.getItem("customer-login")
   const logOut = (e) => {
-    localStorage.removeItem("customer-login");
-  };
+    localStorage.removeItem("customer-login")
+  }
+
+  // Search
+  const inputSearch = useRef()
+  const handleSearchProduct = () => {
+    let searchString = inputSearch.current.value
+    navigate(`product-list?search=${searchString}`)
+  }
 
   return (
     <>
-      {/* Topbar */}
+      {/* Top bar */}
       <div className="container-fluid">
         <div className="row bg-secondary py-1 px-xl-5">
           <div className="col-lg-6 d-none d-lg-block">
@@ -147,8 +157,9 @@ const Header = () => {
                   type="text"
                   className="form-control"
                   placeholder="Search for products"
+                  ref={inputSearch}
                 />
-                <div className="input-group-append cursor-pointer">
+                <div onClick={handleSearchProduct} className="input-group-append button--search">
                   <span className="input-group-text bg-transparent text-primary">
                     <i className="fa fa-search"></i>
                   </span>
@@ -244,4 +255,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Header

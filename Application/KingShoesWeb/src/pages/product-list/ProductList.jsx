@@ -94,6 +94,7 @@ const ProductList = () => {
   // #endregion
 
   // #region FILTERING 
+  const nameFilter = searchParams.get('search') ?? null
   const categoryFilter = searchParams.get('category') ?? 0
   const priceFilter = searchParams.get('price') ?? 'price-all'
   const sizeFilter = searchParams.get('size') ?? 'size-all'
@@ -155,6 +156,8 @@ const ProductList = () => {
         newListProducts = newListProducts.filter(item => item.categoryId == categoryId)
       }
 
+
+
       switch (sorting) {
         case 'lowest':
           newListProducts = [...newListProducts.sort((productFirst, productSecond) => (productFirst.price - productSecond.price))]
@@ -212,9 +215,13 @@ const ProductList = () => {
           break
       }
 
+      if (nameFilter) {
+        newListProducts = newListProducts.filter(item => item.name.toLowerCase().search(nameFilter) >= 0)
+      }
+
       setProductsChange(newListProducts)
     }
-  }, [searchParams.get('category'), searchParams.get('price'), searchParams.get('size'), searchParams.get('sort'), products, productSizes])
+  }, [searchParams.get('category'), searchParams.get('search'), searchParams.get('price'), searchParams.get('size'), searchParams.get('sort'), products, productSizes])
   // #endregion
 
   useEffect(() => {

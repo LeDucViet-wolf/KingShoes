@@ -1,0 +1,8 @@
+.button--search:hover {
+    background-color: #ffd333;
+    cursor: pointer;
+}
+
+.button--search:hover>span>i {
+    color: #3d464d;
+}
