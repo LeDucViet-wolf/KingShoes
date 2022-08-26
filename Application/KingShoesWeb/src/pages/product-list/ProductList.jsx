@@ -156,8 +156,6 @@ const ProductList = () => {
         newListProducts = newListProducts.filter(item => item.categoryId == categoryId)
       }
 
-
-
       switch (sorting) {
         case 'lowest':
           newListProducts = [...newListProducts.sort((productFirst, productSecond) => (productFirst.price - productSecond.price))]

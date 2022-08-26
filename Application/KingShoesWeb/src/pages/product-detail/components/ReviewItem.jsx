@@ -1,10 +1,19 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import { getAllCustomer } from '@/stores/actions'
 import "@/assets/css/review-item.css"
 
 const ReviewItem = ({ ...props }) => {
+    const dispatch = useDispatch()
+
+    const { customers } = useSelector((state) => ({
+        customers: state.customerReducer.customers
+    }))
+
     const { review, customer } = props
     const customerObj = JSON.parse(customer)
     const boxReply = useRef()
+    const [replies, setReplies] = useState(JSON.parse(review.reply))
 
     const [inputReply, setInputReply] = useState()
     const [isInputReplyValid, setIsInputReplyValid] = useState(true)
@@ -16,7 +25,6 @@ const ReviewItem = ({ ...props }) => {
 
     const inputReplyChange = (e) => {
         if (e.target.value) {
-            // if(e.target.value < 200)
             setInputReply(e.target.value)
             setIsInputReplyValid(true)
         } else {
@@ -30,6 +38,21 @@ const ReviewItem = ({ ...props }) => {
             setIsInputReplyValid(false)
         }
     }
+
+    useEffect(() => {
+        let newReplies = []
+        replies.forEach((r) => {
+            newReplies.push({
+                ...r,
+                customer: customers.filter((c) => c.entityId == r.customerId)[0]
+            })
+        })
+        setReplies(newReplies)
+    }, [customers])
+
+    useEffect(() => {
+        dispatch(getAllCustomer())
+    }, [dispatch])
 
     return (
         <div className="media mb-4">
@@ -57,13 +80,24 @@ const ReviewItem = ({ ...props }) => {
                         </div>
                         <p>{review.comment}</p>
 
-                        <div className="reply--child reply--child__done p-0">
-                            <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
-                            <div>
-                                <h6>{`${review.customer.firstName} ${review.customer.lastName}`}</h6>
-                                <p>{review.comment}</p>
-                            </div>
-                        </div>
+                        {
+                            replies
+                                ? replies.map((item, index) => (
+                                    <div key={index} className="reply--child reply--child__done p-0">
+                                        <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
+                                        <div>
+                                            {
+                                                item.customer
+                                                    ? <h6>{`${item.customer.firstName} ${item.customer.lastName}`}</h6>
+                                                    : ""
+                                            }
+                                            <p>{item.text}</p>
+                                        </div>
+                                    </div>
+                                ))
+                                : ""
+                        }
+
 
                         <div ref={boxReply} className="reply--child d-none">
                             <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />

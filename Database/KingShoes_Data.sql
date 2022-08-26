@@ -572,18 +572,18 @@ values
     );
 
 insert into
-    tblProductReview(`product_id`, `customer_id`, `comment`, `point`)
+    tblProductReview(`product_id`, `customer_id`, `comment`, `point`,`reply`)
 values
-    (1, 1, 'Chất lượng quá kém, đi được 2 ngày thì rách', 1),
-    (2, 2, 'Sản phẩm không giống với trên mạng', 2),
-    (3, 3, 'Hộp bọc không được đẹp', 3),
-    (4, 4, 'Đi khá êm, nhưng giá thành hơi cao', 4),
-    (5, 5, 'Tuyệt vời, tôi thích nó', 5),
-    (6, 6, 'Chất lượng quá kém, đi được 2 ngày thì rách', 1),
-    (7, 7, 'Sản phẩm không giống với trên mạng', 2),
-    (8, 8, 'Hộp bọc không được đẹp', 3),
-    (9, 9, 'Đi khá êm, nhưng giá thành hơi cao', 4),
-    (10, 10, 'Tuyệt vời, tôi thích nó', 5);
+    (1, 1, 'Chất lượng quá kém, đi được 2 ngày thì rách', 1, '[{"text":"Bạn nói thế sai rồi","customerId":1,"status":true},{"text":"Bạn nói thế sai rồi","customerId":2,"status":false},{"text":"Bạn nói thế sai rồi","customerId":3,"status":true}]'),
+    (2, 2, 'Sản phẩm không giống với trên mạng', 2,''),
+    (3, 3, 'Hộp bọc không được đẹp', 3,''),
+    (4, 4, 'Đi khá êm, nhưng giá thành hơi cao', 4,''),
+    (5, 5, 'Tuyệt vời, tôi thích nó', 5,''),
+    (6, 6, 'Chất lượng quá kém, đi được 2 ngày thì rách', 1,''),
+    (7, 7, 'Sản phẩm không giống với trên mạng', 2,''),
+    (8, 8, 'Hộp bọc không được đẹp', 3,''),
+    (9, 9, 'Đi khá êm, nhưng giá thành hơi cao', 4,''),
+    (10, 10, 'Tuyệt vời, tôi thích nó', 5,'');
 
 insert into
     tblQuote(`customer_id`, `is_paid`)

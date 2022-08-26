@@ -258,6 +258,7 @@ const ProductDetail = () => {
                   customerId: e.customerId,
                   comment: e.comment,
                   point: e.point,
+                  reply: e.reply,
                   customer: res.data.filter(
                     (x) => x.entityId == e.customerId
                   )[0],

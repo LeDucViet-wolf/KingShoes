@@ -61,6 +61,7 @@ create table tblProductReview (
 	customer_id int,
 	`comment` varchar(256),
 	point int,
+	reply longtext, -- id,text,status
 	foreign key (product_id) references tblProduct(entity_id),
 	foreign key (customer_id) references tblCustomer(entity_id)
 );

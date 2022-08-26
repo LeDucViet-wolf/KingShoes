@@ -22,19 +22,22 @@ public class ProductReview {
 	public String comment;
 	@Column(name = "point")
 	public Integer point;
+	@Column(name = "reply")
+	public String reply;
 
 	public ProductReview() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ProductReview(Integer entityId, Integer productId, String customerId, String comment, Integer point) {
+	public ProductReview(Integer entityId, Integer productId, String customerId, String comment, Integer point, String reply) {
 		super();
 		this.entityId = entityId;
 		this.productId = productId;
 		this.customerId = customerId;
 		this.comment = comment;
 		this.point = point;
+		this.reply = reply;
 	}
 
 	public Integer getEntityId() {
@@ -75,5 +78,13 @@ public class ProductReview {
 
 	public void setPoint(Integer point) {
 		this.point = point;
+	}
+	
+	public String getReply() {
+		return reply;
+	}
+	
+	public void setReply(String reply) {
+		this.reply = reply;
 	}
 }
