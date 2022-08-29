@@ -13,8 +13,9 @@ const ReviewItem = ({ ...props }) => {
     const { review, customer } = props
     const customerObj = JSON.parse(customer)
     const boxReply = useRef()
-    const [replies, setReplies] = useState(JSON.parse(review.reply))
-
+    const [replies, setReplies] = useState(review.reply ? JSON.parse(review.reply) : [])
+    const [reviewOrigin, setReviewOrigin] = useState()
+    console.log(replies, review)
     const [inputReply, setInputReply] = useState()
     const [isInputReplyValid, setIsInputReplyValid] = useState(true)
 
@@ -36,6 +37,15 @@ const ReviewItem = ({ ...props }) => {
         e.preventDefault()
         if (!inputReply) {
             setIsInputReplyValid(false)
+        } else {
+            // setReviewOrigin([
+            //     entityId:,
+            //     productId,
+            //     customerId,
+            //     comment,
+            //     point,
+            //     reply
+            // ])
         }
     }
 
@@ -97,7 +107,6 @@ const ReviewItem = ({ ...props }) => {
                                 ))
                                 : ""
                         }
-
 
                         <div ref={boxReply} className="reply--child d-none">
                             <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
