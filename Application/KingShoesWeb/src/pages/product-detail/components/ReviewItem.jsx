@@ -11,11 +11,11 @@ const ReviewItem = ({ ...props }) => {
     }))
 
     const { review, customer } = props
-    const customerObj = JSON.parse(customer)
+    const customerLogin = JSON.parse(customer)
     const boxReply = useRef()
     const [replies, setReplies] = useState(review.reply ? JSON.parse(review.reply) : [])
-    const [reviewOrigin, setReviewOrigin] = useState()
-    console.log(replies, review)
+    const [reviewOrigin, setReviewOrigin] = useState({})
+    console.log(reviewOrigin)
     const [inputReply, setInputReply] = useState()
     const [isInputReplyValid, setIsInputReplyValid] = useState(true)
 
@@ -38,14 +38,27 @@ const ReviewItem = ({ ...props }) => {
         if (!inputReply) {
             setIsInputReplyValid(false)
         } else {
-            // setReviewOrigin([
-            //     entityId:,
-            //     productId,
-            //     customerId,
-            //     comment,
-            //     point,
-            //     reply
-            // ])
+            setReviewOrigin({
+                entityId: review.entityId,
+                productId: review.productId,
+                customerId: review.customerId,
+                comment: review.comment,
+                point: review.point,
+                reply: [
+                    ...replies.map(item => (
+                        {
+                            text: item.text,
+                            customerId: item.customerId,
+                            status: item.status
+                        }
+                    )),
+                    {
+                        text: inputReply,
+                        customerId: customerLogin[0].entityId,
+                        status: true
+                    }
+                ]
+            })
         }
     }
 
@@ -112,7 +125,13 @@ const ReviewItem = ({ ...props }) => {
                             <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
                             <form>
                                 <div className="form-group">
-                                    <textarea onChange={inputReplyChange} id="message" cols="30" rows="5" className={`form-control ${isInputReplyValid ? '' : 'is-invalid'}`}></textarea>
+                                    <textarea
+                                        onChange={inputReplyChange}
+                                        id="message"
+                                        cols="30"
+                                        rows="5"
+                                        className={`form-control ${isInputReplyValid ? '' : 'is-invalid'}`}>
+                                    </textarea>
                                     <div className="invalid-feedback">
                                         Please enter your reply.
                                     </div>
