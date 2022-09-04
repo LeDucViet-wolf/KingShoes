@@ -1,21 +1,28 @@
-import React, { useRef } from "react"
-import { NavLink, Link, useNavigate } from "react-router-dom"
-import "@/assets/css/header.css"
+import React, { useRef } from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import "@/assets/css/header.css";
 
 const Header = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const customer = localStorage.getItem("customer-login")
+  const customer = localStorage.getItem("customer-login");
   const logOut = (e) => {
-    localStorage.removeItem("customer-login")
-  }
+    localStorage.removeItem("customer-login");
+  };
 
   // Search
-  const inputSearch = useRef()
+  const inputSearch = useRef();
   const handleSearchProduct = () => {
-    let searchString = inputSearch.current.value
-    navigate(`product-list?search=${searchString}`)
-  }
+    let searchString = inputSearch.current.value;
+    navigate(`product-list?search=${searchString}`);
+  };
+
+  var cart = localStorage.getItem("cart");
+  cart = JSON.parse(cart);
+  var qty = 0;
+  cart.forEach((element) => {
+    qty += parseInt(element.qty);
+  });
 
   return (
     <>
@@ -151,19 +158,22 @@ const Header = () => {
             </NavLink>
           </div>
           <div className="col-lg-4 col-6 text-left">
-              <div className="input-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search for products"
-                  ref={inputSearch}
-                />
-                <div onClick={handleSearchProduct} className="input-group-append button--search">
-                  <span className="input-group-text bg-transparent text-primary">
-                    <i className="fa fa-search"></i>
-                  </span>
-                </div>
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search for products"
+                ref={inputSearch}
+              />
+              <div
+                onClick={handleSearchProduct}
+                className="input-group-append button--search"
+              >
+                <span className="input-group-text bg-transparent text-primary">
+                  <i className="fa fa-search"></i>
+                </span>
               </div>
+            </div>
           </div>
           <div className="col-lg-4 col-6 text-right">
             <p className="m-0">Customer Service</p>
@@ -240,7 +250,7 @@ const Header = () => {
                       className="badge text-secondary border border-secondary rounded-circle"
                       style={{ paddingBottom: "2px" }}
                     >
-                      0
+                      {qty}
                     </span>
                   </NavLink>
                 </div>
@@ -253,4 +263,4 @@ const Header = () => {
   );
 };
 
-export default Header
+export default Header;
