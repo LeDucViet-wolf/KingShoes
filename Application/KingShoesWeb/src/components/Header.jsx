@@ -20,9 +20,12 @@ const Header = () => {
   var cart = localStorage.getItem("cart");
   cart = JSON.parse(cart);
   var qty = 0;
-  cart.forEach((element) => {
-    qty += parseInt(element.qty);
-  });
+  if(cart){
+    cart.forEach((element) => {
+      qty += parseInt(element.qty);
+    });
+  }
+  
 
   return (
     <>
