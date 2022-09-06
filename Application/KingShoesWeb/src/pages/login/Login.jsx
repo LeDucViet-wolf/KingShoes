@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllCustomer } from "@/stores/actions";
 import bcrypt from "bcryptjs";
 import { useNavigate } from "react-router-dom";
+import { useAlert } from 'react-alert';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,9 @@ const Login = () => {
   // Validate
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
+
+  // Alert
+  const alert = useAlert()
 
   useEffect(() => {
     dispatch(getAllCustomer());
@@ -61,9 +65,13 @@ const Login = () => {
       if (customer && customer.length > 0) {
         localStorage.setItem("customer-login", JSON.stringify(customer));
         navigate("/");
-        alert("Login success!");
+        alert.show("Login success!", {
+          type: 'success',
+        });
       } else {
-        alert("Email or Password is not match!");
+        alert.show("Email or Password is not match!", {
+          type: 'error',
+        });
       }
     }
   };
@@ -83,9 +91,8 @@ const Login = () => {
                   <div className="col-md-6 form-group">
                     <label>Email</label>
                     <input
-                      className={`form-control ${
-                        isEmailValid ? "" : "is-invalid"
-                      }`}
+                      className={`form-control ${isEmailValid ? "" : "is-invalid"
+                        }`}
                       onChange={handleEmailChange}
                       type="text"
                     />
@@ -96,9 +103,8 @@ const Login = () => {
                   <div className="col-md-6 form-group">
                     <label>Password</label>
                     <input
-                      className={`form-control ${
-                        isPasswordValid ? "" : "is-invalid"
-                      }`}
+                      className={`form-control ${isPasswordValid ? "" : "is-invalid"
+                        }`}
                       onChange={handlePasswordChange}
                       type="password"
                     />

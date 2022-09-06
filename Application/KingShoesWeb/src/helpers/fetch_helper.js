@@ -20,7 +20,7 @@ export const getAllProductReviewHelper = () => get(url.URL_PRODUCT_REVIEW_GET_AL
 export const getProductReviewByIdHelper = id => get(`${url.URL_PRODUCT_REVIEW_GET_BY_ID}/${id}`)
 export const insertProductReviewHelper = data => post(url.URL_PRODUCT_REVIEW_INSERT, data)
 export const updateProductReviewHelper = data => put(url.URL_PRODUCT_REVIEW_UPDATE, data)
-export const deleteProductReviewHelper = id => del(url.URL_PRODUCT_REVIEW_DELETE, { params: { id } })
+export const deleteProductReviewHelper = id => del(`${url.URL_PRODUCT_REVIEW_DELETE}/${id}`)
 
 // Product Image
 export const getAllProductImageHelper = () => get(url.URL_PRODUCT_IMAGE_GET_ALL)
