@@ -16,6 +16,41 @@ const Cart = () => {
 
   total = subtotal + shipping;
 
+  const removeItem = (e, id, size) => {
+    cart.forEach((item, index) => {
+      if (item.productId == id && item.size == size) {
+        cart.splice(index, 1);
+      }
+    });
+    localStorage.setItem("cart", JSON.stringify(cart));
+  };
+
+  const minusItem = (e, id, size) => {
+    cart.forEach((item, index) => {
+      if (item.productId == id && item.size == size) {
+        cart[index].qty--;
+        if (cart[index].qty == 0) {
+          cart.splice(index, 1);
+        }
+      }
+    });
+    localStorage.setItem("cart", JSON.stringify(cart));
+  };
+
+  const plusItem = (e, id, size) => {
+    cart.forEach((item, index) => {
+      if (item.productId == id && item.size == size) {
+        cart[index].qty++;
+      }
+    });
+    localStorage.setItem("cart", JSON.stringify(cart));
+  };
+
+  const clearCart = (e) => {
+    cart = [];
+    localStorage.setItem("cart", JSON.stringify(cart));
+  };
+
   return (
     <>
       <Breadcrumb
@@ -64,7 +99,12 @@ const Cart = () => {
                             style={{ width: "100px" }}
                           >
                             <div className="input-group-btn">
-                              <button className="btn btn-sm btn-primary btn-minus">
+                              <button
+                                className="btn btn-sm btn-primary btn-minus"
+                                onClick={(event) =>
+                                  minusItem(event, item.productId, item.size)
+                                }
+                              >
                                 <i className="fa fa-minus"></i>
                               </button>
                             </div>
@@ -74,7 +114,12 @@ const Cart = () => {
                               defaultValue={item.qty}
                             />
                             <div className="input-group-btn">
-                              <button className="btn btn-sm btn-primary btn-plus">
+                              <button
+                                className="btn btn-sm btn-primary btn-plus"
+                                onClick={(event) =>
+                                  plusItem(event, item.productId, item.size)
+                                }
+                              >
                                 <i className="fa fa-plus"></i>
                               </button>
                             </div>
@@ -89,7 +134,12 @@ const Cart = () => {
                           VND
                         </td>
                         <td className="align-middle">
-                          <button className="btn btn-sm btn-danger">
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={(event) =>
+                              removeItem(event, item.productId, item.size)
+                            }
+                          >
                             <i className="fa fa-times"></i>
                           </button>
                         </td>
@@ -98,6 +148,9 @@ const Cart = () => {
                   : "These is no item in cart"}
               </tbody>
             </table>
+            <button className="btn btn-primary" onClick={clearCart}>
+              Clear Shopping Cart
+            </button>
           </div>
           <div className="col-lg-4">
             <form className="mb-30" action="">
@@ -135,7 +188,8 @@ const Cart = () => {
                       ? shipping
                           .toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      : null}{"0 "}
+                      : null}
+                    {"0 "}
                     VND
                   </h6>
                 </div>
