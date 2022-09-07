@@ -10,6 +10,28 @@
     width: 100%;
 }
 
-/* .reply--child .reply--child__done{
-    justify-content: a;
-} */
+.media-body--right {
+    display: flex;
+    justify-content: start;
+}
+
+.media-body--right a {
+    margin-right: 10px;
+}
+
+.tool-comment {
+    padding: 0;
+}
+
+.tool-comment .dropdown-toggle {
+    color: #FFD333;
+    outline: none;
+    border: none;
+    background: unset;
+}
+
+.tool-comment .dropdown-toggle::after {
+    border: none;
+    margin: 0;
+    vertical-align: auto;
+}

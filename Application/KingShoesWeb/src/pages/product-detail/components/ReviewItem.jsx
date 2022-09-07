@@ -149,6 +149,15 @@ const ReviewItem = ({ ...props }) => {
                     </div>
                     <div className="media-body--right col-3">
                         <a onClick={toggleReply} href="#"><i className="fa fa-reply"></i></a>
+                        <div class="dropdown tool-comment">
+                            <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Edit</a>
+                                <a class="dropdown-item" href="#">Delete</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
