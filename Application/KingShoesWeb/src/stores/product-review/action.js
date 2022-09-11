@@ -32,9 +32,9 @@ export const addProductReview = (productReview) => ({
     payload: productReview
 })
 
-export const addProductReviewSuccess = (result) => ({
+export const addProductReviewSuccess = (productReview) => ({
     type: ADD_PRODUCT_REVIEW_SUCCESS,
-    payload: result
+    payload: productReview
 })
 
 export const addProductReviewFail = (error) => ({
@@ -47,9 +47,9 @@ export const updateProductReview = (productReview) => ({
     payload: productReview
 })
 
-export const updateProductReviewSuccess = (result) => ({
+export const updateProductReviewSuccess = (productReview) => ({
     type: UPDATE_PRODUCT_REVIEW_SUCCESS,
-    payload: result
+    payload: productReview
 })
 
 export const updateProductReviewFail = (error) => ({

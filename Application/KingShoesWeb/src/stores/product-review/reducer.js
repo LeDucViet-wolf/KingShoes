@@ -12,7 +12,7 @@ import {
 const INIT_STATE = {
   productReviews: [],
   productReview: {},
-  result: 0,
+  resultProductReview: 0,
   error: {}
 }
 
@@ -31,7 +31,7 @@ const productReviewReducer = (state = INIT_STATE, action) => {
     case ADD_PRODUCT_REVIEW_SUCCESS:
       return {
         ...state,
-        result: action.payload,
+        productReview: action.payload,
       }
     case ADD_PRODUCT_REVIEW_FAIL:
       return {
@@ -41,7 +41,7 @@ const productReviewReducer = (state = INIT_STATE, action) => {
     case UPDATE_PRODUCT_REVIEW_SUCCESS:
       return {
         ...state,
-        result: action.payload,
+        productReview: action.payload,
       }
     case UPDATE_PRODUCT_REVIEW_FAIL:
       return {
@@ -51,7 +51,7 @@ const productReviewReducer = (state = INIT_STATE, action) => {
     case DELETE_PRODUCT_REVIEW_SUCCESS:
       return {
         ...state,
-        result: action.payload,
+        resultProductReview: action.payload,
       }
     case DELETE_PRODUCT_REVIEW_FAIL:
       return {

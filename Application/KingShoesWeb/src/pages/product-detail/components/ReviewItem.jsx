@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { getAllCustomer } from '@/stores/actions'
+import { getAllCustomer, updateProductReview } from '@/stores/actions'
+import { useAlert } from 'react-alert';
 import "@/assets/css/review-item.css"
 
 const ReviewItem = ({ ...props }) => {
     const dispatch = useDispatch()
+    const alert = useAlert()
 
     const { customers } = useSelector((state) => ({
         customers: state.customerReducer.customers
@@ -14,10 +16,10 @@ const ReviewItem = ({ ...props }) => {
     const customerLogin = JSON.parse(customer)
     const boxReply = useRef()
     const [replies, setReplies] = useState(review.reply ? JSON.parse(review.reply) : [])
-    const [reviewOrigin, setReviewOrigin] = useState({})
-    console.log(reviewOrigin)
     const [inputReply, setInputReply] = useState()
     const [isInputReplyValid, setIsInputReplyValid] = useState(true)
+
+    const [productReviewAction, SetProductReviewAction] = useState("")
 
     const toggleReply = (e) => {
         e.preventDefault()
@@ -33,18 +35,26 @@ const ReviewItem = ({ ...props }) => {
         }
     }
 
+    const handleEditReview = (e) => {
+
+    }
+
+    const handleDeleteReview = (e) => {
+
+    }
+
     const handleSubmitReply = (e) => {
         e.preventDefault()
         if (!inputReply) {
             setIsInputReplyValid(false)
         } else {
-            setReviewOrigin({
+            let reviewOrigin = {
                 entityId: review.entityId,
                 productId: review.productId,
                 customerId: review.customerId,
                 comment: review.comment,
                 point: review.point,
-                reply: [
+                reply: JSON.stringify([
                     ...replies.map(item => (
                         {
                             text: item.text,
@@ -57,10 +67,72 @@ const ReviewItem = ({ ...props }) => {
                         customerId: customerLogin[0].entityId,
                         status: true
                     }
-                ]
-            })
+                ])
+            }
+            dispatch(updateProductReview(reviewOrigin))
+            SetProductReviewAction('add-reply')
         }
     }
+
+    const handleEditReply = (e) => {
+
+    }
+
+    const handleDeleteReply = (e) => {
+
+    }
+
+    const { productReview, resultProductReview, error } = useSelector((state) => ({
+        productReview: state.productReviewReducer.productReview,
+        resultProductReview: state.productReviewReducer.resultProductReview,
+        error: state.productReviewReducer.error
+    }))
+
+    console.log(productReview)
+
+    useEffect(() => {
+        switch (productReviewAction) {
+            case 'add-reply':
+                if (productReview) {
+                    alert.show("Add Reply Success!", { type: 'success' })
+                    let currentReplies = productReview.reply ? JSON.parse(productReview.reply) : []
+                    let newReplies = []
+                    currentReplies.forEach(item =>
+                        newReplies.push({
+                            ...item,
+                            customer: customers.filter((c) => c.entityId == item.customerId)[0]
+                        })
+                    )
+                    setReplies(newReplies)
+                } else {
+                    alert.show("Add Reply Fail!", {
+                        type: 'error',
+                    })
+                }
+                SetProductReviewAction("")
+                break
+            case 'edit-reply':
+                resultProductReview !== 0
+                    ? alert.show("Edit Reply Success!", {
+                        type: 'success',
+                    })
+                    : alert.show("Edit Reply Fail!", {
+                        type: 'error',
+                    })
+                SetProductReviewAction("")
+                break
+            case 'delete-reply':
+                resultProductReview !== 0
+                    ? alert.show("Delete Reply Success!", {
+                        type: 'success',
+                    })
+                    : alert.show("Delete Reply Fail!", {
+                        type: 'error',
+                    })
+                SetProductReviewAction("")
+                break
+        }
+    }, [productReviewAction])
 
     useEffect(() => {
         let newReplies = []
@@ -82,8 +154,30 @@ const ReviewItem = ({ ...props }) => {
             <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
             <div className="media-body">
                 <div className="row">
-                    <div className="media-body--left col-9">
-                        <h6>{`${review.customer.firstName} ${review.customer.lastName}`}</h6>
+                    <div className="media-body--review col-12">
+                        <h6 className="title">
+                            <span className="name">{`${review.customer.firstName} ${review.customer.lastName}`}</span>
+                            <div className="tools">
+                                <a onClick={toggleReply} href="#"><i className="fa fa-reply"></i></a>
+                                {
+                                    customerLogin && customerLogin[0].entityId === review.customer.entityId
+                                        ? <div className="dropdown tool-comment">
+                                            <button className="dropdown-toggle"
+                                                type="button" id="dropdownMenuButton"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                            </button>
+                                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a className="dropdown-item" href="#">Edit</a>
+                                                <a className="dropdown-item" href="#">Delete</a>
+                                            </div>
+                                        </div>
+                                        : ""
+                                }
+                            </div>
+                        </h6>
                         <div className="text-primary mb-2">
                             {
                                 [...Array(parseInt(review.point))].map(
@@ -108,10 +202,31 @@ const ReviewItem = ({ ...props }) => {
                                 ? replies.map((item, index) => (
                                     <div key={index} className="reply--child reply--child__done p-0">
                                         <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
-                                        <div>
+                                        <div className="information">
                                             {
                                                 item.customer
-                                                    ? <h6>{`${item.customer.firstName} ${item.customer.lastName}`}</h6>
+                                                    ? <h6 className="title">
+                                                        <span className="name">{`${item.customer.firstName} ${item.customer.lastName}`}</span>
+                                                        {
+                                                            customerLogin && customerLogin[0].entityId === item.customerId
+                                                                ? <div className="tools">
+                                                                    <div className="dropdown tool-comment">
+                                                                        <button className="dropdown-toggle"
+                                                                            type="button" id="dropdownMenuButton"
+                                                                            data-toggle="dropdown"
+                                                                            aria-haspopup="true"
+                                                                            aria-expanded="false">
+                                                                            <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                                        </button>
+                                                                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                            <a className="dropdown-item" href="#">Edit</a>
+                                                                            <a className="dropdown-item" href="#">Delete</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                : ""
+                                                        }
+                                                    </h6>
                                                     : ""
                                             }
                                             <p>{item.text}</p>
@@ -145,18 +260,6 @@ const ReviewItem = ({ ...props }) => {
                                     />
                                 </div>
                             </form>
-                        </div>
-                    </div>
-                    <div className="media-body--right col-3">
-                        <a onClick={toggleReply} href="#"><i className="fa fa-reply"></i></a>
-                        <div class="dropdown tool-comment">
-                            <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="#">Delete</a>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -289,9 +289,6 @@ const ProductDetail = () => {
 
   useEffect(() => {
     fetchData();
-  }, [productId]);
-
-  useEffect(() => {
     window.scrollTo(0, 0);
   }, [productId]);
 

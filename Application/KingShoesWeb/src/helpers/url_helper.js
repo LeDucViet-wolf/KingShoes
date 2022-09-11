@@ -18,7 +18,7 @@ export const URL_PRODUCT_SIZE_DELETE = "product-sizes/delete"
 export const URL_PRODUCT_REVIEW = "product-reviews"
 export const URL_PRODUCT_REVIEW_GET_ALL = "product-reviews/get-all"
 export const URL_PRODUCT_REVIEW_GET_BY_ID = "product-reviews/get-by-id"
-export const URL_PRODUCT_REVIEW_INSERT = "productreviewss/insert"
+export const URL_PRODUCT_REVIEW_INSERT = "product-reviews/insert"
 export const URL_PRODUCT_REVIEW_UPDATE = "product-reviews/update"
 export const URL_PRODUCT_REVIEW_DELETE = "product-reviews/delete"
 

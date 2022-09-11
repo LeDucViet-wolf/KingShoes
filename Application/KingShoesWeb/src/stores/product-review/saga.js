@@ -19,11 +19,11 @@ import {
     deleteProductReviewHelper
 } from '@/helpers'
 
-import { 
+import {
     GET_ALL_PRODUCT_REVIEW,
     ADD_PRODUCT_REVIEW,
     UPDATE_PRODUCT_REVIEW,
-    DELETE_PRODUCT_REVIEW 
+    DELETE_PRODUCT_REVIEW
 } from "./actionType"
 
 function* fetchProductReviewList() {
@@ -47,7 +47,10 @@ function* onAddNewProductReview({ payload: productReview }) {
 function* onUpdateProductReview({ payload: productReview }) {
     try {
         const response = yield call(updateProductReviewHelper, productReview)
-        yield put(updateProductReviewSuccess(response))
+        response != 0
+            ? yield put(updateProductReviewSuccess(productReview))
+            : yield put(updateProductReviewSuccess({}))
+
     } catch (error) {
         yield put(updateProductReviewFail(error))
     }

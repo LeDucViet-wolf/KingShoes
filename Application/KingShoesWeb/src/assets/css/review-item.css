@@ -6,17 +6,33 @@
     padding-top: 10px;
 }
 
+.reply--child .information{
+    width: 100%;
+}
+
+.reply--child .information .title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .reply--child form {
     width: 100%;
 }
 
-.media-body--right {
+.media-body--review .title{
     display: flex;
-    justify-content: start;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.media-body--right a {
-    margin-right: 10px;
+.media-body--review .title .tools{
+    display: flex;
+    align-items: center;
+}
+
+.media-body--review .title .tools a{
+    margin-right: 5px;
 }
 
 .tool-comment {
