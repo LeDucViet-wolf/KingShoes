@@ -15,6 +15,7 @@ const App = () => {
         { path: 'product-list', element: <Page.ProductList /> },
         { path: 'product-detail', element: <Page.ProductDetail /> },
         { path: 'cart', element: <Page.Cart /> },
+        { path: 'wishlist', element: <Page.Wishlist /> },
         { path: 'checkout', element: <Page.Checkout /> },
         { path: 'contact', element: <Page.Contact /> },
       ]

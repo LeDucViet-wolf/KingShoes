@@ -5,8 +5,8 @@ import ReviewItem from "./components/ReviewItem";
 import { Breadcrumb } from "@/components";
 import useScript from "@/hooks/useScript";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux"
-import { getAllProductImage } from '@/stores/actions'
+import { useSelector, useDispatch } from "react-redux";
+import { getAllProductImage } from "@/stores/actions";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -21,11 +21,11 @@ const ProductDetail = () => {
   useScript("public/js/product-quantity");
   useScript("public/js/tab");
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { productImages } = useSelector((state) => ({
-    productImages: state.productImageReducer.productImages
-  }))
+    productImages: state.productImageReducer.productImages,
+  }));
 
   const navigate = useNavigate();
   const customer = localStorage.getItem("customer-login");
@@ -49,7 +49,9 @@ const ProductDetail = () => {
   const qtyMessage =
     "Please enter a valid number in this field and quantity must bigger than 0.";
 
-  const productImage = productImages.filter(pi => pi.productId == product.entityId)
+  const productImage = productImages.filter(
+    (pi) => pi.productId == product.entityId
+  );
 
   // #region Rating
   const stars = 5;
@@ -71,7 +73,7 @@ const ProductDetail = () => {
   };
   //  #endregion
 
-  const inputReview = useRef()
+  const inputReview = useRef();
 
   const handleReviewChange = (e) => {
     if (e.target.value) {
@@ -148,6 +150,72 @@ const ProductDetail = () => {
     }
   };
 
+  const addToWishlist = (e) => {
+    e.preventDefault();
+    var valid = true;
+    if (!size) {
+      setIsSizeValid(false);
+      valid = false;
+    } else {
+      setIsSizeValid(true);
+    }
+
+    if (!qty) {
+      setIsQtyValid(false);
+      valid = false;
+    } else {
+      setIsQtyValid(true);
+    }
+
+    if (valid) {
+      var wishlist = localStorage.getItem("wishlist")
+        ? JSON.parse(localStorage.getItem("wishlist"))
+        : [];
+      if (wishlist.length > 0) {
+        var existProductInWishlist = wishlist.filter(
+          (x) => x.productId == productId && x.size == parseInt(size)
+        );
+        if (existProductInWishlist.length > 0) {
+          var wishlistItem = {
+            productId: parseInt(productId),
+            product: product,
+            size: parseInt(size),
+            qty: existProductInWishlist[0].qty + parseInt(qty),
+          };
+
+          wishlist.forEach((item, index) => {
+            if (
+              item.productId === parseInt(productId) &&
+              item.size === parseInt(size)
+            ) {
+              wishlist[index] = wishlistItem;
+            }
+          });
+        } else {
+          var wishlistItem = {
+            productId: parseInt(productId),
+            product: product,
+            size: parseInt(size),
+            qty: parseInt(qty),
+          };
+          wishlist.push(wishlistItem);
+        }
+
+        localStorage.setItem("wishlist", wishlist);
+      } else {
+        var wishlistItem = {
+          productId: parseInt(productId),
+          product: product,
+          size: parseInt(size),
+          qty: parseInt(qty),
+        };
+
+        wishlist.push(wishlistItem);
+      }
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    }
+  };
+
   const handleSizeChange = (e) => {
     setSize(e.target.value);
     setIsSizeValid(true);
@@ -165,15 +233,15 @@ const ProductDetail = () => {
 
   const submitReview = (e) => {
     e.preventDefault();
-    let valid = true
+    let valid = true;
     if (objRating.rating < 1) {
       setIsPointValid(false);
-      valid = false
+      valid = false;
     }
 
     if (!review) {
       setIsReviewValid(false);
-      valid = false
+      valid = false;
     }
 
     if (valid) {
@@ -216,9 +284,9 @@ const ProductDetail = () => {
 
   const fetchData = () => {
     var configGetProductData = {
-      method: "get",
-      url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
-    },
+        method: "get",
+        url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
+      },
       configGetProductSizeData = {
         method: "get",
         url: `http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id/${productId}`,
@@ -238,7 +306,7 @@ const ProductDetail = () => {
       .then(function (response) {
         getProductSize(response.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
     axios(configGetProductReviewData)
       .then((response) => {
         if (response.data.length > 0) {
@@ -284,11 +352,14 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllProductImage())
-  }, [dispatch])
+    dispatch(getAllProductImage());
+  }, [dispatch]);
 
   useEffect(() => {
     fetchData();
+  }, [productId]);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [productId]);
 
@@ -307,15 +378,16 @@ const ProductDetail = () => {
               modules={[Navigation]}
               className="bg-light mySwiper"
             >
-              {
-                (productImage != null && productImage.length != 0)
-                  ? productImage.map(item => (
+              {productImage != null && productImage.length != 0
+                ? productImage.map((item) => (
                     <SwiperSlide key={item.entityId}>
-                      <img className="w-100 h-100" src={`img/product/${item.value}`} />
+                      <img
+                        className="w-100 h-100"
+                        src={`img/product/${item.value}`}
+                      />
                     </SwiperSlide>
                   ))
-                  : ""
-              }
+                : ""}
             </Swiper>
           </div>
           <div className="col-lg-7 h-auto mb-30">
@@ -328,8 +400,8 @@ const ProductDetail = () => {
                   ))}
                   {overallReview < 5
                     ? [...Array(5 - overallReview)].map((item, i) => (
-                      <small key={i} className="far fa-star"></small>
-                    ))
+                        <small key={i} className="far fa-star"></small>
+                      ))
                     : ""}
                 </div>
                 <small className="pt-1">({productReviewCount} Reviews)</small>
@@ -337,8 +409,8 @@ const ProductDetail = () => {
               <h3 className="font-weight-semi-bold mb-4">
                 {product.price
                   ? product.price
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   : null}{" "}
                 VND
               </h3>
@@ -348,26 +420,26 @@ const ProductDetail = () => {
                 <form>
                   {productSize
                     ? productSize.map((item, i) => (
-                      <div
-                        key={i}
-                        className="custom-control custom-radio custom-control-inline"
-                      >
-                        <input
-                          type="radio"
-                          className="custom-control-input"
-                          id={item.value}
-                          value={item.value}
-                          name="size"
-                          onChange={handleSizeChange}
-                        />
-                        <label
-                          className="custom-control-label"
-                          htmlFor={item.value}
+                        <div
+                          key={i}
+                          className="custom-control custom-radio custom-control-inline"
                         >
-                          {item.value}
-                        </label>
-                      </div>
-                    ))
+                          <input
+                            type="radio"
+                            className="custom-control-input"
+                            id={item.value}
+                            value={item.value}
+                            name="size"
+                            onChange={handleSizeChange}
+                          />
+                          <label
+                            className="custom-control-label"
+                            htmlFor={item.value}
+                          >
+                            {item.value}
+                          </label>
+                        </div>
+                      ))
                     : ""}
                 </form>
               </div>
@@ -392,8 +464,9 @@ const ProductDetail = () => {
                   <input
                     type="text"
                     onChange={handleQty}
-                    className={`form-control bg-secondary border-0 text-center ${isQtyValid ? "" : "is-invalid"
-                      }`}
+                    className={`form-control bg-secondary border-0 text-center ${
+                      isQtyValid ? "" : "is-invalid"
+                    }`}
                     defaultValue="1"
                   />
                   <div className="input-group-btn">
@@ -408,8 +481,17 @@ const ProductDetail = () => {
                 <button className="btn btn-primary px-3" onClick={addToCart}>
                   <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
                 </button>
+                <button
+                  className="btn btn-primary px-3"
+                  onClick={addToWishlist}
+                  style={{ marginLeft: "10px" }}
+                >
+                  <i className="fa fa-heart mr-1"></i> Add To Wishlist
+                </button>
               </div>
-              <div className={`invalid-feedback ${isQtyValid ? "" : "d-block"}`}>
+              <div
+                className={`invalid-feedback ${isQtyValid ? "" : "d-block"}`}
+              >
                 {qtyMessage}
               </div>
             </div>
@@ -437,7 +519,9 @@ const ProductDetail = () => {
               <div className="tab-content">
                 <div className="tab-pane fade show active" id="tab-pane-1">
                   <h4 className="mb-3">Product Description</h4>
-                  <div dangerouslySetInnerHTML={{ __html: product.description }}></div>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: product.description }}
+                  ></div>
                 </div>
                 <div className="tab-pane fade" id="tab-pane-2">
                   <div className="row">
@@ -445,13 +529,15 @@ const ProductDetail = () => {
                       <h4 className="mb-4">
                         {productReviewCount} review for "{product.name}"
                       </h4>
-                      {
-                        productReview
-                          ? productReview.map((item, i) => (
-                            <ReviewItem key={item.entityId} customer={customer} review={item} />
+                      {productReview
+                        ? productReview.map((item, i) => (
+                            <ReviewItem
+                              key={item.entityId}
+                              customer={customer}
+                              review={item}
+                            />
                           ))
-                          : ""
-                      }
+                        : ""}
                     </div>
                     {customer ? (
                       <div className="col-md-6">
@@ -471,12 +557,13 @@ const ProductDetail = () => {
                                   onMouseEnter={() => hoverRating(star)}
                                   onMouseLeave={() => hoverRating(0)}
                                   key={index + 1}
-                                  className={`${objRating.rating < star
-                                    ? objRating.hovered < star
-                                      ? objRating.deselectedClass
+                                  className={`${
+                                    objRating.rating < star
+                                      ? objRating.hovered < star
+                                        ? objRating.deselectedClass
+                                        : objRating.selectedClass
                                       : objRating.selectedClass
-                                    : objRating.selectedClass
-                                    } 
+                                  } 
                                   fa-star`}
                                 ></i>
                               );
@@ -484,8 +571,9 @@ const ProductDetail = () => {
                           </div>
                         </div>
                         <div
-                          className={`invalid-feedback ${isPointValid ? "" : "d-block"
-                            }`}
+                          className={`invalid-feedback ${
+                            isPointValid ? "" : "d-block"
+                          }`}
                         >
                           Please choose your rating.
                         </div>
@@ -498,8 +586,9 @@ const ProductDetail = () => {
                               id="message"
                               cols="30"
                               rows="5"
-                              className={`form-control ${isReviewValid ? "" : "is-invalid"
-                                }`}
+                              className={`form-control ${
+                                isReviewValid ? "" : "is-invalid"
+                              }`}
                             ></textarea>
                             <div className="invalid-feedback">
                               Please enter your review.

@@ -17,15 +17,21 @@ const Header = () => {
     navigate(`product-list?search=${searchString}`);
   };
 
-  var cart = localStorage.getItem("cart");
-  cart = JSON.parse(cart);
-  var qty = 0;
-  if(cart){
+  var cart = JSON.parse(localStorage.getItem("cart")),
+    wishlist = JSON.parse(localStorage.getItem("wishlist")),
+    cartQty = 0,
+    wishlistQty = 0;
+  if (cart) {
     cart.forEach((element) => {
-      qty += parseInt(element.qty);
+      cartQty += parseInt(element.qty);
     });
   }
-  
+
+  if (wishlist) {
+    wishlist.forEach((element) => {
+      wishlistQty += parseInt(element.qty);
+    });
+  }
 
   return (
     <>
@@ -234,15 +240,19 @@ const Header = () => {
                   </NavLink>
                 </div>
                 <div className="navbar-nav ml-auto py-0 d-none d-lg-block">
-                  <a href="" className="btn px-0">
+                  <NavLink
+                    activeclassname="active"
+                    to="/wishlist"
+                    className="btn px-0"
+                  >
                     <i className="fas fa-heart text-primary"></i>
                     <span
                       className="badge text-secondary border border-secondary rounded-circle"
                       style={{ paddingBottom: "2px" }}
                     >
-                      0
+                      {wishlistQty}
                     </span>
-                  </a>
+                  </NavLink>
                   <NavLink
                     activeclassname="active"
                     to="/cart"
@@ -253,7 +263,7 @@ const Header = () => {
                       className="badge text-secondary border border-secondary rounded-circle"
                       style={{ paddingBottom: "2px" }}
                     >
-                      {qty}
+                      {cartQty}
                     </span>
                   </NavLink>
                 </div>

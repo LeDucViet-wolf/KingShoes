@@ -7,6 +7,8 @@ const ProductItem = ({ ...props }) => {
   const { product, grid } = props;
   const dispatch = useDispatch();
 
+  const [type, setType] = useState();
+
   const { productImages, productReviews } = useSelector((state) => ({
     productImages: state.productImageReducer.productImages,
     productReviews: state.productReviewReducer.productReviews,
@@ -30,55 +32,59 @@ const ProductItem = ({ ...props }) => {
     setSize(e.target.value);
   };
 
-  const addToCartPLP = (e) => {
+  const addPLP = (e) => {
     if (size && productId) {
-      var cart = localStorage.getItem("cart")
-        ? JSON.parse(localStorage.getItem("cart"))
+      var data = localStorage.getItem(type)
+        ? JSON.parse(localStorage.getItem(type))
         : [];
 
-      if (cart.length > 0) {
-        var existProductInCart = cart.filter(
+      if (data.length > 0) {
+        var existProduct = data.filter(
           (x) => x.productId == productId && x.size == parseInt(size)
         );
-        if (existProductInCart.length > 0) {
-          var cartItem = {
+        if (existProduct.length > 0) {
+          var dataItem = {
             productId: parseInt(productId),
             product: product,
             size: parseInt(size),
-            qty: existProductInCart[0].qty + 1,
+            qty: existProduct[0].qty + 1,
           };
 
-          cart.forEach((item, index) => {
+          data.forEach((item, index) => {
             if (
               item.productId === parseInt(productId) &&
               item.size === parseInt(size)
             ) {
-              cart[index] = cartItem;
+              data[index] = dataItem;
             }
           });
         } else {
-          var cartItem = {
+          var dataItem = {
             productId: parseInt(productId),
             product: product,
             size: parseInt(size),
             qty: 1,
           };
-          cart.push(cartItem);
+          data.push(dataItem);
         }
 
-        localStorage.setItem("cart", cart);
+        localStorage.setItem(type, data);
       } else {
-        var cartItem = {
+        var dataItem = {
           productId: parseInt(productId),
           product: product,
           size: parseInt(size),
           qty: 1,
         };
 
-        cart.push(cartItem);
+        data.push(dataItem);
       }
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem(type, JSON.stringify(data));
     }
+  };
+
+  const setTypeAdd = (e) => {
+    setType(e);
   };
 
   const productRatingAverage = isProductReviewEmpty
@@ -111,10 +117,16 @@ const ProductItem = ({ ...props }) => {
               className="btn btn-outline-dark btn-square"
               data-toggle="modal"
               data-target={"#modal" + product.entityId}
+              onClick={() => setTypeAdd("cart")}
             >
               <i className="fa fa-shopping-cart"></i>
             </a>
-            <a className="btn btn-outline-dark btn-square" href="#">
+            <a
+              className="btn btn-outline-dark btn-square"
+              data-toggle="modal"
+              data-target={"#modal" + product.entityId}
+              onClick={() => setTypeAdd("wishlist")}
+            >
               <i className="far fa-heart"></i>
             </a>
             <div className="modal" id={"modal" + product.entityId}>
@@ -168,7 +180,7 @@ const ProductItem = ({ ...props }) => {
                       type="button"
                       className="btn btn-primary"
                       data-dismiss="modal"
-                      onClick={addToCartPLP}
+                      onClick={addPLP}
                     >
                       Add
                     </button>
