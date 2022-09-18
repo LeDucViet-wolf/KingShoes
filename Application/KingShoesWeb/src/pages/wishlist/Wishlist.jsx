@@ -80,6 +80,9 @@ const Wishlist = () => {
                           <i className="fa fa-shopping-cart mr-1"></i> Add To
                           Cart
                         </button>
+                        <button className="btn btn-primary">
+                          <i className="fa fa-eraser mr-1"></i> Remove item
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -88,6 +91,8 @@ const Wishlist = () => {
             </div>
           </div>
         </div>
+        <button className="btn btn-primary">Continue Shopping</button>
+        <button className="btn btn-primary">Add All To Cart</button>
       </div>
     </>
   );

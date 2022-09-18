@@ -1,9 +1,11 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Breadcrumb } from "@/components";
 import useScript from "@/hooks/useScript";
 
 const Cart = () => {
+  const navigate = useNavigate();
+
   useScript("public/js/product-quantity");
   var cart = localStorage.getItem("cart");
   cart = JSON.parse(cart);
@@ -148,6 +150,9 @@ const Cart = () => {
                   : "These is no item in cart"}
               </tbody>
             </table>
+            <button className="btn btn-primary" onClick={() => navigate("/")}>
+              Continue Shopping
+            </button>
             <button className="btn btn-primary" onClick={clearCart}>
               Clear Shopping Cart
             </button>
