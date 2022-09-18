@@ -7,6 +7,7 @@ import useScript from "@/hooks/useScript";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllProductImage } from "@/stores/actions";
+import { useAlert } from 'react-alert'
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -22,9 +23,11 @@ const ProductDetail = () => {
   useScript("public/js/tab");
 
   const dispatch = useDispatch();
+  const alert = useAlert()
 
-  const { productImages } = useSelector((state) => ({
+  const { productImages, resultProductReview } = useSelector((state) => ({
     productImages: state.productImageReducer.productImages,
+    resultProductReview: state.productReviewReducer.resultProductReview
   }));
 
   const navigate = useNavigate();
@@ -52,6 +55,7 @@ const ProductDetail = () => {
   const productImage = productImages.filter(
     (pi) => pi.productId == product.entityId
   );
+  const [waitResultProductReview, setWaitResultProductReview] = useState(resultProductReview)
 
   // #region Rating
   const stars = 5;
@@ -350,6 +354,21 @@ const ProductDetail = () => {
         console.log(err);
       });
   };
+
+  useEffect(() => {
+    debugger
+    setWaitResultProductReview(resultProductReview)
+  },[resultProductReview])
+
+  useEffect(() => {
+    // debugger
+    if(waitResultProductReview === 1){
+      fetchData()
+      alert.show("Delete Review Success!", { type: 'success' })
+    }else{
+      alert.show("Delete Reply Fail!", { type: 'error' })
+    }
+  }, [waitResultProductReview])
 
   useEffect(() => {
     dispatch(getAllProductImage());

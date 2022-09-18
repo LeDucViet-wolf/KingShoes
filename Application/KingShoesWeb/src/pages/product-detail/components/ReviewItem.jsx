@@ -1,51 +1,88 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { getAllCustomer, updateProductReview } from '@/stores/actions'
-import { useAlert } from 'react-alert';
+import { getAllCustomer, updateProductReview, deleteProductReview } from '@/stores/actions'
+import { useAlert } from 'react-alert'
 import "@/assets/css/review-item.css"
 
 const ReviewItem = ({ ...props }) => {
     const dispatch = useDispatch()
     const alert = useAlert()
 
-    const { customers } = useSelector((state) => ({
-        customers: state.customerReducer.customers
+    const { customers, productReview, resultProductReview, error } = useSelector((state) => ({
+        customers: state.customerReducer.customers,
+        productReview: state.productReviewReducer.productReview,
+        resultProductReview: state.productReviewReducer.resultProductReview,
+        error: state.productReviewReducer.error
     }))
 
     const { review, customer } = props
     const customerLogin = JSON.parse(customer)
+
+    const [productReviewAction, setProductReviewAction] = useState("")
+
+
+    const handleEditReview = (e) => {
+
+    }
+
+    const handleDeleteReview = (e, id) => {
+        e.preventDefault()
+        if (confirm('Are you sure to delete this review?')) {
+            dispatch(deleteProductReview(id))
+        }
+    }
+
+    // #region REPLY
     const boxReply = useRef()
+    const inputReply = useRef()
     const [replies, setReplies] = useState(review.reply ? JSON.parse(review.reply) : [])
-    const [inputReply, setInputReply] = useState()
     const [isInputReplyValid, setIsInputReplyValid] = useState(true)
+    const [waitProductReview, setWaitProductReview] = useState()
 
-    const [productReviewAction, SetProductReviewAction] = useState("")
-
-    const toggleReply = (e) => {
+    const handleAddReply = (e) => {
         e.preventDefault()
         boxReply.current.classList.toggle('d-none')
+        setProductReviewAction('add-reply')
+    }
+
+    const handleEditReply = (e) => {
+
+    }
+
+    const handleDeleteReply = (e, index) => {
+        e.preventDefault()
+        if (confirm('Are you sure to delete this reply?')) {
+            replies.splice(index, 1)
+            let reviewOrigin = {
+                entityId: review.entityId,
+                productId: review.productId,
+                customerId: review.customerId,
+                comment: review.comment,
+                point: review.point,
+                reply: JSON.stringify([...replies.map(item => (
+                    {
+                        text: item.text,
+                        customerId: item.customerId,
+                        status: item.status
+                    }
+                ))])
+            }
+            dispatch(updateProductReview(reviewOrigin))
+            setProductReviewAction('delete-reply')
+        }
     }
 
     const inputReplyChange = (e) => {
         if (e.target.value) {
-            setInputReply(e.target.value)
             setIsInputReplyValid(true)
         } else {
             setIsInputReplyValid(false)
         }
     }
 
-    const handleEditReview = (e) => {
-
-    }
-
-    const handleDeleteReview = (e) => {
-
-    }
-
     const handleSubmitReply = (e) => {
         e.preventDefault()
-        if (!inputReply) {
+        if (!inputReply.current.value) {
             setIsInputReplyValid(false)
         } else {
             let reviewOrigin = {
@@ -63,53 +100,45 @@ const ReviewItem = ({ ...props }) => {
                         }
                     )),
                     {
-                        text: inputReply,
+                        text: inputReply.current.value,
                         customerId: customerLogin[0].entityId,
                         status: true
                     }
                 ])
             }
+            inputReply.current.value = null
             dispatch(updateProductReview(reviewOrigin))
-            SetProductReviewAction('add-reply')
+            setProductReviewAction('add-reply')
         }
     }
 
-    const handleEditReply = (e) => {
-
+    const reloadReply = () => {
+        let newReplies = []
+        JSON.parse(waitProductReview.reply).forEach((r) => {
+            newReplies.push({
+                ...r,
+                customer: customers.filter((c) => c.entityId == r.customerId)[0]
+            })
+        })
+        setReplies(newReplies)
     }
+    // #endregion
 
-    const handleDeleteReply = (e) => {
-
-    }
-
-    const { productReview, resultProductReview, error } = useSelector((state) => ({
-        productReview: state.productReviewReducer.productReview,
-        resultProductReview: state.productReviewReducer.resultProductReview,
-        error: state.productReviewReducer.error
-    }))
-
-    console.log(productReview)
+    useEffect(() => {
+        setWaitProductReview(productReview)
+    }, [productReview])
 
     useEffect(() => {
         switch (productReviewAction) {
             case 'add-reply':
-                if (productReview) {
+                debugger
+                if (waitProductReview) {
+                    reloadReply()
                     alert.show("Add Reply Success!", { type: 'success' })
-                    let currentReplies = productReview.reply ? JSON.parse(productReview.reply) : []
-                    let newReplies = []
-                    currentReplies.forEach(item =>
-                        newReplies.push({
-                            ...item,
-                            customer: customers.filter((c) => c.entityId == item.customerId)[0]
-                        })
-                    )
-                    setReplies(newReplies)
                 } else {
-                    alert.show("Add Reply Fail!", {
-                        type: 'error',
-                    })
+                    alert.show("Add Reply Fail!", { type: 'error' })
                 }
-                SetProductReviewAction("")
+                setProductReviewAction("")
                 break
             case 'edit-reply':
                 resultProductReview !== 0
@@ -122,17 +151,16 @@ const ReviewItem = ({ ...props }) => {
                 SetProductReviewAction("")
                 break
             case 'delete-reply':
-                resultProductReview !== 0
-                    ? alert.show("Delete Reply Success!", {
-                        type: 'success',
-                    })
-                    : alert.show("Delete Reply Fail!", {
-                        type: 'error',
-                    })
-                SetProductReviewAction("")
+                if (waitProductReview) {
+                    reloadReply()
+                    alert.show("Delete Reply Success!", { type: 'success' })
+                } else {
+                    alert.show("Delete Reply Fail!", { type: 'error' })
+                }
+                setProductReviewAction("")
                 break
         }
-    }, [productReviewAction])
+    }, [waitProductReview])
 
     useEffect(() => {
         let newReplies = []
@@ -158,7 +186,7 @@ const ReviewItem = ({ ...props }) => {
                         <h6 className="title">
                             <span className="name">{`${review.customer.firstName} ${review.customer.lastName}`}</span>
                             <div className="tools">
-                                <a onClick={toggleReply} href="#"><i className="fa fa-reply"></i></a>
+                                <a onClick={handleAddReply} href="#"><i className="fa fa-reply"></i></a>
                                 {
                                     customerLogin && customerLogin[0].entityId === review.customer.entityId
                                         ? <div className="dropdown tool-comment">
@@ -171,7 +199,10 @@ const ReviewItem = ({ ...props }) => {
                                             </button>
                                             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a className="dropdown-item" href="#">Edit</a>
-                                                <a className="dropdown-item" href="#">Delete</a>
+                                                <a
+                                                    className="dropdown-item"
+                                                    href="#"
+                                                    onClick={(e) => handleDeleteReview(e, review.entityId)}>Delete</a>
                                             </div>
                                         </div>
                                         : ""
@@ -219,21 +250,25 @@ const ReviewItem = ({ ...props }) => {
                                                                             <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
                                                                         </button>
                                                                         <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                            <a className="dropdown-item" href="#">Edit</a>
-                                                                            <a className="dropdown-item" href="#">Delete</a>
+                                                                            <a className="dropdown-item" href="#" onClick={handleEditReply}>Edit</a>
+                                                                            <a
+                                                                                className="dropdown-item"
+                                                                                href="#"
+                                                                                onClick={(e) => handleDeleteReply(e, index)}>Delete
+                                                                            </a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                : ""
+                                                                : ''
                                                         }
                                                     </h6>
-                                                    : ""
+                                                    : ''
                                             }
                                             <p>{item.text}</p>
                                         </div>
                                     </div>
                                 ))
-                                : ""
+                                : ''
                         }
 
                         <div ref={boxReply} className="reply--child d-none">
@@ -241,6 +276,7 @@ const ReviewItem = ({ ...props }) => {
                             <form>
                                 <div className="form-group">
                                     <textarea
+                                        ref={inputReply}
                                         onChange={inputReplyChange}
                                         id="message"
                                         cols="30"
