@@ -24,6 +24,13 @@ public class Category{
 	public Category() {
 		super();
 	}
+	
+	public Category( String name, Integer status, String image) {
+		super();
+		this.name = name;
+		this.status = status;
+		this.image = image;
+	}
 
 	public Category(Integer entityId, String name, Integer status, String image) {
 		super();

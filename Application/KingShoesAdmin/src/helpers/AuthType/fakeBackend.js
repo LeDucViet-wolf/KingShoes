@@ -111,7 +111,7 @@ const fakeBackend = () => {
 
     var config = {
       method: "get",
-      url: "http://localhost:3113/signDraw",
+      url: "http://localhost:3113/login",
     }
       return new Promise((resolve, reject) => {
         setTimeout(() => {

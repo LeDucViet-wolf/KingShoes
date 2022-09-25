@@ -57,11 +57,13 @@ const TableContainer = ({
   isGlobalFilter,
   isAddOptions,
   isAddUserList,
+  isAddCategory,
   isAddCurrency,
   handleCurrencyClick,
   handleOrderClicks,
   handleUserClick,
   handleCustomerClick,
+  handleCategoryClick,
   isAddCustList,
   customPageSize,
   className,
@@ -215,6 +217,21 @@ const TableContainer = ({
               >
                 <i className="mdi mdi-plus me-1" />
                 New Currency
+              </Button>
+            </div>
+          </Col>
+        )}
+        {isAddCategory && (
+          <Col sm="7">
+            <div className="text-sm-end">
+              <Button
+                type="button"
+                color="primary"
+                className="btn mb-2 me-2"
+                onClick={handleCategoryClick}
+              >
+                <i className="mdi mdi-plus-circle-outline me-1" />
+                Create New Category
               </Button>
             </div>
           </Col>

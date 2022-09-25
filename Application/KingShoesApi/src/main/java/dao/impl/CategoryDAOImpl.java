@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 
 import dao.CategoryDAO;
 import entities.Category;
+import entities.Product;
 import utils.HibernateUtil;
 
 public class CategoryDAOImpl implements CategoryDAO {
@@ -17,6 +18,23 @@ public class CategoryDAOImpl implements CategoryDAO {
 		try {
 			session.beginTransaction();
 			List<Category> list = session.createQuery("from Category", Category.class).list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+	
+	public List<Category> getListCategoryEnable() {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List<Category> list = session.createQuery("from Category where status = 1", Category.class).list();
 			session.getTransaction().commit();
 			return list;
 		} catch (Exception e) {

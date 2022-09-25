@@ -106,51 +106,41 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to={process.env.REACT_APP_SECURITY_URL + "/message"}>
-                <i className="bx bx-message-dots"></i>
-                <span>{props.t("Message")}</span>
+              <Link to={process.env.REACT_APP_SECURITY_URL + "/category"}>
+                <i className="bx bxs-category"></i>
+                <span>{props.t("Category")}</span>
               </Link>
             </li>
+            <li className="menu-title">{props.t("Product")} </li>
+
             <li>
-              <Link to={process.env.REACT_APP_SECURITY_URL + "/bet"}>
-                <i className="bx bx-money"></i>
+              <Link to={process.env.REACT_APP_SECURITY_URL + "/products"}>
+                <i className='bx bxl-product-hunt' ></i>
                 <span>{props.t("Products")}</span>
               </Link>
             </li>
             <li>
-              <Link to={process.env.REACT_APP_SECURITY_URL + "/certificate"}>
-                <i className="bx bx-poll"></i>
-                <span>{props.t("Certificate")}</span>
+              <Link to={process.env.REACT_APP_SECURITY_URL + "/products-related"}>
+                <i className='bx bxl-product-hunt' ></i>
+                <span>{props.t("Related Products")}</span>
               </Link>
             </li>
             <li>
-              <Link to={process.env.REACT_APP_SECURITY_URL + "/poll"}>
-                <i className="bx bx-poll"></i>
-                <span>{props.t("Poll")}</span>
+              <Link to={process.env.REACT_APP_SECURITY_URL + "/order"}>
+                <i className="bx bxl-product-hunt"></i>
+                <span>{props.t("Orders")}</span>
               </Link>
             </li>
             <li>
-              <Link to={process.env.REACT_APP_SECURITY_URL + "/transaction"}>
-                <i className="bx bx-list-ul"></i>
-                <span>{props.t("Transaction")}</span>
+              <Link to={process.env.REACT_APP_SECURITY_URL + "/ship"}>
+                <i className="bx bxl-product-hunt"></i>
+                <span>{props.t("Shipping Methods")}</span>
               </Link>
             </li>
             <li>
-              <Link to={process.env.REACT_APP_SECURITY_URL + "/newsletter"}>
-                <i className="bx bx-envelope"></i>
-                <span>{props.t("Newsletter")}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to={process.env.REACT_APP_SECURITY_URL + "/meme"}>
-                <i className="bx bx-list-ul"></i>
-                <span>{props.t("Slide Meme")}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to={process.env.REACT_APP_SECURITY_URL + "/system"}>
-                <i className="bx bx-share-alt"></i>
-                <span>{props.t("System Configuration")}</span>
+              <Link to={process.env.REACT_APP_SECURITY_URL + "/payment"}>
+                <i className="bx bxl-product-hunt"></i>
+                <span>{props.t("Payments")}</span>
               </Link>
             </li>
           </ul>

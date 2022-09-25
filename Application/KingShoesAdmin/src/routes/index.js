@@ -73,7 +73,7 @@ import TwostepVerification2 from "../pages/AuthenticationInner/auth-two-step-ver
 import Dashboard from "../pages/Dashboard/index"
 import DashboardSaas from "../pages/Dashboard-saas/index"
 import DashboardCrypto from "../pages/Dashboard-crypto/index"
-import Message from "../pages/Message/index"
+import Category from "../pages/Category/index"
 
 //Crypto
 import CryptoWallet from "../pages/Crypto/CryptoWallet/crypto-wallet"
@@ -164,6 +164,8 @@ import PagesPricing from "../pages/Utility/pages-pricing"
 import Pages404 from "../pages/Utility/pages-404"
 import Pages500 from "../pages/Utility/pages-500"
 import AllProducts from "../pages/Products/index"
+import RelatedProducts from "../pages/ProductRelated/index"
+
 
 //Contacts
 import ContactsGrid from "../pages/Users/contacts-grid"
@@ -171,11 +173,12 @@ import ContactsList from "../pages/Users/UsersList/Users-list"
 import ContactsProfile from "../pages/Users/UsersProfile/contacts-profile"
 import Newsletter from "pages/Newsletter/newsletter_list"
 import Poll from "pages/Poll/poll_list"
-import BetDetails from "pages/Products/BetDetails"
 import Contracts from "pages/Contracts/Contracts"
 import Certificate from "pages/certificate"
 import config from "pages/config/config"
-import SlideMeme from "pages/SlideMeme"
+import Order from "pages/Order"
+import Ship from "pages/Ship-method"
+import Payment from "pages/payment"
 
 const authProtectedRoutes = [
   {
@@ -194,14 +197,16 @@ const authProtectedRoutes = [
     path: process.env.REACT_APP_SECURITY_URL + "/transaction",
     component: EcommerceOrders,
   },
-  { path: process.env.REACT_APP_SECURITY_URL + "/message", component: Message },
+  { path: process.env.REACT_APP_SECURITY_URL + "/category", component: Category },
   { path: process.env.REACT_APP_SECURITY_URL + "/newsletter", component: Newsletter },
   { path: process.env.REACT_APP_SECURITY_URL + "/poll", component: Poll },
   { path: process.env.REACT_APP_SECURITY_URL + "/products", component: AllProducts },
-  { path: process.env.REACT_APP_SECURITY_URL + "/product/:id", component: BetDetails },
+  { path: process.env.REACT_APP_SECURITY_URL + "/products-related", component: RelatedProducts },
   { path: process.env.REACT_APP_SECURITY_URL + "/contracts", component: Contracts },
   { path: process.env.REACT_APP_SECURITY_URL + "/system", component: config },
-  { path: process.env.REACT_APP_SECURITY_URL + "/meme", component: SlideMeme },
+  { path: process.env.REACT_APP_SECURITY_URL + "/order", component: Order },
+  { path: process.env.REACT_APP_SECURITY_URL + "/ship", component: Ship },
+  { path: process.env.REACT_APP_SECURITY_URL + "/payment", component: Payment },
 
 
 

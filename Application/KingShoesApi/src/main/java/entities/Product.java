@@ -35,6 +35,17 @@ public class Product{
 		// TODO Auto-generated constructor stub
 	}
 
+	public Product(String name, Float price, String sku,
+			String description, Integer status, Integer categoryId) {
+		super();
+		this.name = name;
+		this.price = price;
+		this.sku = sku;
+		this.description = description;
+		this.status = status;
+		this.categoryId = categoryId;
+	}
+	
 	public Product(Integer entityId, String name, Float price, String sku,
 			String description, Integer status, Integer categoryId) {
 		super();

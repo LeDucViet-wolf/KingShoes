@@ -51,6 +51,16 @@ public class CategoryController {
 		String data = son.toJson(list);
 		return data;
 	}
+	
+	@GET
+	@Path("/get-list-category-enable")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getListCategoryEnable() {
+		List<Category> list = new CategoryDAOImpl().getListCategoryEnable();
+		Gson son = new Gson();
+		String data = son.toJson(list);
+		return data;
+	}
 
 	@GET
 	@Path("/get-by-id/{entityId}")
@@ -72,14 +82,32 @@ public class CategoryController {
 		String data = son.toJson(result);
 		return data;
 	}
+	
+	@PUT
+	@Path("/update/{entityId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String updateC(@PathParam("entityId")int entityId, String dataJson) {
+		Gson son = new Gson();
+		Category Category = son.fromJson(dataJson, Category.class);
+		Category CategoryOld = new CategoryDAOImpl().getById(entityId);
+		if(CategoryOld != null) {
+			CategoryOld = new Category(entityId, Category.getName() , 1, Category.getImage());
+		}
+		int result = new CategoryDAOImpl().update(CategoryOld);
+		String data = son.toJson(result);
+		return data;
+	}
 
 	@PUT
-	@Path("/update")
+	@Path("/disableCategory/{entityId}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String update(String dataJson) {
+	public String update(@PathParam("entityId")int entityId, String dataJson) {
 		Gson son = new Gson();
-		Category category = son.fromJson(dataJson, Category.class);
-		int result = new CategoryDAOImpl().update(category);
+		Category CategoryOld = new CategoryDAOImpl().getById(entityId);
+		if(CategoryOld != null) {
+			CategoryOld = new Category(entityId, CategoryOld.getName() , 0, CategoryOld.getImage());
+		}
+		int result = new CategoryDAOImpl().update(CategoryOld);
 		String data = son.toJson(result);
 		return data;
 	}
