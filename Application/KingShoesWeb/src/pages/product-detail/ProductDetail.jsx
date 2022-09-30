@@ -56,7 +56,7 @@ const ProductDetail = () => {
     (pi) => pi.productId == product.entityId
   );
   const [waitResultProductReview, setWaitResultProductReview] = useState(resultProductReview)
-
+  
   // #region Rating
   const stars = 5;
   const [objRating, setObjRating] = useState({
@@ -175,6 +175,8 @@ const ProductDetail = () => {
       updateCartItem(cartQty)
     }
   };
+
+
 
   const addToWishlist = (e) => {
     e.preventDefault();
@@ -384,9 +386,10 @@ const ProductDetail = () => {
         console.log(err);
       });
   };
-
+  const handleClickDeleteChild = () => {
+    fetchData()
+  } 
   useEffect(() => {
-    debugger
     setWaitResultProductReview(resultProductReview)
   },[resultProductReview])
 
@@ -584,6 +587,7 @@ const ProductDetail = () => {
                               key={item.entityId}
                               customer={customer}
                               review={item}
+                              handleClickDeleteChild={() => handleClickDeleteChild()}
                             />
                           ))
                         : ""}

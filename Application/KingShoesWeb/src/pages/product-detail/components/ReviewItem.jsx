@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux"
 import { getAllCustomer, updateProductReview, deleteProductReview } from '@/stores/actions'
 import { useAlert } from 'react-alert'
 import "@/assets/css/review-item.css"
-
-const ReviewItem = ({ ...props }) => {
+import { del } from "@/helpers/api_helper"
+const ReviewItem = ({ handleClickDeleteChild, ...props }, ) => {
     const dispatch = useDispatch()
     const alert = useAlert()
 
@@ -28,7 +28,12 @@ const ReviewItem = ({ ...props }) => {
     const handleDeleteReview = (e, id) => {
         e.preventDefault()
         if (confirm('Are you sure to delete this review?')) {
-            dispatch(deleteProductReview(id))
+            del('/product-reviews/delete/' + id)
+                .then(res => {
+                    if (res === 1) {
+                        handleClickDeleteChild()
+                    }
+                })
         }
     }
 
@@ -46,7 +51,7 @@ const ReviewItem = ({ ...props }) => {
     }
 
     const handleEditReply = (e) => {
-
+console.log(123)
     }
 
     const handleDeleteReply = (e, index) => {
@@ -131,7 +136,6 @@ const ReviewItem = ({ ...props }) => {
     useEffect(() => {
         switch (productReviewAction) {
             case 'add-reply':
-                debugger
                 if (waitProductReview) {
                     reloadReply()
                     alert.show("Add Reply Success!", { type: 'success' })
