@@ -32,6 +32,20 @@ const ProductItem = ({ ...props }) => {
     setSize(e.target.value);
   };
 
+  const updateCartItem = (qty) => {
+    const cart = document.querySelector('.dat__cart-item')
+    if (cart) {
+      cart.innerText = qty
+    }
+  }
+
+  const updateWishlist = (qty) => {
+    const wishlist = document.querySelector('.dat__wishlist')
+    if (wishlist) {
+      wishlist.innerText = qty
+    }
+  }
+
   const addPLP = (e) => {
     if (size && productId) {
       var data = localStorage.getItem(type)
@@ -76,10 +90,26 @@ const ProductItem = ({ ...props }) => {
           size: parseInt(size),
           qty: 1,
         };
-
         data.push(dataItem);
       }
       localStorage.setItem(type, JSON.stringify(data));
+      var cart = JSON.parse(localStorage.getItem("cart")),
+      wishlist = JSON.parse(localStorage.getItem("wishlist")),
+      cartQty = 0,
+      wishlistQty = 0;
+      if (cart) {
+        cart.forEach((element) => {
+          cartQty += parseInt(element.qty);
+        });
+      }
+    
+      if (wishlist) {
+        wishlist.forEach((element) => {
+          wishlistQty += parseInt(element.qty);
+        });
+      }
+      updateCartItem(cartQty)
+      updateWishlist(wishlistQty)
     }
   };
 

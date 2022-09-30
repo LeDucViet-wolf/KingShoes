@@ -247,7 +247,7 @@ const Header = () => {
                   >
                     <i className="fas fa-heart text-primary"></i>
                     <span
-                      className="badge text-secondary border border-secondary rounded-circle"
+                      className="dat__wishlist badge text-secondary border border-secondary rounded-circle"
                       style={{ paddingBottom: "2px" }}
                     >
                       {wishlistQty}
@@ -260,7 +260,7 @@ const Header = () => {
                   >
                     <i className="fas fa-shopping-cart text-primary"></i>
                     <span
-                      className="badge text-secondary border border-secondary rounded-circle"
+                      className="dat__cart-item badge text-secondary border border-secondary rounded-circle"
                       style={{ paddingBottom: "2px" }}
                     >
                       {cartQty}

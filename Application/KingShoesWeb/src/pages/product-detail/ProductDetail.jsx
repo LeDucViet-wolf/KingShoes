@@ -87,6 +87,19 @@ const ProductDetail = () => {
       setIsReviewValid(false);
     }
   };
+  const updateCartItem = (qty) => {
+    const cart = document.querySelector('.dat__cart-item')
+    if (cart) {
+      cart.innerText = qty
+    }
+  }
+
+  const updateWishlist = (qty) => {
+    const wishlist = document.querySelector('.dat__wishlist')
+    if (wishlist) {
+      wishlist.innerText = qty
+    }
+  }
 
   const addToCart = (e) => {
     e.preventDefault();
@@ -151,6 +164,15 @@ const ProductDetail = () => {
         cart.push(cartItem);
       }
       localStorage.setItem("cart", JSON.stringify(cart));
+      var cart = JSON.parse(localStorage.getItem("cart")),
+      cartQty = 0
+      if (cart) {
+        cart.forEach((element) => {
+          cartQty += parseInt(element.qty);
+        });
+      }
+
+      updateCartItem(cartQty)
     }
   };
 
@@ -206,6 +228,7 @@ const ProductDetail = () => {
         }
 
         localStorage.setItem("wishlist", wishlist);
+
       } else {
         var wishlistItem = {
           productId: parseInt(productId),
@@ -217,6 +240,13 @@ const ProductDetail = () => {
         wishlist.push(wishlistItem);
       }
       localStorage.setItem("wishlist", JSON.stringify(wishlist));
+      var  wishlistt = JSON.parse(localStorage.getItem("wishlist")), wishlistQty = 0;
+      if (wishlistt) {
+        wishlistt.forEach((element) => {
+          wishlistQty += parseInt(element.qty);
+        });
+      }
+      updateWishlist(wishlistQty)
     }
   };
 
