@@ -36,13 +36,20 @@ const Cart = () => {
     }
   }
 
-  const dele = (id) => {
+  const dele = (id,size) => {
     var data = localStorage.getItem('cart')
     ? JSON.parse(localStorage.getItem('cart'))
     : [];
-    let index = data.findIndex(item => item.id === id)
-    data.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(data));
+    const newD = []
+    data.forEach(e=>{
+      if(e.productId != id){
+        newD.push(e)
+      }else if (e.size != size) {
+        newD.push(e)
+      }
+
+    })
+    localStorage.setItem('cart', JSON.stringify(newD));
     updateCart()
     fetchData();
   }
@@ -67,7 +74,8 @@ const Cart = () => {
           const tr = e.target.closest('tr')
           if (tr) {
             const itemId = tr.dataset.itemId
-            dele(itemId)
+            const size = tr.dataset.itemSize
+            dele(itemId, size)
           }
         }
       }
@@ -121,7 +129,7 @@ const Cart = () => {
                     <tbody className="align-middle">
                       {cart
                         ? cart.map((item, i) => (
-                            <tr key={i} data-item-id ={item.productId}>
+                            <tr key={i} data-item-id ={item.productId} data-item-size ={item.size}>
                               <td className="align-middle">
                                 <img
                                   src="img/product-1.jpg"
@@ -155,9 +163,9 @@ const Cart = () => {
                                     </button>
                                   </div>
                                   <input
-                                    type="text"
+                                    type="hideen"
                                     className="form-control form-control-sm bg-secondary border-0 text-center"
-                                    defaultValue={item.qty}
+                                    value={item.qty}
                                   />
                                   <div className="input-group-btn">
                                     <button
@@ -183,7 +191,7 @@ const Cart = () => {
                                 <button
                                   className="btn btn-sm btn-danger"
                                   onClick={(event) =>
-                                    dele(item.productId)
+                                    dele(item.productId, item.size)
                                   }
                                 >
                                   <i className="fa fa-times"></i>

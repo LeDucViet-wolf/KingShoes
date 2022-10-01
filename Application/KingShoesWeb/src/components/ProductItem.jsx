@@ -104,10 +104,10 @@ const ProductItem = ({ ...props }) => {
       }
     
       if (wishlist) {
-        wishlist.forEach((element) => {
-          wishlistQty += parseInt(element.qty);
-        });
+        wishlistQty = wishlist.length
       }
+
+      console.log(wishlistQty);
       updateCartItem(cartQty)
       updateWishlist(wishlistQty)
     }

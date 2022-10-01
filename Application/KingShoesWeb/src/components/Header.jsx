@@ -28,9 +28,7 @@ const Header = () => {
   }
 
   if (wishlist) {
-    wishlist.forEach((element) => {
-      wishlistQty += parseInt(element.qty);
-    });
+    wishlistQty = wishlist.length
   }
 
   return (

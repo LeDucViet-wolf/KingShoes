@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Breadcrumb } from "@/components";
 import { Link } from "react-router-dom";
 
 const Wishlist = () => {
-  var wishlist = JSON.parse(localStorage.getItem("wishlist"));
+  const [wishlist, setWishlist] = useState([])
+
+  const fetchData = () => {
+    setWishlist(JSON.parse(localStorage.getItem("wishlist")));
+
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const [qty, setQty] = useState(1);
 
@@ -13,6 +22,53 @@ const Wishlist = () => {
       setQty(parseInt(e.target.value));
     }
   };
+
+  const updateWishlistItem = (qty) => {
+    const wishlistCur = document.querySelector('.dat__wishlist')
+    if (wishlistCur) {
+      wishlistCur.innerText = qty
+    }
+  }
+
+  const updateWishlist = () => {
+    var wishlistItem = JSON.parse(localStorage.getItem("wishlist")),
+    wishlistQty = 0
+    if (wishlistItem) {
+      wishlistItem.forEach((element) => {
+        wishlistQty += parseInt(element.qty);
+      });
+    }
+    updateWishlistItem(wishlistQty)
+  }
+
+  const removeItem = (e) => {
+    const item = e.target.closest('.dat__wishlist-item')
+    if (item) {
+      const prodId = item.dataset.itemId;
+      const size = item.dataset.itemSize;
+      remove(prodId, size)
+      fetchData()
+    }
+  }
+
+  const remove = (id, size) => {
+    var data = localStorage.getItem('wishlist')
+    ? JSON.parse(localStorage.getItem('wishlist'))
+    : [];
+    const newD = []
+    data.forEach(e=>{
+      if(e.productId != id){
+        newD.push(e)
+      }else if (e.size != size) {
+        newD.push(e)
+      }
+
+    })
+    localStorage.setItem('wishlist', JSON.stringify(newD));
+    updateWishlist()
+    fetchData();
+
+  }
 
   return (
     <>
@@ -27,7 +83,7 @@ const Wishlist = () => {
             <div className="row pb-3">
               {wishlist.map((item, index) => {
                 return (
-                  <div key={index} className="col-lg-4 col-md-6 col-sm-6 pb-1">
+                  <div key={index} className="col-lg-4 col-md-6 col-sm-6 pb-1 dat__wishlist-item" data-item-id={item.productId} data-item-size={item.size}>
                     <div className="product-item bg-light mb-4">
                       <div className="product-img position-relative overflow-hidden">
                         {/* <img
@@ -80,7 +136,7 @@ const Wishlist = () => {
                           <i className="fa fa-shopping-cart mr-1"></i> Add To
                           Cart
                         </button>
-                        <button className="btn btn-primary">
+                        <button className="btn btn-primary" onClick={removeItem}>
                           <i className="fa fa-eraser mr-1"></i> Remove item
                         </button>
                       </div>
@@ -92,7 +148,13 @@ const Wishlist = () => {
           </div>
         </div>
         <button className="btn btn-primary">Continue Shopping</button>
-        <button className="btn btn-primary">Add All To Cart</button>
+        {
+          wishlist.length !== 0
+          ?
+          <button className="btn btn-primary">Add All To Cart</button>
+          :
+          null
+        }
       </div>
     </>
   );

@@ -244,9 +244,7 @@ const ProductDetail = () => {
       localStorage.setItem("wishlist", JSON.stringify(wishlist));
       var  wishlistt = JSON.parse(localStorage.getItem("wishlist")), wishlistQty = 0;
       if (wishlistt) {
-        wishlistt.forEach((element) => {
-          wishlistQty += parseInt(element.qty);
-        });
+          wishlistQty = wishlistt.length;
       }
       updateWishlist(wishlistQty)
     }
