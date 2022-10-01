@@ -1,5 +1,20 @@
 import React from 'react'
+import axios from 'axios'
 
+const sendmail = (e) => {
+    e.preventDefault()
+    const value = e.target.closest('.newsletter').querySelector('input').value
+    if (value) {
+        var dt = JSON.stringify(value);
+        axios.post("http://localhost:6969/sendMail", { dt })
+            .then(async res => {
+                alert(res.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+}
 const Footer = () => {
     return (
         <div className="container-fluid bg-dark text-secondary mt-5 pt-5">
@@ -39,10 +54,10 @@ const Footer = () => {
                             <h5 className="text-secondary text-uppercase mb-4">Newsletter</h5>
                             <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
                             <form action="">
-                                <div className="input-group">
-                                    <input type="text" className="form-control" placeholder="Your Email Address" />
+                                <div className="input-group newsletter">
+                                    <input type="email" className="form-control newsletter_value" placeholder="Your Email Address" />
                                     <div className="input-group-append">
-                                        <button className="btn btn-primary">Sign Up</button>
+                                        <button onClick={sendmail} className="btn btn-primary">Sign Up</button>
                                     </div>
                                 </div>
                             </form>

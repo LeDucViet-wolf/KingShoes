@@ -2,13 +2,23 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Breadcrumb } from "@/components";
 import useScript from "@/hooks/useScript";
+import { useState,useEffect } from "react";
 
 const Cart = () => {
   const navigate = useNavigate();
 
   useScript("public/js/product-quantity");
-  var cart = localStorage.getItem("cart");
-  cart = JSON.parse(cart);
+  const [cart, setCart] = useState([])
+
+  const fetchData = () => {
+    setCart(JSON.parse(localStorage.getItem("cart")));
+
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   var subtotal = 0;
   var shipping = 0;
   var total = 0;
@@ -18,25 +28,53 @@ const Cart = () => {
 
   total = subtotal + shipping;
 
-  const removeItem = (e, id, size) => {
-    cart.forEach((item, index) => {
-      if (item.productId == id && item.size == size) {
-        cart.splice(index, 1);
-      }
-    });
-    localStorage.setItem("cart", JSON.stringify(cart));
-  };
+
+  const updateCartItem = (qty) => {
+    const cartCur = document.querySelector('.dat__cart-item')
+    if (cartCur) {
+      cartCur.innerText = qty
+    }
+  }
+
+  const dele = (id) => {
+    var data = localStorage.getItem('cart')
+    ? JSON.parse(localStorage.getItem('cart'))
+    : [];
+    let index = data.findIndex(item => item.id === id)
+    data.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(data));
+    updateCart()
+    fetchData();
+  }
+
+  const updateCart = () => {
+    var cartItem = JSON.parse(localStorage.getItem("cart")),
+    cartQty = 0
+    if (cartItem) {
+      cartItem.forEach((element) => {
+        cartQty += parseInt(element.qty);
+      });
+    }
+    updateCartItem(cartQty)
+  }
 
   const minusItem = (e, id, size) => {
     cart.forEach((item, index) => {
       if (item.productId == id && item.size == size) {
-        cart[index].qty--;
-        if (cart[index].qty == 0) {
+        item.qty--;
+        if (item.qty === 0) {
           cart.splice(index, 1);
+          const tr = e.target.closest('tr')
+          if (tr) {
+            const itemId = tr.dataset.itemId
+            dele(itemId)
+          }
         }
       }
     });
     localStorage.setItem("cart", JSON.stringify(cart));
+    updateCart()
+    fetchData();
   };
 
   const plusItem = (e, id, size) => {
@@ -46,13 +84,15 @@ const Cart = () => {
       }
     });
     localStorage.setItem("cart", JSON.stringify(cart));
+    updateCart()
+    fetchData();
   };
 
   const clearCart = (e) => {
-    cart = [];
-    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify([]));
+    fetchData();
+    updateCart()
   };
-
   return (
     <>
       <Breadcrumb
@@ -63,99 +103,107 @@ const Cart = () => {
       <div className="container-fluid">
         <div className="row px-xl-5">
           <div className="col-lg-8 table-responsive mb-5">
-            <table className="table table-light table-borderless table-hover text-center mb-0">
-              <thead className="thead-dark">
-                <tr>
-                  <th>Products</th>
-                  <th>Size</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                  <th>Remove</th>
-                </tr>
-              </thead>
-              <tbody className="align-middle">
-                {cart
-                  ? cart.map((item, i) => (
-                      <tr key={i}>
-                        <td className="align-middle">
-                          <img
-                            src="img/product-1.jpg"
-                            alt=""
-                            style={{ width: "50px" }}
-                          />{" "}
-                          {item.product.name}
-                        </td>
-                        <td className="align-middle">{item.size}</td>
-                        <td className="align-middle">
-                          {item.product.price
-                            ? item.product.price
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                            : null}{" "}
-                          VND
-                        </td>
-                        <td className="align-middle">
-                          <div
-                            className="input-group quantity mx-auto"
-                            style={{ width: "100px" }}
-                          >
-                            <div className="input-group-btn">
-                              <button
-                                className="btn btn-sm btn-primary btn-minus"
-                                onClick={(event) =>
-                                  minusItem(event, item.productId, item.size)
-                                }
-                              >
-                                <i className="fa fa-minus"></i>
-                              </button>
-                            </div>
-                            <input
-                              type="text"
-                              className="form-control form-control-sm bg-secondary border-0 text-center"
-                              defaultValue={item.qty}
-                            />
-                            <div className="input-group-btn">
-                              <button
-                                className="btn btn-sm btn-primary btn-plus"
-                                onClick={(event) =>
-                                  plusItem(event, item.productId, item.size)
-                                }
-                              >
-                                <i className="fa fa-plus"></i>
-                              </button>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="align-middle">
-                          {item.product.price && item.qty
-                            ? (item.product.price * item.qty)
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                            : null}{" "}
-                          VND
-                        </td>
-                        <td className="align-middle">
-                          <button
-                            className="btn btn-sm btn-danger"
-                            onClick={(event) =>
-                              removeItem(event, item.productId, item.size)
-                            }
-                          >
-                            <i className="fa fa-times"></i>
-                          </button>
-                        </td>
+            {
+              cart && cart.length !== 0
+              ?
+                <>
+                  <table className="table table-light table-borderless table-hover text-center mb-0">
+                    <thead className="thead-dark">
+                      <tr>
+                        <th>Products</th>
+                        <th>Size</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Remove</th>
                       </tr>
-                    ))
-                  : "These is no item in cart"}
-              </tbody>
-            </table>
-            <button className="btn btn-primary" onClick={() => navigate("/")}>
-              Continue Shopping
-            </button>
-            <button className="btn btn-primary" onClick={clearCart}>
-              Clear Shopping Cart
-            </button>
+                    </thead>
+                    <tbody className="align-middle">
+                      {cart
+                        ? cart.map((item, i) => (
+                            <tr key={i} data-item-id ={item.productId}>
+                              <td className="align-middle">
+                                <img
+                                  src="img/product-1.jpg"
+                                  alt=""
+                                  style={{ width: "50px" }}
+                                />{" "}
+                                {item.product.name}
+                              </td>
+                              <td className="align-middle">{item.size}</td>
+                              <td className="align-middle">
+                                {item.product.price
+                                  ? item.product.price
+                                      .toString()
+                                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                  : null}{" "}
+                                VND
+                              </td>
+                              <td className="align-middle">
+                                <div
+                                  className="input-group quantity mx-auto"
+                                  style={{ width: "100px" }}
+                                >
+                                  <div className="input-group-btn">
+                                    <button
+                                      className="btn btn-sm btn-primary btn-minus"
+                                      onClick={(event) =>
+                                        minusItem(event, item.productId, item.size)
+                                      }
+                                    >
+                                      <i className="fa fa-minus"></i>
+                                    </button>
+                                  </div>
+                                  <input
+                                    type="text"
+                                    className="form-control form-control-sm bg-secondary border-0 text-center"
+                                    defaultValue={item.qty}
+                                  />
+                                  <div className="input-group-btn">
+                                    <button
+                                      className="btn btn-sm btn-primary btn-plus"
+                                      onClick={(event) =>
+                                        plusItem(event, item.productId, item.size)
+                                      }
+                                    >
+                                      <i className="fa fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="align-middle">
+                                {item.product.price && item.qty
+                                  ? (item.product.price*item.qty)
+                                      .toString()
+                                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                  : null}{" "}
+                                VND
+                              </td>
+                              <td className="align-middle">
+                                <button
+                                  className="btn btn-sm btn-danger"
+                                  onClick={(event) =>
+                                    dele(item.productId)
+                                  }
+                                >
+                                  <i className="fa fa-times"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        : null}
+                    </tbody>
+                  </table>
+                  <button className="btn btn-primary" onClick={() => navigate("/")}>
+                    Continue Shopping
+                  </button>
+                  <button className="btn btn-primary" onClick={clearCart}>
+                    Clear Shopping Cart
+                  </button>
+                </>
+              :
+              "These is no item in cart"
+            }
           </div>
           <div className="col-lg-4">
             <form className="mb-30" action="">
