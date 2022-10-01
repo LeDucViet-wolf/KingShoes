@@ -3,24 +3,25 @@ import { useSelector, useDispatch } from "react-redux"
 import { getAllCustomer, updateProductReview, deleteProductReview } from '@/stores/actions'
 import { useAlert } from 'react-alert'
 import "@/assets/css/review-item.css"
-import { del } from "@/helpers/api_helper"
-const ReviewItem = ({ handleClickDeleteChild, ...props }, ) => {
+// import { del } from "@/helpers/api_helper"
+
+const ReviewItem = ({ ...props }) => {
     const dispatch = useDispatch()
     const alert = useAlert()
 
-    const { customers, productReview, resultProductReview, error } = useSelector((state) => ({
+    const { customers, productReview, resultProductReview } = useSelector((state) => ({
         customers: state.customerReducer.customers,
         productReview: state.productReviewReducer.productReview,
         resultProductReview: state.productReviewReducer.resultProductReview,
-        error: state.productReviewReducer.error
     }))
 
-    const { review, customer } = props
+    const { review, customer, fetchData } = props
     const customerLogin = JSON.parse(customer)
 
     const [productReviewAction, setProductReviewAction] = useState("")
+    const [waitProductReview, setWaitProductReview] = useState()
 
-
+    // #region REVIEW
     const handleEditReview = (e) => {
 
     }
@@ -28,21 +29,36 @@ const ReviewItem = ({ handleClickDeleteChild, ...props }, ) => {
     const handleDeleteReview = (e, id) => {
         e.preventDefault()
         if (confirm('Are you sure to delete this review?')) {
-            del('/product-reviews/delete/' + id)
-                .then(res => {
-                    if (res === 1) {
-                        handleClickDeleteChild()
-                    }
-                })
+            debugger
+            setProductReviewAction("delete-review")
+            dispatch(deleteProductReview(id))
         }
     }
+
+    useEffect(() => {
+        debugger
+        if (productReviewAction == "delete-review") {
+            if (resultProductReview == 1) {
+                fetchData()
+                alert.show("Delete Review Success!", {
+                    type: 'success',
+                })
+            }else{
+                alert.show("Delete Review Fail!", {
+                    type: 'error',
+                })
+            }
+            setProductReviewAction("")
+        }
+    }, [resultProductReview])
+    // #endregion
 
     // #region REPLY
     const boxReply = useRef()
     const inputReply = useRef()
     const [replies, setReplies] = useState(review.reply ? JSON.parse(review.reply) : [])
     const [isInputReplyValid, setIsInputReplyValid] = useState(true)
-    const [waitProductReview, setWaitProductReview] = useState()
+    const [waitProductReply, setWaitProductReply] = useState()
 
     const handleAddReply = (e) => {
         e.preventDefault()
@@ -51,7 +67,6 @@ const ReviewItem = ({ handleClickDeleteChild, ...props }, ) => {
     }
 
     const handleEditReply = (e) => {
-console.log(123)
     }
 
     const handleDeleteReply = (e, index) => {
@@ -119,7 +134,7 @@ console.log(123)
 
     const reloadReply = () => {
         let newReplies = []
-        JSON.parse(waitProductReview.reply).forEach((r) => {
+        JSON.parse(waitProductReply.reply).forEach((r) => {
             newReplies.push({
                 ...r,
                 customer: customers.filter((c) => c.entityId == r.customerId)[0]
@@ -130,13 +145,13 @@ console.log(123)
     // #endregion
 
     useEffect(() => {
-        setWaitProductReview(productReview)
+        setWaitProductReply(productReview)
     }, [productReview])
 
     useEffect(() => {
         switch (productReviewAction) {
             case 'add-reply':
-                if (waitProductReview) {
+                if (waitProductReply) {
                     reloadReply()
                     alert.show("Add Reply Success!", { type: 'success' })
                 } else {
@@ -152,10 +167,10 @@ console.log(123)
                     : alert.show("Edit Reply Fail!", {
                         type: 'error',
                     })
-                SetProductReviewAction("")
+                setProductReviewAction("")
                 break
             case 'delete-reply':
-                if (waitProductReview) {
+                if (waitProductReply) {
                     reloadReply()
                     alert.show("Delete Reply Success!", { type: 'success' })
                 } else {
@@ -164,7 +179,7 @@ console.log(123)
                 setProductReviewAction("")
                 break
         }
-    }, [waitProductReview])
+    }, [waitProductReply])
 
     useEffect(() => {
         let newReplies = []

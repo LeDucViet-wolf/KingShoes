@@ -14,9 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
 
-import dao.impl.CategoryDAOImpl;
 import dao.impl.ProductDAOImpl;
-import entities.Category;
 import entities.Product;
 
 @Path(value = "/products")

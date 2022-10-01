@@ -55,7 +55,6 @@ const ProductDetail = () => {
   const productImage = productImages.filter(
     (pi) => pi.productId == product.entityId
   );
-  const [waitResultProductReview, setWaitResultProductReview] = useState(resultProductReview)
   
   // #region Rating
   const stars = 5;
@@ -175,8 +174,6 @@ const ProductDetail = () => {
       updateCartItem(cartQty)
     }
   };
-
-
 
   const addToWishlist = (e) => {
     e.preventDefault();
@@ -384,22 +381,10 @@ const ProductDetail = () => {
         console.log(err);
       });
   };
+
   const handleClickDeleteChild = () => {
     fetchData()
   } 
-  useEffect(() => {
-    setWaitResultProductReview(resultProductReview)
-  },[resultProductReview])
-
-  useEffect(() => {
-    // debugger
-    if(waitResultProductReview === 1){
-      fetchData()
-      alert.show("Delete Review Success!", { type: 'success' })
-    }else{
-      alert.show("Delete Reply Fail!", { type: 'error' })
-    }
-  }, [waitResultProductReview])
 
   useEffect(() => {
     dispatch(getAllProductImage());
@@ -407,9 +392,6 @@ const ProductDetail = () => {
 
   useEffect(() => {
     fetchData();
-  }, [productId]);
-
-  useEffect(() => {
     window.scrollTo(0, 0);
   }, [productId]);
 
@@ -585,7 +567,7 @@ const ProductDetail = () => {
                               key={item.entityId}
                               customer={customer}
                               review={item}
-                              handleClickDeleteChild={() => handleClickDeleteChild()}
+                              fetchData={fetchData}
                             />
                           ))
                         : ""}

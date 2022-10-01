@@ -7,7 +7,6 @@ import org.hibernate.SessionFactory;
 
 import dao.CategoryDAO;
 import entities.Category;
-import entities.Product;
 import utils.HibernateUtil;
 
 public class CategoryDAOImpl implements CategoryDAO {
