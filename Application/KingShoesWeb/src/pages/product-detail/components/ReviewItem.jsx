@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { getAllCustomer, updateProductReview, deleteProductReview } from '@/stores/actions'
+import { getAllCustomer, updateProductReview } from '@/stores/actions'
 import { useAlert } from 'react-alert'
 import "@/assets/css/review-item.css"
 import { del } from "@/helpers/api_helper"
@@ -12,14 +12,12 @@ const ReviewItem = ({ ...props }) => {
     const { customers, productReview, resultProductReview } = useSelector((state) => ({
         customers: state.customerReducer.customers,
         productReview: state.productReviewReducer.productReview,
-        resultProductReview: state.productReviewReducer.resultProductReview,
     }))
 
     const { review, customer, fetchData } = props
     const customerLogin = JSON.parse(customer)
 
     const [productReviewAction, setProductReviewAction] = useState("")
-    const [waitProductReview, setWaitProductReview] = useState()
 
     // #region REVIEW
     const handleEditReview = (e) => {
@@ -28,22 +26,18 @@ const ReviewItem = ({ ...props }) => {
 
     const handleDeleteReview = async (e, id) => {
         e.preventDefault()
-        if (confirm('Are you sure to delete this review?')) {
-            let result = await del(`product-reviews/delete/${id}`)
-            if (result == 1) {
-                fetchData()
-                alert.show("Delete Review Success!", {
-                    type: 'success',
-                })
-            }else{
-                alert.show("Delete Review Fail!", {
-                    type: 'error',
-                })
-            }
+        let result = await del(`product-reviews/delete/${id}`)
+        if (result == 1) {
+            fetchData()
+            alert.show("Delete Review Success!", {
+                type: 'success',
+            })
+        } else {
+            alert.show("Delete Review Fail!", {
+                type: 'error',
+            })
         }
     }
-
-    
     // #endregion
 
     // #region REPLY
@@ -190,129 +184,171 @@ const ReviewItem = ({ ...props }) => {
     }, [dispatch])
 
     return (
-        <div className="media mb-4">
-            <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
-            <div className="media-body">
-                <div className="row">
-                    <div className="media-body--review col-12">
-                        <h6 className="title">
-                            <span className="name">{`${review.customer.firstName} ${review.customer.lastName}`}</span>
-                            <div className="tools">
-                                <a onClick={handleAddReply} href="#"><i className="fa fa-reply"></i></a>
-                                {
-                                    customerLogin && customerLogin[0].entityId === review.customer.entityId
-                                        ? <div className="dropdown tool-comment">
-                                            <button className="dropdown-toggle"
-                                                type="button" id="dropdownMenuButton"
-                                                data-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                            </button>
-                                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a className="dropdown-item" href="#">Edit</a>
-                                                <a
-                                                    className="dropdown-item"
-                                                    href="#"
-                                                    onClick={(e) => handleDeleteReview(e, review.entityId)}>Delete</a>
+        <>
+            <div className="media mb-4">
+                <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
+                <div className="media-body">
+                    <div className="row">
+                        <div className="media-body--review col-12">
+                            <h6 className="title">
+                                <span className="name">{`${review.customer.firstName} ${review.customer.lastName}`}</span>
+                                <div className="tools">
+                                    <a onClick={handleAddReply} href="#"><i className="fa fa-reply"></i></a>
+                                    {
+                                        customerLogin && customerLogin[0].entityId === review.customer.entityId
+                                            ? <div className="dropdown tool-comment">
+                                                <button className="dropdown-toggle"
+                                                    type="button" id="dropdownMenuButton"
+                                                    data-toggle="dropdown"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                    <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                </button>
+                                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a className="dropdown-item" href="#">Edit</a>
+                                                    <a
+                                                        data-toggle="modal"
+                                                        data-target={`#modal-review-${review.entityId}`}
+                                                        className="dropdown-item"
+                                                        href="#"
+
+                                                    >Delete</a>
+
+                                                </div>
                                             </div>
-                                        </div>
+                                            : ""
+                                    }
+                                </div>
+                            </h6>
+                            <div className="text-primary mb-2">
+                                {
+                                    [...Array(parseInt(review.point))].map(
+                                        (item, i) => (
+                                            <i key={i} className="fas fa-star"></i>
+                                        ))
+                                }
+                                {
+                                    parseInt(review.point) < 5
+                                        ? [...Array(5 - parseInt(review.point))].map(
+                                            (item, i) => (
+                                                <i key={i} className="far fa-star"></i>
+                                            )
+                                        )
                                         : ""
                                 }
                             </div>
-                        </h6>
-                        <div className="text-primary mb-2">
-                            {
-                                [...Array(parseInt(review.point))].map(
-                                    (item, i) => (
-                                        <i key={i} className="fas fa-star"></i>
-                                    ))
-                            }
-                            {
-                                parseInt(review.point) < 5
-                                    ? [...Array(5 - parseInt(review.point))].map(
-                                        (item, i) => (
-                                            <i key={i} className="far fa-star"></i>
-                                        )
-                                    )
-                                    : ""
-                            }
-                        </div>
-                        <p>{review.comment}</p>
+                            <p>{review.comment}</p>
 
-                        {
-                            replies
-                                ? replies.map((item, index) => (
-                                    <div key={index} className="reply--child reply--child__done p-0">
-                                        <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
-                                        <div className="information">
-                                            {
-                                                item.customer
-                                                    ? <h6 className="title">
-                                                        <span className="name">{`${item.customer.firstName} ${item.customer.lastName}`}</span>
-                                                        {
-                                                            customerLogin && customerLogin[0].entityId === item.customerId
-                                                                ? <div className="tools">
-                                                                    <div className="dropdown tool-comment">
-                                                                        <button className="dropdown-toggle"
-                                                                            type="button" id="dropdownMenuButton"
-                                                                            data-toggle="dropdown"
-                                                                            aria-haspopup="true"
-                                                                            aria-expanded="false">
-                                                                            <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                                                        </button>
-                                                                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                            <a className="dropdown-item" href="#" onClick={handleEditReply}>Edit</a>
-                                                                            <a
-                                                                                className="dropdown-item"
-                                                                                href="#"
-                                                                                onClick={(e) => handleDeleteReply(e, index)}>Delete
-                                                                            </a>
+                            {
+                                replies
+                                    ? replies.map((item, index) => (
+                                        <div key={index} className="reply--child reply--child__done p-0">
+                                            <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
+                                            <div className="information">
+                                                {
+                                                    item.customer
+                                                        ? <h6 className="title">
+                                                            <span className="name">{`${item.customer.firstName} ${item.customer.lastName}`}</span>
+                                                            {
+                                                                customerLogin && customerLogin[0].entityId === item.customerId
+                                                                    ? <div className="tools">
+                                                                        <div className="dropdown tool-comment">
+                                                                            <button className="dropdown-toggle"
+                                                                                type="button" id="dropdownMenuButton"
+                                                                                data-toggle="dropdown"
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="false">
+                                                                                <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                                            </button>
+                                                                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                                <a className="dropdown-item" href="#" onClick={handleEditReply}>Edit</a>
+                                                                                <a
+                                                                                    className="dropdown-item"
+                                                                                    href="#"
+                                                                                    onClick={(e) => handleDeleteReply(e, index)}>Delete
+                                                                                </a>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                : ''
-                                                        }
-                                                    </h6>
-                                                    : ''
-                                            }
-                                            <p>{item.text}</p>
+                                                                    : ''
+                                                            }
+                                                        </h6>
+                                                        : ''
+                                                }
+                                                <p>{item.text}</p>
+                                            </div>
+                                        </div>
+                                    ))
+                                    : ''
+                            }
+
+                            <div ref={boxReply} className="reply--child d-none">
+                                <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
+                                <form>
+                                    <div className="form-group">
+                                        <textarea
+                                            ref={inputReply}
+                                            onChange={inputReplyChange}
+                                            id="message"
+                                            cols="30"
+                                            rows="5"
+                                            className={`form-control ${isInputReplyValid ? '' : 'is-invalid'}`}>
+                                        </textarea>
+                                        <div className="invalid-feedback">
+                                            Please enter your reply.
                                         </div>
                                     </div>
-                                ))
-                                : ''
-                        }
-
-                        <div ref={boxReply} className="reply--child d-none">
-                            <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
-                            <form>
-                                <div className="form-group">
-                                    <textarea
-                                        ref={inputReply}
-                                        onChange={inputReplyChange}
-                                        id="message"
-                                        cols="30"
-                                        rows="5"
-                                        className={`form-control ${isInputReplyValid ? '' : 'is-invalid'}`}>
-                                    </textarea>
-                                    <div className="invalid-feedback">
-                                        Please enter your reply.
+                                    <div className="form-group mb-0">
+                                        <input
+                                            onClick={handleSubmitReply}
+                                            type="submit"
+                                            defaultValue="Leave Your Review"
+                                            className="btn btn-primary px-3"
+                                        />
                                     </div>
-                                </div>
-                                <div className="form-group mb-0">
-                                    <input
-                                        onClick={handleSubmitReply}
-                                        type="submit"
-                                        defaultValue="Leave Your Review"
-                                        className="btn btn-primary px-3"
-                                    />
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div className="modal" id={`modal-review-${review.entityId}`}>
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title">Are you sure to delete?</h4>
+                            <button
+                                type="button"
+                                className="close"
+                                data-dismiss="modal"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            {review.entityId}
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-danger"
+                                data-dismiss="modal"
+                            >
+                                Close
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                data-dismiss="modal"
+                                onClick={(e) => handleDeleteReview(e, review.entityId)}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
     )
 }
 

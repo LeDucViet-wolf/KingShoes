@@ -54,7 +54,7 @@ const ProductDetail = () => {
   const productImage = productImages.filter(
     (pi) => pi.productId == product.entityId
   );
-  
+
   // #region Rating
   const stars = 5;
   const [objRating, setObjRating] = useState({
@@ -163,7 +163,7 @@ const ProductDetail = () => {
       }
       localStorage.setItem("cart", JSON.stringify(cart));
       var cart = JSON.parse(localStorage.getItem("cart")),
-      cartQty = 0
+        cartQty = 0
       if (cart) {
         cart.forEach((element) => {
           cartQty += parseInt(element.qty);
@@ -238,9 +238,9 @@ const ProductDetail = () => {
         wishlist.push(wishlistItem);
       }
       localStorage.setItem("wishlist", JSON.stringify(wishlist));
-      var  wishlistt = JSON.parse(localStorage.getItem("wishlist")), wishlistQty = 0;
+      var wishlistt = JSON.parse(localStorage.getItem("wishlist")), wishlistQty = 0;
       if (wishlistt) {
-          wishlistQty = wishlistt.length;
+        wishlistQty = wishlistt.length;
       }
       updateWishlist(wishlistQty)
     }
@@ -294,10 +294,16 @@ const ProductDetail = () => {
             fetchData();
             changeRating(0);
             inputReview.current.value = "";
+            setReview("");
+            alert.show("Create Review Success!", {
+              type: 'success',
+            })
           }
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          alert.show("Create Review Fail!", {
+            type: 'error',
+          })
         });
     }
   };
@@ -314,9 +320,9 @@ const ProductDetail = () => {
 
   const fetchData = () => {
     var configGetProductData = {
-        method: "get",
-        url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
-      },
+      method: "get",
+      url: `http://localhost:8080/KingShoesApi/api/products/get-by-id/${productId}`,
+    },
       configGetProductSizeData = {
         method: "get",
         url: `http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id/${productId}`,
@@ -336,7 +342,7 @@ const ProductDetail = () => {
       .then(function (response) {
         getProductSize(response.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
     axios(configGetProductReviewData)
       .then((response) => {
         if (response.data.length > 0) {
@@ -381,10 +387,6 @@ const ProductDetail = () => {
       });
   };
 
-  const handleClickDeleteChild = () => {
-    fetchData()
-  } 
-
   useEffect(() => {
     dispatch(getAllProductImage());
   }, [dispatch]);
@@ -411,13 +413,13 @@ const ProductDetail = () => {
             >
               {productImage != null && productImage.length != 0
                 ? productImage.map((item) => (
-                    <SwiperSlide key={item.entityId}>
-                      <img
-                        className="w-100 h-100"
-                        src={`img/product/${item.value}`}
-                      />
-                    </SwiperSlide>
-                  ))
+                  <SwiperSlide key={item.entityId}>
+                    <img
+                      className="w-100 h-100"
+                      src={`img/product/${item.value}`}
+                    />
+                  </SwiperSlide>
+                ))
                 : ""}
             </Swiper>
           </div>
@@ -431,8 +433,8 @@ const ProductDetail = () => {
                   ))}
                   {overallReview < 5
                     ? [...Array(5 - overallReview)].map((item, i) => (
-                        <small key={i} className="far fa-star"></small>
-                      ))
+                      <small key={i} className="far fa-star"></small>
+                    ))
                     : ""}
                 </div>
                 <small className="pt-1">({productReviewCount} Reviews)</small>
@@ -440,8 +442,8 @@ const ProductDetail = () => {
               <h3 className="font-weight-semi-bold mb-4">
                 {product.price
                   ? product.price
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   : null}{" "}
                 VND
               </h3>
@@ -451,26 +453,26 @@ const ProductDetail = () => {
                 <form>
                   {productSize
                     ? productSize.map((item, i) => (
-                        <div
-                          key={i}
-                          className="custom-control custom-radio custom-control-inline"
+                      <div
+                        key={i}
+                        className="custom-control custom-radio custom-control-inline"
+                      >
+                        <input
+                          type="radio"
+                          className="custom-control-input"
+                          id={item.value}
+                          value={item.value}
+                          name="size"
+                          onChange={handleSizeChange}
+                        />
+                        <label
+                          className="custom-control-label"
+                          htmlFor={item.value}
                         >
-                          <input
-                            type="radio"
-                            className="custom-control-input"
-                            id={item.value}
-                            value={item.value}
-                            name="size"
-                            onChange={handleSizeChange}
-                          />
-                          <label
-                            className="custom-control-label"
-                            htmlFor={item.value}
-                          >
-                            {item.value}
-                          </label>
-                        </div>
-                      ))
+                          {item.value}
+                        </label>
+                      </div>
+                    ))
                     : ""}
                 </form>
               </div>
@@ -495,9 +497,8 @@ const ProductDetail = () => {
                   <input
                     type="text"
                     onChange={handleQty}
-                    className={`form-control bg-secondary border-0 text-center ${
-                      isQtyValid ? "" : "is-invalid"
-                    }`}
+                    className={`form-control bg-secondary border-0 text-center ${isQtyValid ? "" : "is-invalid"
+                      }`}
                     defaultValue="1"
                   />
                   <div className="input-group-btn">
@@ -562,13 +563,13 @@ const ProductDetail = () => {
                       </h4>
                       {productReview
                         ? productReview.map((item, i) => (
-                            <ReviewItem
-                              key={item.entityId}
-                              customer={customer}
-                              review={item}
-                              fetchData={fetchData}
-                            />
-                          ))
+                          <ReviewItem
+                            key={item.entityId}
+                            customer={customer}
+                            review={item}
+                            fetchData={fetchData}
+                          />
+                        ))
                         : ""}
                     </div>
                     {customer ? (
@@ -589,13 +590,12 @@ const ProductDetail = () => {
                                   onMouseEnter={() => hoverRating(star)}
                                   onMouseLeave={() => hoverRating(0)}
                                   key={index + 1}
-                                  className={`${
-                                    objRating.rating < star
+                                  className={`${objRating.rating < star
                                       ? objRating.hovered < star
                                         ? objRating.deselectedClass
                                         : objRating.selectedClass
                                       : objRating.selectedClass
-                                  } 
+                                    } 
                                   fa-star`}
                                 ></i>
                               );
@@ -603,9 +603,8 @@ const ProductDetail = () => {
                           </div>
                         </div>
                         <div
-                          className={`invalid-feedback ${
-                            isPointValid ? "" : "d-block"
-                          }`}
+                          className={`invalid-feedback ${isPointValid ? "" : "d-block"
+                            }`}
                         >
                           Please choose your rating.
                         </div>
@@ -618,9 +617,8 @@ const ProductDetail = () => {
                               id="message"
                               cols="30"
                               rows="5"
-                              className={`form-control ${
-                                isReviewValid ? "" : "is-invalid"
-                              }`}
+                              className={`form-control ${isReviewValid ? "" : "is-invalid"
+                                }`}
                             ></textarea>
                             <div className="invalid-feedback">
                               Please enter your review.
