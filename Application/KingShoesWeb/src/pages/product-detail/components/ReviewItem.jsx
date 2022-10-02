@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { getAllCustomer, updateProductReview, deleteProductReview } from '@/stores/actions'
 import { useAlert } from 'react-alert'
 import "@/assets/css/review-item.css"
-// import { del } from "@/helpers/api_helper"
+import { del } from "@/helpers/api_helper"
 
 const ReviewItem = ({ ...props }) => {
     const dispatch = useDispatch()
@@ -26,19 +26,11 @@ const ReviewItem = ({ ...props }) => {
 
     }
 
-    const handleDeleteReview = (e, id) => {
+    const handleDeleteReview = async (e, id) => {
         e.preventDefault()
         if (confirm('Are you sure to delete this review?')) {
-            debugger
-            setProductReviewAction("delete-review")
-            dispatch(deleteProductReview(id))
-        }
-    }
-
-    useEffect(() => {
-        debugger
-        if (productReviewAction == "delete-review") {
-            if (resultProductReview == 1) {
+            let result = await del(`product-reviews/delete/${id}`)
+            if (result == 1) {
                 fetchData()
                 alert.show("Delete Review Success!", {
                     type: 'success',
@@ -48,9 +40,10 @@ const ReviewItem = ({ ...props }) => {
                     type: 'error',
                 })
             }
-            setProductReviewAction("")
         }
-    }, [resultProductReview])
+    }
+
+    
     // #endregion
 
     // #region REPLY

@@ -27,7 +27,6 @@ const ProductDetail = () => {
 
   const { productImages, resultProductReview } = useSelector((state) => ({
     productImages: state.productImageReducer.productImages,
-    resultProductReview: state.productReviewReducer.resultProductReview
   }));
 
   const navigate = useNavigate();
