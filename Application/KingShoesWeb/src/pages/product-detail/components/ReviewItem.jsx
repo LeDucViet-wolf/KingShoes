@@ -59,25 +59,23 @@ const ReviewItem = ({ ...props }) => {
 
     const handleDeleteReply = (e, index) => {
         e.preventDefault()
-        if (confirm('Are you sure to delete this reply?')) {
-            replies.splice(index, 1)
-            let reviewOrigin = {
-                entityId: review.entityId,
-                productId: review.productId,
-                customerId: review.customerId,
-                comment: review.comment,
-                point: review.point,
-                reply: JSON.stringify([...replies.map(item => (
-                    {
-                        text: item.text,
-                        customerId: item.customerId,
-                        status: item.status
-                    }
-                ))])
-            }
-            dispatch(updateProductReview(reviewOrigin))
-            setProductReviewAction('delete-reply')
+        replies.splice(index, 1)
+        let reviewOrigin = {
+            entityId: review.entityId,
+            productId: review.productId,
+            customerId: review.customerId,
+            comment: review.comment,
+            point: review.point,
+            reply: JSON.stringify([...replies.map(item => (
+                {
+                    text: item.text,
+                    customerId: item.customerId,
+                    status: item.status
+                }
+            ))])
         }
+        dispatch(updateProductReview(reviewOrigin))
+        setProductReviewAction('delete-reply')
     }
 
     const inputReplyChange = (e) => {
@@ -214,7 +212,6 @@ const ReviewItem = ({ ...props }) => {
                                                         href="#"
 
                                                     >Delete</a>
-
                                                 </div>
                                             </div>
                                             : ""
@@ -243,42 +240,55 @@ const ReviewItem = ({ ...props }) => {
                             {
                                 replies
                                     ? replies.map((item, index) => (
-                                        <div key={index} className="reply--child reply--child__done p-0">
-                                            <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
-                                            <div className="information">
-                                                {
-                                                    item.customer
-                                                        ? <h6 className="title">
-                                                            <span className="name">{`${item.customer.firstName} ${item.customer.lastName}`}</span>
-                                                            {
-                                                                customerLogin && customerLogin[0].entityId === item.customerId
-                                                                    ? <div className="tools">
-                                                                        <div className="dropdown tool-comment">
-                                                                            <button className="dropdown-toggle"
-                                                                                type="button" id="dropdownMenuButton"
-                                                                                data-toggle="dropdown"
-                                                                                aria-haspopup="true"
-                                                                                aria-expanded="false">
-                                                                                <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                                                            </button>
-                                                                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a className="dropdown-item" href="#" onClick={handleEditReply}>Edit</a>
-                                                                                <a
-                                                                                    className="dropdown-item"
-                                                                                    href="#"
-                                                                                    onClick={(e) => handleDeleteReply(e, index)}>Delete
-                                                                                </a>
+                                        <>
+                                            <div key={index} className="reply--child reply--child__done p-0">
+                                                <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
+                                                <div className="information">
+                                                    {
+                                                        item.customer
+                                                            ? <h6 className="title">
+                                                                <span className="name">{`${item.customer.firstName} ${item.customer.lastName}`}</span>
+                                                                {
+                                                                    customerLogin && customerLogin[0].entityId === item.customerId
+                                                                        ? <div className="tools">
+                                                                            <div className="dropdown tool-comment">
+                                                                                <button className="dropdown-toggle"
+                                                                                    type="button" id="dropdownMenuButton"
+                                                                                    data-toggle="dropdown"
+                                                                                    aria-haspopup="true"
+                                                                                    aria-expanded="false">
+                                                                                    <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                                                </button>
+                                                                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                                    <a className="dropdown-item" href="#" onClick={handleEditReply}>Edit</a>
+                                                                                    <a
+                                                                                        data-toggle="modal"
+                                                                                        className="dropdown-item"
+                                                                                        href="#"
+                                                                                        data-target={`#modal-reply-${index}`}
+                                                                                    >
+                                                                                        Delete
+                                                                                    </a>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                    : ''
-                                                            }
-                                                        </h6>
-                                                        : ''
-                                                }
-                                                <p>{item.text}</p>
+                                                                        : ''
+                                                                }
+                                                            </h6>
+                                                            : ''
+                                                    }
+                                                    <p>{item.text}</p>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <ModalAction
+                                                key={`modal-${index}`}
+                                                idName={`modal-reply-${index}`}
+                                                title={`Are you sure to delete?`}
+                                                body={`${index}`}
+                                                action={`delete`}
+                                                handleEvent={(e) => handleDeleteReply(e, index)}
+                                            />
+                                        </>
                                     ))
                                     : ''
                             }
@@ -314,13 +324,13 @@ const ReviewItem = ({ ...props }) => {
                 </div>
             </div>
             <ModalAction
+                key={`modal-${review.entityId}`}
                 idName={`modal-review-${review.entityId}`}
                 title={`Are you sure to delete?`}
                 body={`${review.entityId}`}
                 action={`delete`}
                 handleEvent={(e) => handleDeleteReview(e, review.entityId)}
             />
-            
         </>
     )
 }
