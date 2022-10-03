@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux"
 import { getAllCustomer, updateProductReview } from '@/stores/actions'
 import { useAlert } from 'react-alert'
 import "@/assets/css/review-item.css"
-import { del } from "@/helpers/api_helper"
+import { del } from '@/helpers'
+import ModalAction from './ModalAction'
 
 const ReviewItem = ({ ...props }) => {
     const dispatch = useDispatch()
@@ -312,42 +313,14 @@ const ReviewItem = ({ ...props }) => {
                     </div>
                 </div>
             </div>
-            <div className="modal" id={`modal-review-${review.entityId}`}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title">Are you sure to delete?</h4>
-                            <button
-                                type="button"
-                                className="close"
-                                data-dismiss="modal"
-                            >
-                                &times;
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            {review.entityId}
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-danger"
-                                data-dismiss="modal"
-                            >
-                                Close
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-primary"
-                                data-dismiss="modal"
-                                onClick={(e) => handleDeleteReview(e, review.entityId)}
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <ModalAction
+                idName={`modal-review-${review.entityId}`}
+                title={`Are you sure to delete?`}
+                body={`${review.entityId}`}
+                action={`delete`}
+                handleEvent={(e) => handleDeleteReview(e, review.entityId)}
+            />
+            
         </>
     )
 }

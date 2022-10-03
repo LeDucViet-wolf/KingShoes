@@ -5,11 +5,11 @@ const ModalAction = ({ ...props }) => {
 
     return (
         <>
-            <div className="modal" id={`modal-review-${review.entityId}`}>
+            <div className="modal" id={idName}>
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title">Are you sure to delete?</h4>
+                            <h4 className="modal-title">{title}</h4>
                             <button
                                 type="button"
                                 className="close"
@@ -19,7 +19,7 @@ const ModalAction = ({ ...props }) => {
                             </button>
                         </div>
                         <div className="modal-body">
-                            {review.entityId}
+                            {body}
                         </div>
                         <div className="modal-footer">
                             <button
@@ -33,7 +33,12 @@ const ModalAction = ({ ...props }) => {
                                 type="button"
                                 className="btn btn-primary"
                                 data-dismiss="modal"
-                                onClick={(e) => handleDeleteReview(e, review.entityId)}
+                                {
+                                ...
+                                action == 'delete'
+                                    ? { onClick: handleEvent }
+                                    : {}
+                                }
                             >
                                 Delete
                             </button>
