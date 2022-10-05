@@ -1,35 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "@/components";
-import axios from "axios";
 import { get } from "@/helpers";
 
 const Checkout = () => {
+  const emailCode = "email";
+  const firstNameCode = "firstName";
+  const lastNameCode = "lastName";
+  const addressCode = "address";
+  const cityCode = "city";
+  const regionCode = "region";
+  const phoneCode = "phone";
   const billingCode = "billing";
   const shippingCode = "shipping";
   const textRequire = "This is a required field.";
-  const emailValidMsg =
-    "Please enter a valid email address (Ex: johndoe@domain.com).";
+  const emailValidMsg = "Your email is not valid.";
   const phoneValidMsg = "Your phone number is not valid.";
+  const regrexEmail =
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const regrexPhone = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
   const [countries, getCountries] = useState([]);
-  const [email, setEmail] = useState();
-  const [firstNameBilling, setFirstNameBilling] = useState();
-  const [firstNameShipping, setFirstNameShipping] = useState();
-  const [lastName, setLastName] = useState();
-  const [address, setAddress] = useState();
-  const [city, setCity] = useState();
-  const [region, setRegion] = useState();
-  const [phone, setPhone] = useState();
-  const [emailMsg, setEmailMsg] = useState(textRequire);
-  const [phoneMsg, setPhoneMsg] = useState(textRequire);
+  const [shipToDifferentAddress, useShipToDifferentAddress] = useState(false);
 
-  const [isEmailValid, setIsEmailValid] = useState(true);
-  const [isFirstNameBillingValid, setIsFirstNameBillingValid] = useState(true);
-  const [isFirstNameShippingValid, setIsFirstNameShippingValid] = useState(true);
-  const [isLastNameValid, setIsLastNameValid] = useState(true);
-  const [isAddressValid, setIsAddressValid] = useState(true);
-  const [isCityValid, setIsCityValid] = useState(true);
-  const [isRegionValid, setIsRegionValid] = useState(true);
-  const [isPhoneValid, setIsPhoneValid] = useState(true);
+  const checkUseShipToDifferentAddress = (e) => {
+    useShipToDifferentAddress(e.currentTarget.checked);
+  };
 
   var cart = JSON.parse(localStorage.getItem("cart")),
     subtotal = 0,
@@ -42,169 +36,111 @@ const Checkout = () => {
 
   total = shipping + subtotal;
 
-  const validateEmail = (email) => {
-    return email.match(
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
+  const validator = (code, value) => {
+    var valid = !value ? false : true;
+    if (code == emailCode) {
+      valid = value.match(regrexEmail) ? true : false;
+    }
+
+    if (code == phoneCode) {
+      valid = value.match(regrexPhone) ? true : false;
+    }
+
+    return valid;
   };
 
-  const validatePhone = (phone) => {
-    var regrex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-    if (phone.match(regrex)) {
-      return true;
-    } else {
-      return false;
-    }
+  const [data, setData] = useState({
+    shipping: {
+      firstName: {
+        valid: true,
+        value: "",
+      },
+      lastName: {
+        valid: true,
+        value: "",
+      },
+      address: {
+        valid: true,
+        value: "",
+      },
+      city: {
+        valid: true,
+        value: "",
+      },
+      region: {
+        valid: true,
+        value: "",
+      },
+      country: {
+        valid: true,
+        value: "",
+      },
+      phone: {
+        valid: true,
+        value: "",
+      },
+    },
+    billing: {
+      email: {
+        valid: true,
+        value: "",
+      },
+      firstName: {
+        valid: true,
+        value: "",
+      },
+      lastName: {
+        valid: true,
+        value: "",
+      },
+      address: {
+        valid: true,
+        value: "",
+      },
+      city: {
+        valid: true,
+        value: "",
+      },
+      region: {
+        valid: true,
+        value: "",
+      },
+      country: {
+        valid: true,
+        value: "",
+      },
+      phone: {
+        valid: true,
+        value: "",
+      },
+    },
+  });
+
+  const assignData = (type, code, value) => {
+    var valid = validator(code, value);
+
+    setData((pre) => ({
+      ...pre,
+      [type]: {
+        ...pre[type],
+        [code]: {
+          ...pre[type][code],
+          valid: valid,
+        },
+      },
+    }));
   };
 
-  const handleEmailChange = (e) => {
-    var email = e.currentTarget.value.trim();
-    setEmail(email);
-    if (!email) {
-      setEmailMsg(textRequire);
-      setIsEmailValid(false);
-    } else {
-      if (!validateEmail(email)) {
-        setEmailMsg(emailValidMsg);
-        setIsEmailValid(false);
-      } else {
-        setIsEmailValid(true);
-      }
-    }
-  };
-
-  const handleFirstNameChange = (code) => (e) => {
-    var firstName = e.currentTarget.value.trim();
-    if (code == shippingCode) {
-      setFirstNameShipping(firstName);
-      if (!firstName) {
-        setIsFirstNameShippingValid(false);
-      } else {
-        setIsFirstNameShippingValid(true);
-      }
-    } else {
-      setFirstNameBilling(firstName);
-      if (!firstName) {
-        setIsFirstNameBillingValid(false);
-      } else {
-        setIsFirstNameBillingValid(true);
-      }
-    }
-  };
-
-  const handleLastNameChange = (e) => {
-    var lastName = e.currentTarget.value.trim();
-    setLastName(lastName);
-    if (!lastName) {
-      setIsLastNameValid(false);
-    } else {
-      setIsLastNameValid(true);
-    }
-  };
-
-  const handleAddressChange = (e) => {
-    var address = e.currentTarget.value.trim();
-    setAddress(address);
-    if (!address) {
-      setIsAddressValid(false);
-    } else {
-      setIsAddressValid(true);
-    }
-  };
-
-  const handleCityChange = (e) => {
-    var city = e.currentTarget.value.trim();
-    setCity(city);
-    if (!city) {
-      setIsCityValid(false);
-    } else {
-      setIsCityValid(true);
-    }
-  };
-
-  const handleRegionChange = (e) => {
-    var region = e.currentTarget.value.trim();
-    setRegion(region);
-    if (!region) {
-      setIsRegionValid(false);
-    } else {
-      setIsRegionValid(true);
-    }
-  };
-
-  const handlePhoneChange = (e) => {
-    var phone = e.currentTarget.value.trim();
-    setPhone(phone);
-    if (!phone) {
-      setPhoneMsg(textRequire);
-      setIsPhoneValid(false);
-    } else {
-      if (!validatePhone(phone)) {
-        setPhoneMsg(phoneValidMsg);
-        setIsPhoneValid(false);
-      } else {
-        setIsPhoneValid(true);
-      }
-    }
+  const handleChange = (type, code) => (e) => {
+    assignData(type, code, e.currentTarget.value.trim());
   };
 
   const submitOrder = (e) => {
     e.preventDefault();
     var valid = true;
 
-    if (!email) {
-      setIsEmailValid(false);
-      valid = false;
-    } else {
-      if (!validateEmail(email)) {
-        setEmailMsg(emailValidMsg);
-        setIsEmailValid(false);
-        valid = false;
-      } else {
-        setIsEmailValid(true);
-      }
-    }
-
-    if (!firstNameBilling) {
-      setIsFirstNameBillingValid(false);
-    } else {
-      setIsFirstNameBillingValid(true);
-    }
-
-    if (!firstNameShipping) {
-      setIsFirstNameShippingValid(false);
-    } else {
-      setIsFirstNameShippingValid(true);
-    }
-
-    if (!lastName) {
-      setIsLastNameValid(false);
-    } else {
-      setIsLastNameValid(true);
-    }
-
-    if (!address) {
-      setIsAddressValid(false);
-    } else {
-      setIsAddressValid(true);
-    }
-
-    if (!city) {
-      setIsCityValid(false);
-    } else {
-      setIsCityValid(true);
-    }
-
-    if (!region) {
-      setIsRegionValid(false);
-    } else {
-      setIsRegionValid(true);
-    }
-
-    if (!phone) {
-      setIsPhoneValid(false);
-    } else {
-      setIsPhoneValid(true);
+    if (shipToDifferentAddress) {
+      
     }
   };
 
@@ -242,22 +178,22 @@ const Checkout = () => {
                 <div className="col-md-7 form-group">
                   <label>Email</label>
                   <input
-                    type="email"
                     className={`form-control ${
-                      isEmailValid ? "" : "is-invalid"
+                      data[billingCode][emailCode].valid ? "" : "is-invalid"
                     }`}
-                    onChange={handleEmailChange}
+                    onChange={handleChange(billingCode, emailCode)}
+                    type="text"
                   />
-                  <div className="invalid-feedback">{emailMsg}</div>
+                  <div className="invalid-feedback">{emailValidMsg}</div>
                   <span>You can create an account after checkout.</span>
                 </div>
                 <div className="col-md-6 form-group">
                   <label>First Name</label>
                   <input
                     className={`form-control ${
-                      isFirstNameBillingValid ? "" : "is-invalid"
+                      data[billingCode][firstNameCode].valid ? "" : "is-invalid"
                     }`}
-                    onChange={handleFirstNameChange(billingCode)}
+                    onChange={handleChange(billingCode, firstNameCode)}
                     type="text"
                   />
                   <div className="invalid-feedback">{textRequire}</div>
@@ -266,9 +202,9 @@ const Checkout = () => {
                   <label>Last Name</label>
                   <input
                     className={`form-control ${
-                      isLastNameValid ? "" : "is-invalid"
+                      data[billingCode][lastNameCode].valid ? "" : "is-invalid"
                     }`}
-                    onChange={handleLastNameChange}
+                    onChange={handleChange(billingCode, lastNameCode)}
                     type="text"
                   />
                   <div className="invalid-feedback">{textRequire}</div>
@@ -277,9 +213,9 @@ const Checkout = () => {
                   <label>Address</label>
                   <input
                     className={`form-control ${
-                      isAddressValid ? "" : "is-invalid"
+                      data[billingCode][addressCode].valid ? "" : "is-invalid"
                     }`}
-                    onChange={handleAddressChange}
+                    onChange={handleChange(billingCode, addressCode)}
                     type="text"
                   />
                   <div className="invalid-feedback">{textRequire}</div>
@@ -288,9 +224,9 @@ const Checkout = () => {
                   <label>City</label>
                   <input
                     className={`form-control ${
-                      isCityValid ? "" : "is-invalid"
+                      data[billingCode][cityCode].valid ? "" : "is-invalid"
                     }`}
-                    onChange={handleCityChange}
+                    onChange={handleChange(billingCode, cityCode)}
                     type="text"
                   />
                   <div className="invalid-feedback">{textRequire}</div>
@@ -299,9 +235,9 @@ const Checkout = () => {
                   <label>State/Province</label>
                   <input
                     className={`form-control ${
-                      isRegionValid ? "" : "is-invalid"
+                      data[billingCode][regionCode].valid ? "" : "is-invalid"
                     }`}
-                    onChange={handleRegionChange}
+                    onChange={handleChange(billingCode, regionCode)}
                     type="text"
                   />
                   <div className="invalid-feedback">{textRequire}</div>
@@ -320,12 +256,12 @@ const Checkout = () => {
                   <label>Phone</label>
                   <input
                     className={`form-control ${
-                      isPhoneValid ? "" : "is-invalid"
+                      data[billingCode][phoneCode].valid ? "" : "is-invalid"
                     }`}
-                    onChange={handlePhoneChange}
+                    onChange={handleChange(billingCode, phoneCode)}
                     type="text"
                   />
-                  <div className="invalid-feedback">{phoneMsg}</div>
+                  <div className="invalid-feedback">{phoneValidMsg}</div>
                 </div>
                 <div className="col-md-12">
                   <div className="custom-control custom-checkbox">
@@ -333,6 +269,7 @@ const Checkout = () => {
                       type="checkbox"
                       className="custom-control-input"
                       id="shipto"
+                      onChange={checkUseShipToDifferentAddress}
                     />
                     <label
                       className="custom-control-label"
@@ -356,9 +293,11 @@ const Checkout = () => {
                     <label>First Name</label>
                     <input
                       className={`form-control ${
-                        isFirstNameShippingValid ? "" : "is-invalid"
+                        data[shippingCode][firstNameCode].valid
+                          ? ""
+                          : "is-invalid"
                       }`}
-                      onChange={handleFirstNameChange(shippingCode)}
+                      onChange={handleChange(shippingCode, firstNameCode)}
                       type="text"
                     />
                     <div className="invalid-feedback">{textRequire}</div>
@@ -367,9 +306,11 @@ const Checkout = () => {
                     <label>Last Name</label>
                     <input
                       className={`form-control ${
-                        isLastNameValid ? "" : "is-invalid"
+                        data[shippingCode][lastNameCode].valid
+                          ? ""
+                          : "is-invalid"
                       }`}
-                      onChange={handleLastNameChange}
+                      onChange={handleChange(shippingCode, lastNameCode)}
                       type="text"
                     />
                     <div className="invalid-feedback">{textRequire}</div>
@@ -378,9 +319,11 @@ const Checkout = () => {
                     <label>Address</label>
                     <input
                       className={`form-control ${
-                        isAddressValid ? "" : "is-invalid"
+                        data[shippingCode][addressCode].valid
+                          ? ""
+                          : "is-invalid"
                       }`}
-                      onChange={handleAddressChange}
+                      onChange={handleChange(shippingCode, addressCode)}
                       type="text"
                     />
                     <div className="invalid-feedback">{textRequire}</div>
@@ -389,9 +332,9 @@ const Checkout = () => {
                     <label>City</label>
                     <input
                       className={`form-control ${
-                        isCityValid ? "" : "is-invalid"
+                        data[shippingCode][cityCode].valid ? "" : "is-invalid"
                       }`}
-                      onChange={handleCityChange}
+                      onChange={handleChange(shippingCode, cityCode)}
                       type="text"
                     />
                     <div className="invalid-feedback">{textRequire}</div>
@@ -400,9 +343,9 @@ const Checkout = () => {
                     <label>State/Province</label>
                     <input
                       className={`form-control ${
-                        isRegionValid ? "" : "is-invalid"
+                        data[shippingCode][regionCode].valid ? "" : "is-invalid"
                       }`}
-                      onChange={handleRegionChange}
+                      onChange={handleChange(shippingCode, regionCode)}
                       type="text"
                     />
                     <div className="invalid-feedback">{textRequire}</div>
@@ -421,12 +364,12 @@ const Checkout = () => {
                     <label>Phone</label>
                     <input
                       className={`form-control ${
-                        isPhoneValid ? "" : "is-invalid"
+                        data[shippingCode][phoneCode].valid ? "" : "is-invalid"
                       }`}
-                      onChange={handlePhoneChange}
+                      onChange={handleChange(shippingCode, phoneCode)}
                       type="text"
                     />
-                    <div className="invalid-feedback">{phoneMsg}</div>
+                    <div className="invalid-feedback">{phoneValidMsg}</div>
                   </div>
                 </div>
               </div>
