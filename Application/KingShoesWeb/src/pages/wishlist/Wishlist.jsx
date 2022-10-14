@@ -23,6 +23,37 @@ const Wishlist = () => {
     }
   };
 
+  const minusItem = (e, id, size) => {
+    cart.forEach((item, index) => {
+      if (item.productId == id && item.size == size) {
+        item.qty--;
+        if (item.qty === 0) {
+          cart.splice(index, 1);
+          const tr = e.target.closest('tr')
+          if (tr) {
+            const itemId = tr.dataset.itemId
+            const size = tr.dataset.itemSize
+            dele(itemId, size)
+          }
+        }
+      }
+    });
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCart()
+    fetchData();
+  };
+
+  const plusItem = (e, id, size) => {
+    cart.forEach((item, index) => {
+      if (item.productId == id && item.size == size) {
+        cart[index].qty++;
+      }
+    });
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCart()
+    fetchData();
+  };
+
   const updateWishlistItem = (qty) => {
     const wishlistCur = document.querySelector('.dat__wishlist')
     if (wishlistCur) {
@@ -39,6 +70,10 @@ const Wishlist = () => {
       });
     }
     updateWishlistItem(wishlistQty)
+  }
+
+  const addToCart = () => {
+
   }
 
   const removeItem = (e) => {
@@ -120,19 +155,31 @@ const Wishlist = () => {
                         </div>
                         <div>
                           <strong>Qty:</strong>
-                          <div
-                            className="input-group"
-                            style={{ width: "50px", margin: "0 auto" }}
-                          >
-                            <input
-                              type="text"
-                              className="form-control bg-secondary text-center"
-                              defaultValue={item.qty}
-                              onChange={handleQty}
-                            />
+                          <div className="input-group quantity mx-auto" style={{ width: "100px" }}>
+                            <div className="input-group-btn">
+                              <button
+                                className="btn btn-sm btn-primary btn-minus"
+                                onClick={(event) =>
+                                  minusItem(event, item.productId, item.size)
+                                }
+                              >
+                                <i className="fa fa-minus"></i>
+                              </button>
+                            </div>
+                            <span>{item.qty}</span>
+                            <div className="input-group-btn">
+                              <button
+                                className="btn btn-sm btn-primary btn-plus"
+                                onClick={(event) =>
+                                  plusItem(event, item.productId, item.size)
+                                }
+                              >
+                                <i className="fa fa-plus"></i>
+                              </button>
+                            </div>
                           </div>
                         </div>
-                        <button className="btn btn-primary">
+                        <button className="btn btn-primary" onClick={addToCart}>
                           <i className="fa fa-shopping-cart mr-1"></i> Add To
                           Cart
                         </button>

@@ -163,7 +163,7 @@ const Cart = () => {
                                     </button>
                                   </div>
                                   <input
-                                    type="hideen"
+                                    type="text"
                                     className="form-control form-control-sm bg-secondary border-0 text-center"
                                     value={item.qty}
                                   />
