@@ -17,7 +17,8 @@ const Checkout = () => {
   const textRequire = "This is a required field.";
   const emailValidMsg = "Your email is not valid.";
   const phoneValidMsg = "Your phone number is not valid.";
-  const [isValid, setIsValid] = useState(true);
+  // const [isValid, setIsValid] = useState(true);
+  var isValid = true;
   const regrexEmail =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const regrexPhone = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
@@ -69,7 +70,7 @@ const Checkout = () => {
     }
 
     if (!valid) {
-      setIsValid(false);
+      isValid = false
     }
 
     return valid;
@@ -142,7 +143,7 @@ const Checkout = () => {
     },
   });
 
-  const assignData = (type, code, value) => {
+  const assignData = async (type, code, value) => {
     var valid = validator(code, value);
 
     setData((pre) => ({
@@ -162,82 +163,81 @@ const Checkout = () => {
     assignData(type, code, e.currentTarget.value.trim());
   };
 
-  const submitOrder = (e) => {
+  const submitOrder = async (e) => {
     e.preventDefault();
 
-    billingData.forEach((code) => {
-      assignData(billingCode, code, data[billingCode][code].value);
+    billingData.forEach(async (code) => {
+      await assignData(billingCode, code, data[billingCode][code].value);
     });
 
     if (shipToDifferentAddress) {
-      shippingData.forEach((code) => {
-        assignData(shippingCode, code, data[shippingCode][code].value);
+      shippingData.forEach(async (code) => {
+        await assignData(shippingCode, code, data[shippingCode][code].value);
       });
     }
-
     if (isValid) {
-      var dataToOrder = prepareDataToOrder(1, 1, 1000, "");
-      axios
-        .post(
-          "http://localhost:8080/KingShoesApi/api/orders/insert",
-          dataToOrder
-        )
-        .then(function (response) {
-          if ((response.status = 200 && response.data)) {
-            var orderId = response.data;
-            axios
-              .get(
-                "http://localhost:8080/KingShoesApi/api/orders/get-by-id/" +
-                  orderId
-              )
-              .then(function (response) {
-                if ((response.status = 200 && response.data)) {
-                  var dataToOrderAddressBilling = prepareDataToOrderAddress(
-                      orderId,
-                      billingCode
-                    ),
-                    dataToOrderAddressShipping = prepareDataToOrderAddress(
-                      orderId,
-                      shippingCode
-                    );
+      // var dataToOrder = prepareDataToOrder(1, 1, 1000, "");
+      // axios
+      //   .post(
+      //     "http://localhost:8080/KingShoesApi/api/orders/insert",
+      //     dataToOrder
+      //   )
+      //   .then(function (response) {
+      //     if ((response.status = 200 && response.data)) {
+      //       var orderId = response.data;
+      //       axios
+      //         .get(
+      //           "http://localhost:8080/KingShoesApi/api/orders/get-by-id/" +
+      //             orderId
+      //         )
+      //         .then(function (response) {
+      //           if ((response.status = 200 && response.data)) {
+      //             var dataToOrderAddressBilling = prepareDataToOrderAddress(
+      //                 orderId,
+      //                 billingCode
+      //               ),
+      //               dataToOrderAddressShipping = prepareDataToOrderAddress(
+      //                 orderId,
+      //                 shippingCode
+      //               );
 
-                  axios
-                    .post(
-                      "http://localhost:8080/KingShoesApi/api/order-address/insert/",
-                      dataToOrderAddressBilling
-                    )
-                    .then(function (res) {
-                      console.log(
-                        "insert to order address type = billing success"
-                      );
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  axios
-                    .post(
-                      "http://localhost:8080/KingShoesApi/api/order-address/insert/",
-                      dataToOrderAddressShipping
-                    )
-                    .then(function (res) {
-                      console.log(
-                        "insert to order address type = shipping success"
-                      );
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                }
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+      //             axios
+      //               .post(
+      //                 "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+      //                 dataToOrderAddressBilling
+      //               )
+      //               .then(function (res) {
+      //                 console.log(
+      //                   "insert to order address type = billing success"
+      //                 );
+      //               })
+      //               .catch((err) => {
+      //                 console.log(err);
+      //               });
+      //             axios
+      //               .post(
+      //                 "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+      //                 dataToOrderAddressShipping
+      //               )
+      //               .then(function (res) {
+      //                 console.log(
+      //                   "insert to order address type = shipping success"
+      //                 );
+      //               })
+      //               .catch((err) => {
+      //                 console.log(err);
+      //               });
+      //           }
+      //         })
+      //         .catch((err) => {
+      //           console.log(err);
+      //         });
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+    }  
   };
 
   const prepareDataToOrder = (shippingId, paymentId, grandTotal, note) => {
