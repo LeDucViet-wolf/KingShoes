@@ -27,5 +27,6 @@
         <mapping class="entities.User"/>
         <mapping class="entities.Role"/>
         <mapping class="entities.ProductSize"/>
+        <mapping class="entities.OrderAddress"/>
     </session-factory>
 </hibernate-configuration>

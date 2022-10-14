@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "@/components";
 import { get } from "@/helpers";
+import axios from "axios";
 
 const Checkout = () => {
   const emailCode = "email";
@@ -10,16 +11,37 @@ const Checkout = () => {
   const cityCode = "city";
   const regionCode = "region";
   const phoneCode = "phone";
+  const countryCode = "country";
   const billingCode = "billing";
   const shippingCode = "shipping";
   const textRequire = "This is a required field.";
   const emailValidMsg = "Your email is not valid.";
   const phoneValidMsg = "Your phone number is not valid.";
+  const [isValid, setIsValid] = useState(true);
   const regrexEmail =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const regrexPhone = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
   const [countries, getCountries] = useState([]);
   const [shipToDifferentAddress, useShipToDifferentAddress] = useState(false);
+  const billingData = [
+    emailCode,
+    firstNameCode,
+    lastNameCode,
+    addressCode,
+    cityCode,
+    regionCode,
+    phoneCode,
+    countryCode,
+  ];
+  const shippingData = [
+    firstNameCode,
+    lastNameCode,
+    addressCode,
+    cityCode,
+    regionCode,
+    phoneCode,
+    countryCode,
+  ];
 
   const checkUseShipToDifferentAddress = (e) => {
     useShipToDifferentAddress(e.currentTarget.checked);
@@ -44,6 +66,10 @@ const Checkout = () => {
 
     if (code == phoneCode) {
       valid = value.match(regrexPhone) ? true : false;
+    }
+
+    if (!valid) {
+      setIsValid(false);
     }
 
     return valid;
@@ -126,6 +152,7 @@ const Checkout = () => {
         [code]: {
           ...pre[type][code],
           valid: valid,
+          value: value,
         },
       },
     }));
@@ -137,23 +164,118 @@ const Checkout = () => {
 
   const submitOrder = (e) => {
     e.preventDefault();
-    var valid = true;
+
+    billingData.forEach((code) => {
+      assignData(billingCode, code, data[billingCode][code].value);
+    });
 
     if (shipToDifferentAddress) {
-      
+      shippingData.forEach((code) => {
+        assignData(shippingCode, code, data[shippingCode][code].value);
+      });
     }
+
+    if (isValid) {
+      var dataToOrder = prepareDataToOrder(1, 1, 1000, "");
+      axios
+        .post(
+          "http://localhost:8080/KingShoesApi/api/orders/insert",
+          dataToOrder
+        )
+        .then(function (response) {
+          if ((response.status = 200 && response.data)) {
+            var orderId = response.data;
+            axios
+              .get(
+                "http://localhost:8080/KingShoesApi/api/orders/get-by-id/" +
+                  orderId
+              )
+              .then(function (response) {
+                if ((response.status = 200 && response.data)) {
+                  var dataToOrderAddressBilling = prepareDataToOrderAddress(
+                      orderId,
+                      billingCode
+                    ),
+                    dataToOrderAddressShipping = prepareDataToOrderAddress(
+                      orderId,
+                      shippingCode
+                    );
+
+                  axios
+                    .post(
+                      "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                      dataToOrderAddressBilling
+                    )
+                    .then(function (res) {
+                      console.log(
+                        "insert to order address type = billing success"
+                      );
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  axios
+                    .post(
+                      "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                      dataToOrderAddressShipping
+                    )
+                    .then(function (res) {
+                      console.log(
+                        "insert to order address type = shipping success"
+                      );
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const prepareDataToOrder = (shippingId, paymentId, grandTotal, note) => {
+    return {
+      status: 1,
+      shippingId: parseInt(shippingId),
+      paymentId: parseInt(paymentId),
+      grandTotal: parseFloat(grandTotal),
+      note: note,
+    };
+  };
+
+  const prepareDataToOrderAddress = (orderId, type) => {
+    return {
+      firstName: data[type][firstNameCode].value,
+      lastNameCode: data[type][lastNameCode].value,
+      address: data[type][addressCode].value,
+      city: data[type][cityCode].value,
+      region: data[type][regionCode].value,
+      country: data[type][countryCode].value,
+      phone: data[type][phoneCode].value,
+      type: type,
+      orderId: orderId,
+    };
   };
 
   const fetchData = async () => {
     var res = await get("https://restcountries.com/v3.1/all");
-    var data = [];
+    var countryList = [];
     res.forEach((e) => {
-      data.push({
+      countryList.push({
         name: e.name.common,
         code: e.cca3,
       });
     });
-    getCountries(data);
+    getCountries(countryList);
+    assignData(billingCode, countryCode, countryList[0].code);
+    assignData(shippingCode, countryCode, countryList[0].code);
   };
 
   useEffect(() => {
@@ -244,7 +366,11 @@ const Checkout = () => {
                 </div>
                 <div className="col-md-6 form-group">
                   <label>Country</label>
-                  <select defaultValue={57} className="custom-select">
+                  <select
+                    defaultValue={57}
+                    className="custom-select"
+                    onChange={handleChange(billingCode, countryCode)}
+                  >
                     {countries.map((item, i) => (
                       <option key={i} value={item.code}>
                         {item.name}
@@ -352,7 +478,11 @@ const Checkout = () => {
                   </div>
                   <div className="col-md-6 form-group">
                     <label>Country</label>
-                    <select defaultValue={57} className="custom-select">
+                    <select
+                      defaultValue={57}
+                      className="custom-select"
+                      onChange={handleChange(shippingCode, countryCode)}
+                    >
                       {countries.map((item, i) => (
                         <option key={i} value={item.code}>
                           {item.name}

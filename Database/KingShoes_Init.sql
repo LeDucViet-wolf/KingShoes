@@ -33,6 +33,20 @@ create table tblProduct (
 	foreign key (category_id) references tblCategory(entity_id)
 );
 
+create table tblOrderAddress (
+	entity_id int auto_increment primary key,
+	first_name varchar(256),
+	last_name varchar(256),
+	`address` varchar(256),
+	city varchar(256),
+	region varchar(256),
+	country varchar(256),
+	phone varchar(256),
+	`type` varchar(256),
+	order_id int,
+	foreign key (order_id) references tblOrder(entity_id)
+);
+
 create table tblProductSize(
 	entity_id int auto_increment primary key,
 	product_id int,

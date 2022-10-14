@@ -631,13 +631,3 @@ values
     (8, 80),
     (9, 90),
     (10, 100);
-
-insert into 
-	tblOrder(`status`, `shipping_id`,`payment_id`,`grand_total`,`note`) 
-values
-	(1,1,1,1000,'hello');
-	
-insert into 
-	tblOrderItem(`order_id`,`product_id`,`quantity`,`row_total`) 
-values
-	(1,1,1000,1000);
