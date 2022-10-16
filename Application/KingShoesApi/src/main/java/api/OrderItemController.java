@@ -14,28 +14,16 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
 
-import dao.impl.PaymentMethodDAOImpl;
-import dao.impl.ShippingMethodDAOImpl;
-import entities.PaymentMethod;
-import entities.ShippingMethod;
+import dao.impl.OrderItemDAOImpl;
+import entities.OrderItem;
 
-@Path(value = "/payment-method")
-public class PaymentMethodController {
+@Path(value = "/order-item")
+public class OrderItemController {
 	@GET
 	@Path("/get-all")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAll() {
-		List<PaymentMethod> list = new PaymentMethodDAOImpl().getAll();
-		Gson son = new Gson();
-		String data = son.toJson(list);
-		return data;
-	}
-	
-	@GET
-	@Path("/get-list-enabled")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String getListEnabled() {
-		List<PaymentMethod> list = new PaymentMethodDAOImpl().getListEnabled();
+		List<OrderItem> list = new OrderItemDAOImpl().getAll();
 		Gson son = new Gson();
 		String data = son.toJson(list);
 		return data;
@@ -45,9 +33,9 @@ public class PaymentMethodController {
 	@Path("/get-by-id/{entityId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getById(@PathParam("entityId") int entityId) {
-		PaymentMethod paymentMethod = new PaymentMethodDAOImpl().getById(entityId);
+		OrderItem orderItem = new OrderItemDAOImpl().getById(entityId);
 		Gson son = new Gson();
-		String data = son.toJson(paymentMethod);
+		String data = son.toJson(orderItem);
 		return data;
 	}
 
@@ -56,8 +44,8 @@ public class PaymentMethodController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String insert(String dataJson) {
 		Gson son = new Gson();
-		PaymentMethod paymentMethod = son.fromJson(dataJson, PaymentMethod.class);
-		int result = new PaymentMethodDAOImpl().insert(paymentMethod);
+		OrderItem orderItem = son.fromJson(dataJson, OrderItem.class);
+		int result = new OrderItemDAOImpl().insert(orderItem);
 		String data = son.toJson(result);
 		return data;
 	}
@@ -67,8 +55,8 @@ public class PaymentMethodController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String update(String dataJson) {
 		Gson son = new Gson();
-		PaymentMethod paymentMethod = son.fromJson(dataJson, PaymentMethod.class);
-		int result = new PaymentMethodDAOImpl().update(paymentMethod);
+		OrderItem orderItem = son.fromJson(dataJson, OrderItem.class);
+		int result = new OrderItemDAOImpl().update(orderItem);
 		String data = son.toJson(result);
 		return data;
 	}
@@ -77,7 +65,7 @@ public class PaymentMethodController {
 	@Path("/delete/{entityId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String delete(@PathParam("entityId") int entityId) {
-		int result = new PaymentMethodDAOImpl().delete(entityId);
+		int result = new OrderItemDAOImpl().delete(entityId);
 		Gson son = new Gson();
 		String data = son.toJson(result);
 		return data;

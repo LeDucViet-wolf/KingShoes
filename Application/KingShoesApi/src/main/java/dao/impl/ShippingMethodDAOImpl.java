@@ -27,6 +27,23 @@ public class ShippingMethodDAOImpl implements ShippingMethodDAO {
 		}
 		return null;
 	}
+	
+	public List<ShippingMethod> getListEnabled() {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List<ShippingMethod> list = session.createQuery("from ShippingMethod where status = 1", ShippingMethod.class).list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
 
 	@Override
 	public ShippingMethod getById(int entityId) {

@@ -5,36 +5,18 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import dao.PaymentMethodDAO;
-import entities.PaymentMethod;
+import dao.OrderItemDAO;
+import entities.OrderItem;
 import utils.HibernateUtil;
 
-public class PaymentMethodDAOImpl implements PaymentMethodDAO {
+public class OrderItemDAOImpl implements OrderItemDAO {
 	@Override
-	public List<PaymentMethod> getAll() {
+	public List<OrderItem> getAll() {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		try {
 			session.beginTransaction();
-			List<PaymentMethod> list = session.createQuery("from PaymentMethod", PaymentMethod.class).list();
-			session.getTransaction().commit();
-			return list;
-		} catch (Exception e) {
-			e.printStackTrace();
-			session.getTransaction().rollback();
-		} finally {
-			session.close();
-		}
-		return null;
-	}
-
-	public List<PaymentMethod> getListEnabled() {
-		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-		Session session = sessionFactory.openSession();
-		try {
-			session.beginTransaction();
-			List<PaymentMethod> list = session.createQuery("from PaymentMethod where status = 1", PaymentMethod.class)
-					.list();
+			List<OrderItem> list = session.createQuery("from OrderItem", OrderItem.class).list();
 			session.getTransaction().commit();
 			return list;
 		} catch (Exception e) {
@@ -47,11 +29,11 @@ public class PaymentMethodDAOImpl implements PaymentMethodDAO {
 	}
 
 	@Override
-	public PaymentMethod getById(int entityId) {
+	public OrderItem getById(int entityId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
-			PaymentMethod paymentMethod = session.get(PaymentMethod.class, entityId);
-			return paymentMethod;
+			OrderItem orderItem = session.get(OrderItem.class, entityId);
+			return orderItem;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -61,7 +43,7 @@ public class PaymentMethodDAOImpl implements PaymentMethodDAO {
 	}
 
 	@Override
-	public Integer insert(PaymentMethod entity) {
+	public Integer insert(OrderItem entity) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
@@ -78,7 +60,7 @@ public class PaymentMethodDAOImpl implements PaymentMethodDAO {
 	}
 
 	@Override
-	public Integer update(PaymentMethod entity) {
+	public Integer update(OrderItem entity) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();

@@ -17,13 +17,23 @@ import com.google.gson.Gson;
 import dao.impl.ShippingMethodDAOImpl;
 import entities.ShippingMethod;
 
-@Path(value = "/shipping-methods")
+@Path(value = "/shipping-method")
 public class ShippingMethodController {
 	@GET
 	@Path("/get-all")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAll() {
 		List<ShippingMethod> list = new ShippingMethodDAOImpl().getAll();
+		Gson son = new Gson();
+		String data = son.toJson(list);
+		return data;
+	}
+	
+	@GET
+	@Path("/get-list-enabled")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getListEnabled() {
+		List<ShippingMethod> list = new ShippingMethodDAOImpl().getListEnabled();
 		Gson son = new Gson();
 		String data = son.toJson(list);
 		return data;
