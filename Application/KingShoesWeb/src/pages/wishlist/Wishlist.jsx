@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Breadcrumb } from "@/components";
 import { Link } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Wishlist = () => {
+  const navigate = useNavigate();
+
   const [wishlist, setWishlist] = useState([])
 
   const fetchData = () => {
@@ -24,11 +27,11 @@ const Wishlist = () => {
   };
 
   const minusItem = (e, id, size) => {
-    cart.forEach((item, index) => {
+    wishlist.forEach((item, index) => {
       if (item.productId == id && item.size == size) {
         item.qty--;
         if (item.qty === 0) {
-          cart.splice(index, 1);
+          wishlist.splice(index, 1);
           const tr = e.target.closest('tr')
           if (tr) {
             const itemId = tr.dataset.itemId
@@ -38,19 +41,18 @@ const Wishlist = () => {
         }
       }
     });
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCart()
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
     fetchData();
   };
 
+
   const plusItem = (e, id, size) => {
-    cart.forEach((item, index) => {
+    wishlist.forEach((item, index) => {
       if (item.productId == id && item.size == size) {
-        cart[index].qty++;
+      wishlist[index].qty++;
       }
     });
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCart()
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
     fetchData();
   };
 
@@ -72,10 +74,70 @@ const Wishlist = () => {
     updateWishlistItem(wishlistQty)
   }
 
-  const addToCart = () => {
+  const addToCart = (item) => {
+    const qty = item.qty , size = item.size, productId = item.productId, product = item.product
+    var cart = localStorage.getItem("cart")
+      ? JSON.parse(localStorage.getItem("cart"))
+      : [];
+    if (cart.length > 0) {
+      var existProductInCart = cart.filter(
+        (x) => x.productId == productId && x.size == parseInt(size)
+      );
+      if (existProductInCart.length > 0) {
+        var cartItem = {
+          productId: parseInt(productId),
+          product: product,
+          size: parseInt(size),
+          qty: existProductInCart[0].qty + parseInt(qty),
+        };
 
+        cart.forEach((item, index) => {
+          if (
+            item.productId === parseInt(productId) &&
+            item.size === parseInt(size)
+          ) {
+            cart[index] = cartItem;
+          }
+        });
+      } else {
+        var cartItem = {
+          productId: parseInt(productId),
+          product: product,
+          size: parseInt(size),
+          qty: parseInt(qty),
+        };
+        cart.push(cartItem);
+      }
+
+      localStorage.setItem("cart", cart);
+    } else {
+      var cartItem = {
+        productId: parseInt(productId),
+        product: product,
+        size: parseInt(size),
+        qty: parseInt(qty),
+      };
+
+      cart.push(cartItem);
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    var cart = JSON.parse(localStorage.getItem("cart")),
+      cartQty = 0
+    if (cart) {
+      cart.forEach((element) => {
+        cartQty += parseInt(element.qty);
+      });
+    }
+
+    updateCartItem(cartQty)
+  };
+
+  const updateCartItem = (qty) => {
+    const cart = document.querySelector('.dat__cart-item')
+    if (cart) {
+      cart.innerText = qty
+    }
   }
-
   const removeItem = (e) => {
     const item = e.target.closest('.dat__wishlist-item')
     if (item) {
@@ -105,6 +167,68 @@ const Wishlist = () => {
 
   }
 
+  const addAllToCart = () => {
+    wishlist.forEach(item => {
+      const qty = item.qty , size = item.size, productId = item.productId, product = item.product
+      var cart = localStorage.getItem("cart")
+        ? JSON.parse(localStorage.getItem("cart"))
+        : [];
+      if (cart.length > 0) {
+        var existProductInCart = cart.filter(
+          (x) => x.productId == productId && x.size == parseInt(size)
+        );
+        if (existProductInCart.length > 0) {
+          var cartItem = {
+            productId: parseInt(productId),
+            product: product,
+            size: parseInt(size),
+            qty: existProductInCart[0].qty + parseInt(qty),
+          };
+
+          cart.forEach((item, index) => {
+            if (
+              item.productId === parseInt(productId) &&
+              item.size === parseInt(size)
+            ) {
+              cart[index] = cartItem;
+            }
+          });
+        } else {
+          var cartItem = {
+            productId: parseInt(productId),
+            product: product,
+            size: parseInt(size),
+            qty: parseInt(qty),
+          };
+          cart.push(cartItem);
+        }
+
+        localStorage.setItem("cart", cart);
+      } else {
+        var cartItem = {
+          productId: parseInt(productId),
+          product: product,
+          size: parseInt(size),
+          qty: parseInt(qty),
+        };
+
+        cart.push(cartItem);
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      
+    });
+    var cart = JSON.parse(localStorage.getItem("cart")),
+        cartQty = 0
+      if (cart) {
+        cart.forEach((element) => {
+          cartQty += parseInt(element.qty);
+        });
+      }
+    updateCartItem(cartQty)
+    setTimeout(() => {
+      alert("Add all to cart successfully")
+    }, 1000);
+  };
   return (
     <>
       <Breadcrumb
@@ -179,7 +303,7 @@ const Wishlist = () => {
                             </div>
                           </div>
                         </div>
-                        <button className="btn btn-primary" onClick={addToCart}>
+                        <button className="btn btn-primary" onClick={() => addToCart(item)}>
                           <i className="fa fa-shopping-cart mr-1"></i> Add To
                           Cart
                         </button>
@@ -194,11 +318,11 @@ const Wishlist = () => {
             </div>
           </div>
         </div>
-        <button className="btn btn-primary">Continue Shopping</button>
+        <button className="btn btn-primary" onClick={() => navigate("/")}>Continue Shopping</button>
         {
           wishlist.length !== 0
           ?
-          <button className="btn btn-primary">Add All To Cart</button>
+          <button className="btn btn-primary" onClick={() => addAllToCart()}>Add All To Cart</button>
           :
           null
         }
