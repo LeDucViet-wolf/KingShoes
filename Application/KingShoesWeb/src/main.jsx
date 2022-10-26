@@ -6,6 +6,7 @@ import store from '@/stores'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { positions, Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
+import { AppProvider } from '@/contexts/AppProvider'
 
 const options = {
   timeout: 3000,
@@ -15,10 +16,12 @@ const options = {
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <AlertProvider template={AlertTemplate} {...options}>
-    <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
-    </Provider>
+    <AppProvider initialValues={{}}>
+      <Provider store={store}>
+        <Router>
+          <App />
+        </Router>
+      </Provider>
+    </AppProvider>
   </AlertProvider>
 )

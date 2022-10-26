@@ -15,8 +15,4 @@ const useScript = url => {
   }, [url])
 }
 
-/**
- * Hook reload script js after render react module
- * @param {string} url path js file
- */
 export default useScript
