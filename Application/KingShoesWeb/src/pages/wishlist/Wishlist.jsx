@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Breadcrumb } from "@/components";
 import { Link } from "react-router-dom";
 import { NavLink, useNavigate } from "react-router-dom";
+import "@/assets/css/wishlist.css";
 
 const Wishlist = () => {
   const navigate = useNavigate();
@@ -10,7 +11,6 @@ const Wishlist = () => {
 
   const fetchData = () => {
     setWishlist(JSON.parse(localStorage.getItem("wishlist")));
-
   }
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const Wishlist = () => {
   const plusItem = (e, id, size) => {
     wishlist.forEach((item, index) => {
       if (item.productId == id && item.size == size) {
-      wishlist[index].qty++;
+        wishlist[index].qty++;
       }
     });
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
@@ -65,7 +65,7 @@ const Wishlist = () => {
 
   const updateWishlist = () => {
     var wishlistItem = JSON.parse(localStorage.getItem("wishlist")),
-    wishlistQty = 0
+      wishlistQty = 0
     if (wishlistItem) {
       wishlistItem.forEach((element) => {
         wishlistQty += parseInt(element.qty);
@@ -75,7 +75,7 @@ const Wishlist = () => {
   }
 
   const addToCart = (item) => {
-    const qty = item.qty , size = item.size, productId = item.productId, product = item.product
+    const qty = item.qty, size = item.size, productId = item.productId, product = item.product
     var cart = localStorage.getItem("cart")
       ? JSON.parse(localStorage.getItem("cart"))
       : [];
@@ -150,16 +150,15 @@ const Wishlist = () => {
 
   const remove = (id, size) => {
     var data = localStorage.getItem('wishlist')
-    ? JSON.parse(localStorage.getItem('wishlist'))
-    : [];
+      ? JSON.parse(localStorage.getItem('wishlist'))
+      : [];
     const newD = []
-    data.forEach(e=>{
-      if(e.productId != id){
+    data.forEach(e => {
+      if (e.productId != id) {
         newD.push(e)
-      }else if (e.size != size) {
+      } else if (e.size != size) {
         newD.push(e)
       }
-
     })
     localStorage.setItem('wishlist', JSON.stringify(newD));
     updateWishlist()
@@ -169,7 +168,7 @@ const Wishlist = () => {
 
   const addAllToCart = () => {
     wishlist.forEach(item => {
-      const qty = item.qty , size = item.size, productId = item.productId, product = item.product
+      const qty = item.qty, size = item.size, productId = item.productId, product = item.product
       var cart = localStorage.getItem("cart")
         ? JSON.parse(localStorage.getItem("cart"))
         : [];
@@ -215,15 +214,15 @@ const Wishlist = () => {
         cart.push(cartItem);
       }
       localStorage.setItem("cart", JSON.stringify(cart));
-      
+
     });
     var cart = JSON.parse(localStorage.getItem("cart")),
-        cartQty = 0
-      if (cart) {
-        cart.forEach((element) => {
-          cartQty += parseInt(element.qty);
-        });
-      }
+      cartQty = 0
+    if (cart) {
+      cart.forEach((element) => {
+        cartQty += parseInt(element.qty);
+      });
+    }
     updateCartItem(cartQty)
     setTimeout(() => {
       alert("Add all to cart successfully")
@@ -240,92 +239,93 @@ const Wishlist = () => {
         <div className="row px-xl-5">
           <div className="col-lg-9 col-md-8">
             <div className="row pb-3">
-              {wishlist.map((item, index) => {
-                return (
-                  <div key={index} className="col-lg-4 col-md-6 col-sm-6 pb-1 dat__wishlist-item" data-item-id={item.productId} data-item-size={item.size}>
-                    <div className="product-item bg-light mb-4">
-                      <div className="product-img position-relative overflow-hidden">
-                        {/* <img
-                          className="img-fluid w-100"
-                          src={`${
-                            isProductImageEmpty
-                              ? `/img/product/${productImage[0].value}`
-                              : ""
-                          }`}
-                        /> */}
-                      </div>
-                      <div className="text-center py-4">
-                        <Link
-                          to={`/product-detail?productId=${item.product.entityId}`}
-                          className="h6 text-decoration-none text-truncate"
-                        >
-                          {item.product.name}
-                        </Link>
-                        <p>
-                          <strong>SKU: </strong>
-                          {item.product.sku}
-                        </p>
-                        <p>
-                          <strong>Size: </strong>
-                          {item.size}
-                        </p>
-                        <div className="d-flex align-items-center justify-content-center mt-2">
-                          <h5>
-                            {item.product.price
-                              .toString()
-                              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
-                            VND
-                          </h5>
-                        </div>
-                        <div>
-                          <strong>Qty:</strong>
-                          <div className="input-group quantity mx-auto" style={{ width: "100px" }}>
-                            <div className="input-group-btn">
-                              <button
-                                className="btn btn-sm btn-primary btn-minus"
-                                onClick={(event) =>
-                                  minusItem(event, item.productId, item.size)
-                                }
-                              >
-                                <i className="fa fa-minus"></i>
-                              </button>
+              {
+                wishlist ?
+                  wishlist.map((item, index) => {
+                    return (
+                      <div key={index}
+                        className="col-lg-4 col-md-6 col-sm-6 pb-1 dat__wishlist-item"
+                        data-item-id={item.productId}
+                        data-item-size={item.size}>
+                        <div className="product-item bg-light mb-4">
+                          <div className="product-img position-relative overflow-hidden">
+                          <img className="img-fluid w-100" src={`/img/product/${item.productImage[0].value}`}/>
+                          </div>
+                          <div className="text-center py-4">
+                            <Link
+                              to={`/product-detail?productId=${item.product.entityId}`}
+                              className="h6 text-decoration-none text-truncate"
+                            >
+                              {item.product.name}
+                            </Link>
+                            <p className={`wishlist-sku`}>
+                              <strong>SKU: </strong>
+                              {item.product.sku}
+                            </p>
+                            <p className={`wishlist-size`}>
+                              <strong>Size: </strong>
+                              {item.size}
+                            </p>
+                            <div className="d-flex align-items-center justify-content-center">
+                              <h5>
+                                {item.product.price
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+                                VND
+                              </h5>
                             </div>
-                            <span>{item.qty}</span>
-                            <div className="input-group-btn">
-                              <button
-                                className="btn btn-sm btn-primary btn-plus"
-                                onClick={(event) =>
-                                  plusItem(event, item.productId, item.size)
-                                }
-                              >
-                                <i className="fa fa-plus"></i>
-                              </button>
+                            <div className="wishlist-box__qty">
+                              <div className="input-group wishlist-input-group__qty quantity" style={{ width: "100px" }}>
+                                <div className="input-group-btn">
+                                  <button
+                                    className="btn btn-sm btn-primary btn-minus"
+                                    onClick={(event) =>
+                                      minusItem(event, item.productId, item.size)
+                                    }
+                                  >
+                                    <i className="fa fa-minus"></i>
+                                  </button>
+                                </div>
+                                <span>{item.qty}</span>
+                                <div className="input-group-btn">
+                                  <button
+                                    className="btn btn-sm btn-primary btn-plus"
+                                    onClick={(event) =>
+                                      plusItem(event, item.productId, item.size)
+                                    }
+                                  >
+                                    <i className="fa fa-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
                             </div>
+                            <button className="btn btn-primary mr-2 mt-2" onClick={() => addToCart(item)}>
+                              <i className="fa fa-shopping-cart mr-1"></i> Add To
+                              Cart
+                            </button>
+                            <button className="btn btn-primary mt-2" onClick={removeItem}>
+                              <i className="fa fa-eraser mr-1"></i> Remove item
+                            </button>
                           </div>
                         </div>
-                        <button className="btn btn-primary" onClick={() => addToCart(item)}>
-                          <i className="fa fa-shopping-cart mr-1"></i> Add To
-                          Cart
-                        </button>
-                        <button className="btn btn-primary" onClick={removeItem}>
-                          <i className="fa fa-eraser mr-1"></i> Remove item
-                        </button>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })
+                  : <></>
+              }
+
             </div>
+            <button className="btn btn-primary mr-2" onClick={() => navigate("/")}>Continue Shopping</button>
+            {
+              wishlist
+                ?
+                <button className="btn btn-primary" onClick={() => addAllToCart()}>Add All To Cart</button>
+                :
+                null
+            }
           </div>
         </div>
-        <button className="btn btn-primary" onClick={() => navigate("/")}>Continue Shopping</button>
-        {
-          wishlist.length !== 0
-          ?
-          <button className="btn btn-primary" onClick={() => addAllToCart()}>Add All To Cart</button>
-          :
-          null
-        }
+
       </div>
     </>
   );

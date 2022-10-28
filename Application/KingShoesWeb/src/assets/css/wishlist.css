@@ -1,0 +1,17 @@
+.wishlist-box__qty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.wishlist-input-group__qty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.wishlist-sku, .wishlist-size{
+    margin: 0;
+}

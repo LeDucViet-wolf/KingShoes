@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllProductImage, getAllProductReview } from "@/stores/actions";
+import { useAlert } from 'react-alert'
 
 const ProductItem = ({ ...props }) => {
+  const alert = useAlert()
   const { product, grid } = props;
   const dispatch = useDispatch();
 
@@ -59,6 +61,7 @@ const ProductItem = ({ ...props }) => {
         if (existProduct.length > 0) {
           var dataItem = {
             productId: parseInt(productId),
+            productImage: productImage,
             product: product,
             size: parseInt(size),
             qty: existProduct[0].qty + 1,
@@ -72,25 +75,37 @@ const ProductItem = ({ ...props }) => {
               data[index] = dataItem;
             }
           });
+
+          alert.show(`Add to ${type} success!`, {
+            type: 'success',
+          })
         } else {
           var dataItem = {
             productId: parseInt(productId),
+            productImage: productImage,
             product: product,
             size: parseInt(size),
             qty: 1,
           };
           data.push(dataItem);
+          alert.show(`Add to ${type} success!`, {
+            type: 'success',
+          })
         }
 
         localStorage.setItem(type, data);
       } else {
         var dataItem = {
           productId: parseInt(productId),
+          productImage: productImage,
           product: product,
           size: parseInt(size),
           qty: 1,
         };
         data.push(dataItem);
+        alert.show(`Add to ${type} success!`, {
+          type: 'success',
+        })
       }
       localStorage.setItem(type, JSON.stringify(data));
       var cart = JSON.parse(localStorage.getItem("cart")),
@@ -107,7 +122,6 @@ const ProductItem = ({ ...props }) => {
         wishlistQty = wishlist.length
       }
 
-      console.log(wishlistQty);
       updateCartItem(cartQty)
       updateWishlist(wishlistQty)
     }
@@ -174,6 +188,7 @@ const ProductItem = ({ ...props }) => {
                   </div>
                   <div className="modal-body">
                     {product.size
+                    
                       ? product.size.map((item, i) => (
                           <div
                             key={i}

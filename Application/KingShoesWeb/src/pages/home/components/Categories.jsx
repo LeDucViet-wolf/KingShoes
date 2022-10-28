@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "@/assets/css/category-home.css";
 
 const Categories = () => {
   const [categories, getCategories] = useState([]);
@@ -52,7 +53,7 @@ const Categories = () => {
             .map((item, i) => (
               <div key={i} className="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <Link to={`product-list?category=${item.entityId}`} className="text-decoration-none">
-                  <div className="cat-item d-flex align-items-center mb-4">
+                  <div className="cat-item cat-item--custom d-flex align-items-center mb-4">
                     <div
                       className="overflow-hidden"
                       style={{ width: "150px", height: "auto" }}

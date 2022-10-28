@@ -5,7 +5,7 @@ const ModalAction = ({ ...props }) => {
 
     return (
         <>
-            <div className="modal" id={idName}>
+            <div className="modal" id={idName} key={`modal-${idName}`}>
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">

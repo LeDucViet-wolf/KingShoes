@@ -184,7 +184,7 @@ const ReviewItem = ({ ...props }) => {
 
     return (
         <>
-            <div className="media mb-4">
+            <div key={review.id} className="media mb-4">
                 <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
                 <div className="media-body">
                     <div className="row">

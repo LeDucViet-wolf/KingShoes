@@ -2,11 +2,18 @@ import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "@/components";
 import bcrypt from "bcryptjs";
 import axios from "axios";
+import { useAlert } from 'react-alert'
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const alert = useAlert();
+  const navigate = useNavigate();
   const textRequire = "This is a required field.";
-  const [confirmPasswordMessage, setConfirmPasswordMessage] =
-    useState(textRequire);
+  const textValid = "This is a wrong format.";
+  const [confirmPasswordMessage, setConfirmPasswordMessage] = useState(textRequire);
+  const [emailValidMessage, setEmailValidMessage] = useState(textRequire);
+  const [phoneValidMessage, setPhoneValidMessage] = useState(textRequire);
+
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
@@ -67,8 +74,16 @@ const Register = () => {
     if (!email) {
       setIsEmailValid(false);
       valid = false;
+      setEmailValidMessage(textRequire)
     } else {
-      setIsEmailValid(true);
+      const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+      if (!regexEmail.test(email)) {
+        valid = false
+        setIsEmailValid(false)
+        setEmailValidMessage(textValid)
+      } else {
+        setIsEmailValid(true);
+      }
     }
 
     if (!password) {
@@ -114,10 +129,18 @@ const Register = () => {
     }
 
     if (!phone) {
+      setPhoneValidMessage(textRequire)
       setIsPhoneValid(false);
       valid = false;
     } else {
-      setIsPhoneValid(true);
+      const regexPhone = /^\d+$/
+      if (!regexPhone.test(phone)) {
+        valid = false
+        setIsPhoneValid(false)
+        setPhoneValidMessage(textValid)
+      } else {
+        setIsPhoneValid(true);
+      }
     }
 
     if (!birthday) {
@@ -152,7 +175,7 @@ const Register = () => {
             axios
               .get(
                 "http://localhost:8080/KingShoesApi/api/customers/get-by-id/" +
-                  response.data
+                response.data
               )
               .then(function (res) {
                 if (res.data) {
@@ -160,12 +183,28 @@ const Register = () => {
                     "customer-login",
                     JSON.stringify([res.data])
                   );
+                  navigate("/profile");
+                  alert.show(`Register success!`, {
+                    type: 'success',
+                  })
+                } else {
+                  alert.show(`Register fail!`, {
+                    type: 'error',
+                  })
                 }
               })
-              .catch((e) => {});
+              .catch((e) => {
+                alert.show(`Register fail!`, {
+                  type: 'error',
+                })
+              });
           }
         })
-        .catch((err) => {});
+        .catch((err) => {
+          alert.show(`Register fail!`, {
+            type: 'error',
+          })
+        });
     }
   };
 
@@ -183,9 +222,8 @@ const Register = () => {
                 <div className="col-md-6 form-group">
                   <label>First Name</label>
                   <input
-                    className={`form-control ${
-                      isFirstNameValid ? "" : "is-invalid"
-                    }`}
+                    className={`form-control ${isFirstNameValid ? "" : "is-invalid"
+                      }`}
                     onChange={handleFirstNameChange}
                     type="text"
                   />
@@ -194,9 +232,8 @@ const Register = () => {
                 <div className="col-md-6 form-group">
                   <label>Last Name</label>
                   <input
-                    className={`form-control ${
-                      isLastNameValid ? "" : "is-invalid"
-                    }`}
+                    className={`form-control ${isLastNameValid ? "" : "is-invalid"
+                      }`}
                     onChange={handleLastNameChange}
                     type="text"
                   />
@@ -205,9 +242,8 @@ const Register = () => {
                 <div className="col-md-6 form-group">
                   <label>Birthday</label>
                   <input
-                    className={`form-control ${
-                      isBirthdayValid ? "" : "is-invalid"
-                    }`}
+                    className={`form-control ${isBirthdayValid ? "" : "is-invalid"
+                      }`}
                     onChange={handleBirthdayChange}
                     type="date"
                   />
@@ -237,31 +273,28 @@ const Register = () => {
                 <div className="col-md-6 form-group">
                   <label>Email</label>
                   <input
-                    className={`form-control ${
-                      isEmailValid ? "" : "is-invalid"
-                    }`}
+                    className={`form-control ${isEmailValid ? "" : "is-invalid"
+                      }`}
                     onChange={handleEmailChange}
                     type="email"
                   />
-                  <div className="invalid-feedback">{textRequire}</div>
+                  <div className="invalid-feedback">{emailValidMessage}</div>
                 </div>
                 <div className="col-md-6 form-group">
                   <label>Phone</label>
                   <input
-                    className={`form-control ${
-                      isPhoneValid ? "" : "is-invalid"
-                    }`}
+                    className={`form-control ${isPhoneValid ? "" : "is-invalid"
+                      }`}
                     onChange={handlePhoneChange}
                     type="text"
                   />
-                  <div className="invalid-feedback">{textRequire}</div>
+                  <div className="invalid-feedback">{phoneValidMessage}</div>
                 </div>
                 <div className="col-md-12 form-group">
                   <label>Address</label>
                   <textarea
-                    className={`form-control ${
-                      isAddressValid ? "" : "is-invalid"
-                    }`}
+                    className={`form-control ${isAddressValid ? "" : "is-invalid"
+                      }`}
                     onChange={handleAddressChange}
                   />
                   <div className="invalid-feedback">{textRequire}</div>
@@ -269,9 +302,8 @@ const Register = () => {
                 <div className="col-md-6 form-group">
                   <label>Password</label>
                   <input
-                    className={`form-control ${
-                      isPasswordValid ? "" : "is-invalid"
-                    }`}
+                    className={`form-control ${isPasswordValid ? "" : "is-invalid"
+                      }`}
                     onChange={handlePasswordChange}
                     type="password"
                   />
@@ -280,9 +312,8 @@ const Register = () => {
                 <div className="col-md-6 form-group">
                   <label>Confirm Password</label>
                   <input
-                    className={`form-control ${
-                      isConfirmPasswordValid ? "" : "is-invalid"
-                    }`}
+                    className={`form-control ${isConfirmPasswordValid ? "" : "is-invalid"
+                      }`}
                     onChange={handleConfirmPasswordChange}
                     type="password"
                   />

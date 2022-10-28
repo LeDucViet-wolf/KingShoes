@@ -7,5 +7,6 @@ import Checkout from './checkout/Checkout'
 import Contact from './contact/Contact'
 import Login from './login/Login'
 import Register from './register/Register'
+import Profile from './profile/Profile'
 
-export { Home, ProductList, ProductDetail, Cart, Checkout, Contact, Login, Register, Wishlist }
+export { Home, ProductList, ProductDetail, Cart, Checkout, Contact, Login, Register, Wishlist, Profile }
