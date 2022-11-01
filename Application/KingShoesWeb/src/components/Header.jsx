@@ -1,14 +1,34 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import "@/assets/css/header.css";
+import { useAlert } from 'react-alert'
 
 const Header = () => {
   const navigate = useNavigate();
+  const alert = useAlert()
 
   const customer = localStorage.getItem("customer-login");
-  const logOut = (e) => {
-    localStorage.removeItem("customer-login");
+  const [isLogout, setIsLogOut] = useState(false)
+
+  const redirectProfile = (e) => {
+    e.preventDefault()
+    navigate('/profile')
   };
+
+  const logOut = (e) => {
+    e.preventDefault()
+    localStorage.removeItem("customer-login")
+    setIsLogOut(true)
+  }
+
+  useEffect(() => {
+    if (isLogout) {
+      alert.show(`Log out success!`, {
+        type: 'success',
+      })
+      setIsLogOut(false)
+    }
+  }, [isLogout])
 
   // Search
   const inputSearch = useRef();
@@ -60,34 +80,40 @@ const Header = () => {
                   className="btn btn-sm btn-light dropdown-toggle"
                   data-toggle="dropdown"
                 >
-                  My Account
+                  {!customer ? "My Account" : `${JSON.parse(customer)[0].lastName}`}
                 </button>
                 <div className="dropdown-menu dropdown-menu-right">
-                  {!customer ? (
-                    <>
-                      <Link to="/login" className="dropdown-item" type="button">
-                        Sign in
-                      </Link>
-                      <Link
-                        to="/register"
-                        className="dropdown-item"
-                        type="button"
-                      >
-                        Sign up
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <a
-                        href=""
-                        className="dropdown-item"
-                        type="button"
-                        onClick={logOut}
-                      >
-                        Logout
-                      </a>
-                    </>
-                  )}
+                  {
+                    !customer
+                      ?
+                      <>
+                        <Link to="/login" className="dropdown-item" type="button">
+                          Sign in
+                        </Link>
+                        <Link
+                          to="/register"
+                          className="dropdown-item"
+                          type="button"
+                        >
+                          Sign up
+                        </Link>
+                      </>
+                      :
+                      <>
+                        <a
+                          href=""
+                          className="dropdown-item"
+                          type="button"
+                          onClick={redirectProfile}
+                        >Profile</a>
+                        <a
+                          href=""
+                          className="dropdown-item"
+                          type="button"
+                          onClick={logOut}
+                        >Logout</a>
+                      </>
+                  }
                 </div>
               </div>
               <div className="btn-group mx-2">

@@ -238,18 +238,18 @@ const Wishlist = () => {
       <div className="container-fluid">
         <div className="row px-xl-5">
           <div className="col-lg-9 col-md-8">
-            <div className="row pb-3">
-              {
-                wishlist ?
-                  wishlist.map((item, index) => {
-                    return (
-                      <div key={index}
+            {
+              wishlist && wishlist.length
+                ? wishlist.map((item, index) => {
+                  return (
+                    <div className="row" key={index}>
+                      <div
                         className="col-lg-4 col-md-6 col-sm-6 pb-1 dat__wishlist-item"
                         data-item-id={item.productId}
                         data-item-size={item.size}>
-                        <div className="product-item bg-light mb-4">
+                        <div className="product-item bg-light">
                           <div className="product-img position-relative overflow-hidden">
-                          <img className="img-fluid w-100" src={`/img/product/${item.productImage[0].value}`}/>
+                            <img className="img-fluid w-100" src={`/img/product/${item.productImage[0].value}`} />
                           </div>
                           <div className="text-center py-4">
                             <Link
@@ -309,19 +309,19 @@ const Wishlist = () => {
                           </div>
                         </div>
                       </div>
-                    );
-                  })
-                  : <></>
-              }
+                    </div>
 
-            </div>
-            <button className="btn btn-primary mr-2" onClick={() => navigate("/")}>Continue Shopping</button>
+                  );
+                })
+                : <div>These is no item in wishlist</div>
+            }
+            <button className="btn btn-primary mt-2 mr-2" onClick={() => navigate("/")}>Continue Shopping</button>
             {
-              wishlist
+              wishlist && wishlist.length
                 ?
-                <button className="btn btn-primary" onClick={() => addAllToCart()}>Add All To Cart</button>
+                <button className="btn btn-primary mt-2" onClick={() => addAllToCart()}>Add All To Cart</button>
                 :
-                null
+                <></>
             }
           </div>
         </div>

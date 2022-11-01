@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Breadcrumb } from "@/components";
 import useScript from "@/hooks/useScript";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -36,15 +36,15 @@ const Cart = () => {
     }
   }
 
-  const dele = (id,size) => {
+  const dele = (id, size) => {
     var data = localStorage.getItem('cart')
-    ? JSON.parse(localStorage.getItem('cart'))
-    : [];
+      ? JSON.parse(localStorage.getItem('cart'))
+      : [];
     const newD = []
-    data.forEach(e=>{
-      if(e.productId != id){
+    data.forEach(e => {
+      if (e.productId != id) {
         newD.push(e)
-      }else if (e.size != size) {
+      } else if (e.size != size) {
         newD.push(e)
       }
 
@@ -56,7 +56,7 @@ const Cart = () => {
 
   const updateCart = () => {
     var cartItem = JSON.parse(localStorage.getItem("cart")),
-    cartQty = 0
+      cartQty = 0
     if (cartItem) {
       cartItem.forEach((element) => {
         cartQty += parseInt(element.qty);
@@ -113,7 +113,7 @@ const Cart = () => {
           <div className="col-lg-8 table-responsive mb-5">
             {
               cart && cart.length !== 0
-              ?
+                ?
                 <>
                   <table className="table table-light table-borderless table-hover text-center mb-0">
                     <thead className="thead-dark">
@@ -129,88 +129,92 @@ const Cart = () => {
                     <tbody className="align-middle">
                       {cart
                         ? cart.map((item, i) => (
-                            <tr key={i} data-item-id ={item.productId} data-item-size ={item.size}>
-                              <td className="align-middle">
-                                <img
-                                  src="img/product-1.jpg"
-                                  alt=""
-                                  style={{ width: "50px" }}
-                                />{" "}
-                                {item.product.name}
-                              </td>
-                              <td className="align-middle">{item.size}</td>
-                              <td className="align-middle">
-                                {item.product.price
-                                  ? item.product.price
-                                      .toString()
-                                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                                  : null}{" "}
-                                VND
-                              </td>
-                              <td className="align-middle">
-                                <div
-                                  className="input-group quantity mx-auto"
-                                  style={{ width: "100px" }}
-                                >
-                                  <div className="input-group-btn">
-                                    <button
-                                      className="btn btn-sm btn-primary btn-minus"
-                                      onClick={(event) =>
-                                        minusItem(event, item.productId, item.size)
-                                      }
-                                    >
-                                      <i className="fa fa-minus"></i>
-                                    </button>
-                                  </div>
-                                  <input
-                                    type="text"
-                                    className="form-control form-control-sm bg-secondary border-0 text-center"
-                                    value={item.qty}
-                                  />
-                                  <div className="input-group-btn">
-                                    <button
-                                      className="btn btn-sm btn-primary btn-plus"
-                                      onClick={(event) =>
-                                        plusItem(event, item.productId, item.size)
-                                      }
-                                    >
-                                      <i className="fa fa-plus"></i>
-                                    </button>
-                                  </div>
+                          <tr key={i} data-item-id={item.productId} data-item-size={item.size}>
+                            <td className="align-middle">
+                              <img
+                                src="img/product-1.jpg"
+                                alt=""
+                                style={{ width: "50px" }}
+                              />{" "}
+                              {item.product.name}
+                            </td>
+                            <td className="align-middle">{item.size}</td>
+                            <td className="align-middle">
+                              {item.product.price
+                                ? item.product.price
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                : null}{" "}
+                              VND
+                            </td>
+                            <td className="align-middle">
+                              <div
+                                className="input-group quantity mx-auto"
+                                style={{ width: "100px" }}
+                              >
+                                <div className="input-group-btn">
+                                  <button
+                                    className="btn btn-sm btn-primary btn-minus"
+                                    onClick={(event) =>
+                                      minusItem(event, item.productId, item.size)
+                                    }
+                                  >
+                                    <i className="fa fa-minus"></i>
+                                  </button>
                                 </div>
-                              </td>
-                              <td className="align-middle">
-                                {item.product.price && item.qty
-                                  ? (item.product.price*item.qty)
-                                      .toString()
-                                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                                  : null}{" "}
-                                VND
-                              </td>
-                              <td className="align-middle">
-                                <button
-                                  className="btn btn-sm btn-danger"
-                                  onClick={(event) =>
-                                    dele(item.productId, item.size)
-                                  }
-                                >
-                                  <i className="fa fa-times"></i>
-                                </button>
-                              </td>
-                            </tr>
-                          ))
+                                <input
+                                  type="text"
+                                  className="form-control form-control-sm bg-secondary border-0 text-center"
+                                  value={item.qty}
+                                />
+                                <div className="input-group-btn">
+                                  <button
+                                    className="btn btn-sm btn-primary btn-plus"
+                                    onClick={(event) =>
+                                      plusItem(event, item.productId, item.size)
+                                    }
+                                  >
+                                    <i className="fa fa-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="align-middle">
+                              {item.product.price && item.qty
+                                ? (item.product.price * item.qty)
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                : null}{" "}
+                              VND
+                            </td>
+                            <td className="align-middle">
+                              <button
+                                className="btn btn-sm btn-danger"
+                                onClick={(event) =>
+                                  dele(item.productId, item.size)
+                                }
+                              >
+                                <i className="fa fa-times"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        ))
                         : null}
                     </tbody>
                   </table>
-                  <button className="btn btn-primary" onClick={() => navigate("/")}>
-                    Continue Shopping
-                  </button>
-                  <button className="btn btn-primary" onClick={clearCart}>
-                    Clear Shopping Cart
-                  </button>
+
                 </>
-              :
-              "These is no item in cart"
+                : <div>These is no item in cart</div>
+            }
+            <button className="btn btn-primary mt-2 mr-2" onClick={() => navigate("/")}>
+              Continue Shopping
+            </button>
+            {
+              cart && cart.length !== 0
+                ? <button className="btn btn-primary mt-2" onClick={clearCart}>
+                  Clear Shopping Cart
+                </button>
+                : <></>
             }
           </div>
           <div className="col-lg-4">
@@ -236,8 +240,8 @@ const Cart = () => {
                   <h6>
                     {subtotal
                       ? subtotal
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                       : null}{" "}
                     VND
                   </h6>
@@ -247,8 +251,8 @@ const Cart = () => {
                   <h6 className="font-weight-medium">
                     {shipping
                       ? shipping
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                       : null}
                     {"0 "}
                     VND

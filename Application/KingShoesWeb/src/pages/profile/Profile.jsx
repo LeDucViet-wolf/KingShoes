@@ -1,9 +1,14 @@
 import React, { useEffect } from 'react'
-import { Breadcrumb } from "@/components"
+import { Breadcrumb } from '@/components'
+import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
+    const navigate = useNavigate()
 
     useEffect(() => {
+        if (!localStorage.getItem("customer-login")) {
+            navigate("/")
+        }
         window.scrollTo(0, 0)
     }, [])
 

@@ -164,3 +164,11 @@ create table tblUser (
 	role_id int,
 	foreign key (role_id) references tblRole(entity_id)
 );
+
+create table tblContact (
+	entity_id int auto_increment primary key,
+	`name` varchar(256),
+	`email` varchar(256),
+	`subject` varchar(256),
+	`message` varchar(256)
+);
