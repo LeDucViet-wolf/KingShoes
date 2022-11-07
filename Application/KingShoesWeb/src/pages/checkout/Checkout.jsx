@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "@/components";
 import { get } from "@/helpers";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const emailCode = "email";
   const firstNameCode = "firstName";
   const lastNameCode = "lastName";
@@ -235,11 +237,7 @@ const Checkout = () => {
                       "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                       dataToOrderAddressBilling
                     )
-                    .then(function (res) {
-                      console.log(
-                        "insert to order address type = billing success"
-                      );
-                    })
+                    .then(function (res) {})
                     .catch((err) => {
                       console.log(err);
                     });
@@ -248,14 +246,15 @@ const Checkout = () => {
                       "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                       dataToOrderAddressShipping
                     )
-                    .then(function (res) {
-                      console.log(
-                        "insert to order address type = shipping success"
-                      );
-                    })
+                    .then(function (res) {})
                     .catch((err) => {
                       console.log(err);
                     });
+                    localStorage.removeItem('cart');
+                    localStorage.setItem('last-order-id', orderId);
+                    localStorage.setItem('customer-data', JSON.stringify(data[billingCode]));
+                    localStorage.setItem('is-loaded', false);
+                    navigate('/checkout-success');
                 }
               })
               .catch((err) => {

@@ -107,7 +107,7 @@ create table tblOrder (
 	note varchar(256),
 	foreign key (shipping_id) references tblShippingMethod(entity_id),
 	foreign key (payment_id) references tblPaymentMethod(entity_id)
-);
+) ENGINE=InnoDB AUTO_INCREMENT=10000000;
 
 create table tblOrderItem (
 	entity_id int auto_increment primary key,

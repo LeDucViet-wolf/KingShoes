@@ -8,5 +8,6 @@ import Contact from './contact/Contact'
 import Login from './login/Login'
 import Register from './register/Register'
 import Profile from './profile/Profile'
+import CheckoutSuccess from './checkout-success/CheckoutSuccess'
 
-export { Home, ProductList, ProductDetail, Cart, Checkout, Contact, Login, Register, Wishlist, Profile }
+export { Home, ProductList, ProductDetail, Cart, Checkout, Contact, Login, Register, Wishlist, Profile, CheckoutSuccess }
