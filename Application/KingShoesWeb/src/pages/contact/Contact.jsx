@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Breadcrumb } from '@/components'
 
 const Contact = () => {
+    const [isValid, setIsValid] = useState()
+    
+    const handleSubmitContacts = () => {
+
+    }
+
     return (
         <>
             <Breadcrumb pageUrl='/contact' pageNameChild='Contact' />

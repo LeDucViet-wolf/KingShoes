@@ -631,3 +631,8 @@ values
     (8, 80),
     (9, 90),
     (10, 100);
+
+insert into 
+    tblContact(`name`,`email`,`subject`,`message`) 
+values
+    ('long','hclong2k@gmail.com','test','test');
