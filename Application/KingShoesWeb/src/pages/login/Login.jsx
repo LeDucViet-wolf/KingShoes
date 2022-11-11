@@ -91,8 +91,7 @@ const Login = () => {
                   <div className="col-md-6 form-group">
                     <label>Email</label>
                     <input
-                      className={`form-control ${isEmailValid ? "" : "is-invalid"
-                        }`}
+                      className={`form-control ${isEmailValid ? "" : "is-invalid"}`}
                       onChange={handleEmailChange}
                       type="text"
                     />
@@ -103,8 +102,7 @@ const Login = () => {
                   <div className="col-md-6 form-group">
                     <label>Password</label>
                     <input
-                      className={`form-control ${isPasswordValid ? "" : "is-invalid"
-                        }`}
+                      className={`form-control ${isPasswordValid ? "" : "is-invalid"}`}
                       onChange={handlePasswordChange}
                       type="password"
                     />

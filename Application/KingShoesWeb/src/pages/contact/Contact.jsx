@@ -1,11 +1,82 @@
 import React, { useState } from 'react'
 import { Breadcrumb } from '@/components'
+import { useAlert } from 'react-alert'
+import { post } from '@/helpers'
 
 const Contact = () => {
-    const [isValid, setIsValid] = useState()
-    
-    const handleSubmitContacts = () => {
+    const alert = useAlert()
 
+    const [name, setName] = useState()
+    const [email, setEmail] = useState()
+    const [subject, setSubject] = useState()
+    const [message, setMessage] = useState()
+
+    const [isNameValid, setIsNameValid] = useState(true)
+    const [isEmailValid, setIsEmailValid] = useState(true)
+    const [isSubjectValid, setIsSubjectValid] = useState(true)
+    const [isMessageValid, setIsMessageValid] = useState(true)
+
+    const handleNameChange = (e) => {
+        if (e.target.value) {
+            setName(e.target.value)
+            setIsNameValid(true)
+        } else {
+            setIsNameValid(false)
+        }
+    }
+
+    const handleEmailChange = (e) => {
+        if (e.target.value) {
+            setEmail(e.target.value)
+            setIsEmailValid(true)
+        } else {
+            setIsEmailValid(false)
+        }
+    }
+
+    const handleSubjectChange = (e) => {
+        if (e.target.value) {
+            setSubject(e.target.value)
+            setIsSubjectValid(true)
+        } else {
+            setIsSubjectValid(false)
+        }
+    }
+    const handleMessageChange = (e) => {
+        if (e.target.value) {
+            setMessage(e.target.value)
+            setIsMessageValid(true)
+        } else {
+            setIsMessageValid(false)
+        }
+    }
+
+    const handleSubmit = async () => {
+        if (!name) {
+            setIsNameValid(false)
+        }
+        if (!email) {
+            setIsEmailValid(false)
+        }
+        if (!subject) {
+            setIsSubjectValid(false)
+        }
+        if (!message) {
+            setIsMessageValid(false)
+        }
+        if (name && email && subject && message) {
+            let data = { name, email, subject, message }
+            let result = await post(`contacts/insert/`, data)
+            if (result) {
+                alert.show("Send Message Success!", {
+                    type: 'success',
+                })
+            } else {
+                alert.show("Send Message Fail!", {
+                    type: 'error',
+                })
+            }
+        }
     }
 
     return (
@@ -17,31 +88,51 @@ const Contact = () => {
                     <div className="col-lg-7 mb-5">
                         <div className="contact-form bg-light p-30">
                             <div id="success"></div>
-                            <form name="sentMessage" id="contactForm" noValidate="novalidate">
-                                <div className="control-group">
-                                    <input type="text" className="form-control" id="name" placeholder="Your Name"
-                                        required="required" data-validation-required-message="Please enter your name" />
-                                    <p className="help-block text-danger"></p>
+                            <form name="sentMessage" id="contactForm">
+                                <div className="form-group">
+                                    <input
+                                        defaultValue={name}
+                                        onChange={handleNameChange}
+                                        type="text"
+                                        className={`form-control ${isNameValid ? "" : "is-invalid"}`}
+                                        id="name"
+                                        placeholder="Your Name" />
                                 </div>
-                                <div className="control-group">
-                                    <input type="email" className="form-control" id="email" placeholder="Your Email"
-                                        required="required" data-validation-required-message="Please enter your email" />
-                                    <p className="help-block text-danger"></p>
+                                <div className="form-group">
+                                    <input
+                                        defaultValue={email}
+                                        onChange={handleEmailChange}
+                                        type="email"
+                                        className={`form-control ${isEmailValid ? "" : "is-invalid"}`}
+                                        id="email"
+                                        placeholder="Your Email" />
                                 </div>
-                                <div className="control-group">
-                                    <input type="text" className="form-control" id="subject" placeholder="Subject"
-                                        required="required" data-validation-required-message="Please enter a subject" />
-                                    <p className="help-block text-danger"></p>
+                                <div className="form-group">
+                                    <input
+                                        defaultValue={subject}
+                                        onChange={handleSubjectChange}
+                                        type="text"
+                                        className={`form-control ${isSubjectValid ? "" : "is-invalid"}`}
+                                        id="subject"
+                                        placeholder="Subject" />
                                 </div>
-                                <div className="control-group">
-                                    <textarea className="form-control" rows="8" id="message" placeholder="Message"
-                                        required="required"
-                                        data-validation-required-message="Please enter your message"></textarea>
-                                    <p className="help-block text-danger"></p>
+                                <div className="form-group">
+                                    <textarea
+                                        defaultValue={message}
+                                        onChange={handleMessageChange}
+                                        className={`form-control ${isMessageValid ? "" : "is-invalid"}`}
+                                        rows="8"
+                                        id="message"
+                                        placeholder="Message"></textarea>
                                 </div>
                                 <div>
-                                    <button className="btn btn-primary py-2 px-4" type="submit" id="sendMessageButton">Send
-                                        Message</button>
+                                    <button
+                                        onClick={handleSubmit}
+                                        className="btn btn-primary py-2 px-4"
+                                        type="button"
+                                        id="sendMessageButton">
+                                        Send Message
+                                    </button>
                                 </div>
                             </form>
                         </div>
