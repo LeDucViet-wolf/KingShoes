@@ -16,12 +16,13 @@ const CheckoutSuccess = () => {
   }
 
   useEffect(() => {
-    var isLoaded = localStorage.getItem("is-loaded");
+    var isLoaded = localStorage.getItem("is-loaded-checkout-success");
     if (isLoaded == "true" || isLoaded == null) {
       localStorage.removeItem('customer-data');
+      localStorage.removeItem('last-order-id');
       navigate("/cart");
     } else {
-      localStorage.setItem("is-loaded", true);
+      localStorage.setItem("is-loaded-checkout-success", true);
       setOrderId(localStorage.getItem("last-order-id"));
       setEmail(JSON.parse(localStorage.getItem("customer-data")).email.value);
     }

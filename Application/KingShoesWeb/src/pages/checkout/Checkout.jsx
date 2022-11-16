@@ -25,6 +25,7 @@ const Checkout = () => {
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const regrexPhone = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
   const [countries, getCountries] = useState([]);
+  const [emails, getEmails] = useState([]);
   const [note, setNote] = useState("");
   const [shipping, setShipping] = useState(0);
   const [shippingMethod, setShippingMethod] = useState();
@@ -180,7 +181,16 @@ const Checkout = () => {
   };
 
   const handleChange = (type, code) => (e) => {
-    assignData(type, code, e.currentTarget.value.trim());
+    var value =  e.currentTarget.value.trim();
+    assignData(type, code, value);
+
+    if (type == billingCode && code == emailCode) {
+      emails.map((email, i) => {
+        if (value == email) {
+          alert(123);
+        }
+      });
+    }
   };
 
   const submitOrder = async (e) => {
@@ -250,11 +260,15 @@ const Checkout = () => {
                     .catch((err) => {
                       console.log(err);
                     });
-                    localStorage.removeItem('cart');
-                    localStorage.setItem('last-order-id', orderId);
-                    localStorage.setItem('customer-data', JSON.stringify(data[billingCode]));
-                    localStorage.setItem('is-loaded', false);
-                    navigate('/checkout-success');
+                  localStorage.removeItem("cart");
+                  localStorage.setItem("last-order-id", orderId);
+                  localStorage.setItem(
+                    "customer-data",
+                    JSON.stringify(data[billingCode])
+                  );
+                  localStorage.setItem("is-loaded-checkout-success", false);
+                  localStorage.setItem("is-loaded-register", false);
+                  navigate("/checkout-success");
                 }
               })
               .catch((err) => {
@@ -332,6 +346,16 @@ const Checkout = () => {
         "http://localhost:8080/KingShoesApi/api/payment-method/get-list-enabled"
       )
     );
+
+    var customerListEnable = await get(
+        "http://localhost:8080/KingShoesApi/api/customers/get-list-enabled"
+      ),
+      emailList = [];
+
+    customerListEnable.map((item, i) => {
+      emailList.push(item.email);
+    });
+    getEmails(emailList);
     getCountries(countryList);
     assignData(billingCode, countryCode, countryList[0].code);
     assignData(shippingCode, countryCode, countryList[0].code);

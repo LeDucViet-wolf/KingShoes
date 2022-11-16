@@ -30,6 +30,16 @@ public class CustomerController {
     }
 	
 	@GET
+    @Path("/get-list-enabled")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getListEnabled() {
+        List<Customer> list = new CustomerDAOImpl().getListEnabled();
+        Gson son = new Gson();
+        String data = son.toJson(list);
+        return data;
+    }
+	
+	@GET
 	@Path("/get-by-id/{entityId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getById(@PathParam("entityId")int entityId) {

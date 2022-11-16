@@ -27,6 +27,24 @@ public class CustomerDAOImpl implements CustomerDAO {
 		}
 		return null;
 	}
+	
+	public List<Customer> getListEnabled() {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List<Customer> list = session.createQuery("from Customer where status = 1", Customer.class)
+					.list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
 
 	@Override
 	public Customer getById(int entityId) {
