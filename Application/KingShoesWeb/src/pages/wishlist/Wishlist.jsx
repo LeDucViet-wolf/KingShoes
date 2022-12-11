@@ -228,6 +228,7 @@ const Wishlist = () => {
       alert("Add all to cart successfully")
     }, 1000);
   };
+
   return (
     <>
       <Breadcrumb
@@ -241,6 +242,7 @@ const Wishlist = () => {
             {
               wishlist && wishlist.length
                 ? wishlist.map((item, index) => {
+                  console.log(item)
                   return (
                     <div className="row" key={index}>
                       <div
@@ -249,7 +251,7 @@ const Wishlist = () => {
                         data-item-size={item.size}>
                         <div className="product-item bg-light">
                           <div className="product-img position-relative overflow-hidden">
-                            <img className="img-fluid w-100" src={`/img/product/${item.productImage[0].value}`} />
+                            <img className="img-fluid w-100" src={item.productImage ?  `/img/product/${item.productImage[0].value}` : ``} />
                           </div>
                           <div className="text-center py-4">
                             <Link

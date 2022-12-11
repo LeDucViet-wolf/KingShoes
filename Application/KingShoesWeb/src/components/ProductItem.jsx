@@ -16,9 +16,8 @@ const ProductItem = ({ ...props }) => {
     productReviews: state.productReviewReducer.productReviews,
   }));
 
-  const productImage = productImages.filter(
-    (pi) => pi.productId == product.entityId
-  );
+  const [productImage, setProductImage] = useState([]) 
+ 
   const productReview = productReviews.filter(
     (pr) => pr.productId == product.entityId
   );
@@ -61,8 +60,8 @@ const ProductItem = ({ ...props }) => {
         if (existProduct.length > 0) {
           var dataItem = {
             productId: parseInt(productId),
-            productImage: productImage,
             product: product,
+            productImage: productImage,
             size: parseInt(size),
             qty: existProduct[0].qty + 1,
           };
@@ -82,12 +81,13 @@ const ProductItem = ({ ...props }) => {
         } else {
           var dataItem = {
             productId: parseInt(productId),
-            productImage: productImage,
             product: product,
+            productImage: productImage,
             size: parseInt(size),
             qty: 1,
           };
           data.push(dataItem);
+
           alert.show(`Add to ${type} success!`, {
             type: 'success',
           })
@@ -97,12 +97,13 @@ const ProductItem = ({ ...props }) => {
       } else {
         var dataItem = {
           productId: parseInt(productId),
-          productImage: productImage,
           product: product,
+          productImage: productImage,
           size: parseInt(size),
           qty: 1,
         };
         data.push(dataItem);
+
         alert.show(`Add to ${type} success!`, {
           type: 'success',
         })
@@ -143,6 +144,23 @@ const ProductItem = ({ ...props }) => {
     dispatch(getAllProductImage());
     dispatch(getAllProductReview());
   }, [dispatch]);
+
+  useEffect(() => {
+    setProductImage(productImages.filter(
+      (pi) => pi.productId == product.entityId
+    ));
+  }, [])
+
+  // useEffect(() => {
+  //   var data = localStorage.getItem(type)
+  //   ? JSON.parse(localStorage.getItem(type))
+  //   : [];
+  //   data.forEach(item => {
+  //     if(item.productId === productImage[])
+  //   })
+  //   data = {...data, productImage: productImage}
+  //   localStorage.setItem(type, JSON.stringify(data));
+  // }, [productImage])
 
   return (
     <div

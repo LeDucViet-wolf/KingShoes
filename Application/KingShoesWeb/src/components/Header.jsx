@@ -26,6 +26,7 @@ const Header = () => {
       alert.show(`Log out success!`, {
         type: 'success',
       })
+      navigate('/')
       setIsLogOut(false)
     }
   }, [isLogout])
@@ -42,6 +43,7 @@ const Header = () => {
     cartQty = 0,
     wishlistQty = 0;
   if (cart) {
+    console.log(cart)
     cart.forEach((element) => {
       cartQty += parseInt(element.qty);
     });
