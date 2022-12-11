@@ -489,7 +489,7 @@ values
         0,
         'tonghi@gmail.com',
         '0832536201',
-        '123',
+        '$2a$10$RUTh77wcxEOd7QgdhRajLuGiAsIKxkBhU1zUkx9zTCTuZt/YNcNpC',
         'Trần Hưng Đạo, Hoàn Kiếm, Hà Nội',
         1
     ),
@@ -500,7 +500,7 @@ values
         1,
         'nguyenletuan@gmail.com',
         '0832536202',
-        '123',
+        '$2a$10$RUTh77wcxEOd7QgdhRajLuGiAsIKxkBhU1zUkx9zTCTuZt/YNcNpC',
         '81 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội',
         0
     ),
@@ -511,7 +511,7 @@ values
         0,
         'tranthithu@gmail.com',
         '0832536203',
-        '123',
+        '$2a$10$RUTh77wcxEOd7QgdhRajLuGiAsIKxkBhU1zUkx9zTCTuZt/YNcNpC',
         '6 Ng. 84 P. Trần Quang Diệu, Chợ Dừa, Đống Đa, Hà Nội',
         1
     ),
@@ -522,7 +522,7 @@ values
         1,
         'phamduyhong@gmail.com',
         '0832536204',
-        '123',
+        '$2a$10$RUTh77wcxEOd7QgdhRajLuGiAsIKxkBhU1zUkx9zTCTuZt/YNcNpC',
         '65 Nguyễn Đình Thi, Thuỵ Khuê, Tây Hồ, Hà Nội',
         0
     ),
@@ -533,7 +533,7 @@ values
         0,
         'lehongnguyen@gmail.com',
         '0832536205',
-        '123',
+        '$2a$10$RUTh77wcxEOd7QgdhRajLuGiAsIKxkBhU1zUkx9zTCTuZt/YNcNpC',
         '51 Đ. Âu Cơ, Tứ Liên, Tây Hồ, Hà Nội',
         1
     ),
@@ -544,7 +544,7 @@ values
         1,
         'hocungdatnhan@gmail.com',
         '0832536206',
-        '123',
+        '$2a$10$RUTh77wcxEOd7QgdhRajLuGiAsIKxkBhU1zUkx9zTCTuZt/YNcNpC',
         'Hàng Bột, Đống Đa, Hà Nội',
         0
     ),
@@ -555,7 +555,7 @@ values
         0,
         'chuvannam@gmail.com',
         '0832536207',
-        '123',
+        '$2a$10$RUTh77wcxEOd7QgdhRajLuGiAsIKxkBhU1zUkx9zTCTuZt/YNcNpC',
         '9b Nguyễn Đình Thi, Thuỵ Khuê, Tây Hồ, Hà Nội',
         1
     ),
@@ -566,7 +566,7 @@ values
         1,
         'huynhduclong@gmail.com',
         '0832536208',
-        '123',
+        '$2a$10$RUTh77wcxEOd7QgdhRajLuGiAsIKxkBhU1zUkx9zTCTuZt/YNcNpC',
         '88 P.Yên Lãng, Láng Hạ, Đống Đa, Trung Hoà Cầu Giấy Hà Nội',
         0
     );

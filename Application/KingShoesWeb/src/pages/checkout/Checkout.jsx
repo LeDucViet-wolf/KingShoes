@@ -27,6 +27,7 @@ const Checkout = () => {
   const [countries, getCountries] = useState([]);
   const [emails, getEmails] = useState([]);
   const [note, setNote] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [shipping, setShipping] = useState(0);
   const [shippingMethod, setShippingMethod] = useState();
   const [shippingMethods, getShippingMethods] = useState([]);
@@ -52,6 +53,11 @@ const Checkout = () => {
     phoneCode,
     countryCode,
   ];
+
+  var customerLoggedInData = localStorage.getItem("customer-login");
+  if (customerLoggedInData) {
+    customerLoggedInData = JSON.parse(customerLoggedInData)[0];
+  }
 
   const checkUseShipToDifferentAddress = (e) => {
     useShipToDifferentAddress(e.currentTarget.checked);
@@ -181,13 +187,13 @@ const Checkout = () => {
   };
 
   const handleChange = (type, code) => (e) => {
-    var value =  e.currentTarget.value.trim();
+    var value = e.currentTarget.value.trim();
     assignData(type, code, value);
 
     if (type == billingCode && code == emailCode) {
       emails.map((email, i) => {
         if (value == email) {
-          alert(123);
+          console.log(123);
         }
       });
     }
@@ -211,11 +217,17 @@ const Checkout = () => {
     }
 
     if (isValid) {
+      var customerId = null;
+      if (customerLoggedInData) {
+        customerId = customerLoggedInData.entityId;
+      }
+
       var dataToOrder = prepareDataToOrder(
         shippingMethod,
         paymnetMethod,
         total,
-        note
+        note,
+        customerId
       );
       axios
         .post(
@@ -282,13 +294,20 @@ const Checkout = () => {
     }
   };
 
-  const prepareDataToOrder = (shippingId, paymentId, grandTotal, note) => {
+  const prepareDataToOrder = (
+    shippingId,
+    paymentId,
+    grandTotal,
+    note,
+    customerId = null
+  ) => {
     return {
       status: 1,
       shippingId: parseInt(shippingId),
       paymentId: parseInt(paymentId),
       grandTotal: parseFloat(grandTotal),
       note: note,
+      customerId: customerId,
     };
   };
 
@@ -359,6 +378,20 @@ const Checkout = () => {
     getCountries(countryList);
     assignData(billingCode, countryCode, countryList[0].code);
     assignData(shippingCode, countryCode, countryList[0].code);
+    if (customerLoggedInData) {
+      setIsLoggedIn(true);
+      assignData(billingCode, emailCode, customerLoggedInData.email);
+      assignData(billingCode, firstNameCode, customerLoggedInData.firstName);
+      assignData(billingCode, lastNameCode, customerLoggedInData.lastName);
+      assignData(billingCode, addressCode, customerLoggedInData.address);
+      assignData(billingCode, phoneCode, customerLoggedInData.phone);
+      assignData(shippingCode, firstNameCode, customerLoggedInData.firstName);
+      assignData(shippingCode, lastNameCode, customerLoggedInData.lastName);
+      assignData(shippingCode, addressCode, customerLoggedInData.address);
+      assignData(shippingCode, phoneCode, customerLoggedInData.phone);
+    } else {
+      setIsLoggedIn(false);
+    }
   };
 
   useEffect(() => {
@@ -380,7 +413,10 @@ const Checkout = () => {
             </h5>
             <div className="bg-light p-30 mb-5">
               <div className="row">
-                <div className="col-md-7 form-group">
+                <div
+                  className="col-md-7 form-group"
+                  style={isLoggedIn ? { display: "none" } : {}}
+                >
                   <label>Email</label>
                   <input
                     className={`form-control ${
@@ -400,6 +436,9 @@ const Checkout = () => {
                     }`}
                     onChange={handleChange(billingCode, firstNameCode)}
                     type="text"
+                    defaultValue={
+                      isLoggedIn ? customerLoggedInData.firstName : ""
+                    }
                   />
                   <div className="invalid-feedback">{textRequire}</div>
                 </div>
@@ -411,6 +450,9 @@ const Checkout = () => {
                     }`}
                     onChange={handleChange(billingCode, lastNameCode)}
                     type="text"
+                    defaultValue={
+                      isLoggedIn ? customerLoggedInData.lastName : ""
+                    }
                   />
                   <div className="invalid-feedback">{textRequire}</div>
                 </div>
@@ -422,6 +464,9 @@ const Checkout = () => {
                     }`}
                     onChange={handleChange(billingCode, addressCode)}
                     type="text"
+                    defaultValue={
+                      isLoggedIn ? customerLoggedInData.address : ""
+                    }
                   />
                   <div className="invalid-feedback">{textRequire}</div>
                 </div>
@@ -469,6 +514,7 @@ const Checkout = () => {
                     }`}
                     onChange={handleChange(billingCode, phoneCode)}
                     type="text"
+                    defaultValue={isLoggedIn ? customerLoggedInData.phone : ""}
                   />
                   <div className="invalid-feedback">{phoneValidMsg}</div>
                 </div>
@@ -508,6 +554,9 @@ const Checkout = () => {
                       }`}
                       onChange={handleChange(shippingCode, firstNameCode)}
                       type="text"
+                      defaultValue={
+                        isLoggedIn ? customerLoggedInData.firstName : ""
+                      }
                     />
                     <div className="invalid-feedback">{textRequire}</div>
                   </div>
@@ -521,6 +570,9 @@ const Checkout = () => {
                       }`}
                       onChange={handleChange(shippingCode, lastNameCode)}
                       type="text"
+                      defaultValue={
+                        isLoggedIn ? customerLoggedInData.lastName : ""
+                      }
                     />
                     <div className="invalid-feedback">{textRequire}</div>
                   </div>
@@ -534,6 +586,9 @@ const Checkout = () => {
                       }`}
                       onChange={handleChange(shippingCode, addressCode)}
                       type="text"
+                      defaultValue={
+                        isLoggedIn ? customerLoggedInData.address : ""
+                      }
                     />
                     <div className="invalid-feedback">{textRequire}</div>
                   </div>
@@ -581,6 +636,9 @@ const Checkout = () => {
                       }`}
                       onChange={handleChange(shippingCode, phoneCode)}
                       type="text"
+                      defaultValue={
+                        isLoggedIn ? customerLoggedInData.phone : ""
+                      }
                     />
                     <div className="invalid-feedback">{phoneValidMsg}</div>
                   </div>

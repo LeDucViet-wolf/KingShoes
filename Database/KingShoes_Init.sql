@@ -105,6 +105,7 @@ create table tblOrder (
 	payment_id int,
 	grand_total float,
 	note varchar(256),
+	customer_id int,
 	foreign key (shipping_id) references tblShippingMethod(entity_id),
 	foreign key (payment_id) references tblPaymentMethod(entity_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=10000000;

@@ -5,6 +5,7 @@ const CheckoutSuccess = () => {
   const navigate = useNavigate();
   const [orderId, setOrderId] = useState();
   const [email, setEmail] = useState();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigateHome = () => {
     navigate("/");
@@ -13,13 +14,23 @@ const CheckoutSuccess = () => {
   const navigateRegisterAccount = () => {
     localStorage.setItem("is-loaded", false);
     navigate("/register");
+  };
+
+  var customerLoggedInData = localStorage.getItem("customer-login");
+  if (customerLoggedInData) {
+    customerLoggedInData = JSON.parse(customerLoggedInData)[0];
   }
 
   useEffect(() => {
+    if (customerLoggedInData) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
     var isLoaded = localStorage.getItem("is-loaded-checkout-success");
     if (isLoaded == "true" || isLoaded == null) {
-      localStorage.removeItem('customer-data');
-      localStorage.removeItem('last-order-id');
+      localStorage.removeItem("customer-data");
+      localStorage.removeItem("last-order-id");
       navigate("/cart");
     } else {
       localStorage.setItem("is-loaded-checkout-success", true);
@@ -52,11 +63,17 @@ const CheckoutSuccess = () => {
             </div>
           </div>
           <br />
-          <div className="checkout-success">
+          <div
+            className="checkout-success"
+            style={isLoggedIn ? { display: "none" } : {}}
+          >
             <p>You can track your order status by creating an account.</p>
             <p>Email Address: {email ? email : ""}</p>
           </div>
-          <div className="action-toolbar">
+          <div
+            className="action-toolbar"
+            style={isLoggedIn ? { display: "none" } : {}}
+          >
             <div className="primary">
               <a onClick={navigateRegisterAccount} className="btn btn-primary">
                 <span>Create Account</span>

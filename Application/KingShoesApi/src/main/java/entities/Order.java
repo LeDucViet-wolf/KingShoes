@@ -24,14 +24,16 @@ public class Order {
 	public Float grandTotal;
 	@Column(name = "note")
 	public String note;
-
+	@Column(name = "customer_id")
+	public Integer customerId;
+	
 	public Order() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public Order(Integer entityId, Integer status, Integer shippingId, Integer paymentId, Float grandTotal,
-			String note) {
+	
+	public Order(Integer entityId, Integer status, Integer shippingId, Integer paymentId, Float grandTotal, String note,
+			Integer customerId) {
 		super();
 		this.entityId = entityId;
 		this.status = status;
@@ -39,55 +41,49 @@ public class Order {
 		this.paymentId = paymentId;
 		this.grandTotal = grandTotal;
 		this.note = note;
+		this.customerId = customerId;
 	}
-
+	
 	public Integer getEntityId() {
 		return entityId;
 	}
-
 	public void setEntityId(Integer entityId) {
 		this.entityId = entityId;
 	}
-
 	public Integer getStatus() {
 		return status;
 	}
-
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-
 	public Integer getShippingId() {
 		return shippingId;
 	}
-
 	public void setShippingId(Integer shippingId) {
 		this.shippingId = shippingId;
 	}
-
 	public Integer getPaymentId() {
 		return paymentId;
 	}
-
 	public void setPaymentId(Integer paymentId) {
 		this.paymentId = paymentId;
 	}
-
 	public Float getGrandTotal() {
 		return grandTotal;
 	}
-
 	public void setGrandTotal(Float grandTotal) {
 		this.grandTotal = grandTotal;
 	}
-
 	public String getNote() {
-		
 		return note;
 	}
-
 	public void setNote(String note) {
 		this.note = note;
 	}
-
+	public Integer getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(Integer customerId) {
+		this.customerId = customerId;
+	}
 }
