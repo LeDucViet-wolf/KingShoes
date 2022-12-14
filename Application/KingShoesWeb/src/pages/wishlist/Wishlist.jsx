@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Breadcrumb } from "@/components";
 import { Link } from "react-router-dom";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAlert } from 'react-alert';
 import "@/assets/css/wishlist.css";
 
 const Wishlist = () => {
   const navigate = useNavigate();
+  const alert = useAlert();
 
   const [wishlist, setWishlist] = useState([])
 
@@ -37,7 +39,14 @@ const Wishlist = () => {
             const itemId = tr.dataset.itemId
             const size = tr.dataset.itemSize
             dele(itemId, size)
+            alert.show(`Remove from wishlist successfully!`, {
+              type: 'success',
+            });
           }
+        }else{
+          alert.show(`Update wishlist successfully!`, {
+            type: 'success',
+          });
         }
       }
     });
@@ -54,6 +63,9 @@ const Wishlist = () => {
     });
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
     fetchData();
+    alert.show(`Update wishlist successfully!`, {
+      type: 'success',
+    });
   };
 
   const updateWishlistItem = (qty) => {
@@ -130,6 +142,9 @@ const Wishlist = () => {
     }
 
     updateCartItem(cartQty)
+    alert.show(`Add to cart successfully!`, {
+      type: 'success',
+    });
   };
 
   const updateCartItem = (qty) => {
@@ -138,6 +153,7 @@ const Wishlist = () => {
       cart.innerText = qty
     }
   }
+
   const removeItem = (e) => {
     const item = e.target.closest('.dat__wishlist-item')
     if (item) {
@@ -145,6 +161,9 @@ const Wishlist = () => {
       const size = item.dataset.itemSize;
       remove(prodId, size)
       fetchData()
+      alert.show(`Remove from wishlist successfully!`, {
+        type: 'success',
+      });
     }
   }
 
@@ -223,10 +242,10 @@ const Wishlist = () => {
         cartQty += parseInt(element.qty);
       });
     }
-    updateCartItem(cartQty)
-    setTimeout(() => {
-      alert("Add all to cart successfully")
-    }, 1000);
+    updateCartItem(cartQty);
+    alert.show(`Add all to cart successfully!`, {
+      type: 'success',
+    });
   };
 
   return (
@@ -238,96 +257,92 @@ const Wishlist = () => {
       />
       <div className="container-fluid">
         <div className="row px-xl-5">
-          <div className="col-lg-9 col-md-8">
-            {
-              wishlist && wishlist.length
-                ? wishlist.map((item, index) => {
-                  console.log(item)
-                  return (
-                    <div className="row" key={index}>
-                      <div
-                        className="col-lg-4 col-md-6 col-sm-6 pb-1 dat__wishlist-item"
-                        data-item-id={item.productId}
-                        data-item-size={item.size}>
-                        <div className="product-item bg-light">
-                          <div className="product-img position-relative overflow-hidden">
-                            <img className="img-fluid w-100" src={item.productImage ?  `/img/product/${item.productImage[0].value}` : ``} />
-                          </div>
-                          <div className="text-center py-4">
-                            <Link
-                              to={`/product-detail?productId=${item.product.entityId}`}
-                              className="h6 text-decoration-none text-truncate"
-                            >
-                              {item.product.name}
-                            </Link>
-                            <p className={`wishlist-sku`}>
-                              <strong>SKU: </strong>
-                              {item.product.sku}
-                            </p>
-                            <p className={`wishlist-size`}>
-                              <strong>Size: </strong>
-                              {item.size}
-                            </p>
-                            <div className="d-flex align-items-center justify-content-center">
-                              <h5>
-                                {item.product.price
-                                  .toString()
-                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
-                                VND
-                              </h5>
+          {
+            wishlist && wishlist.length
+              ? wishlist.map((item, index) => {
+                console.log(item)
+                return (
+                  <div key={index}
+                    className="col-lg-3 col-md-6 col-sm-6 pb-1 dat__wishlist-item"
+                    data-item-id={item.productId}
+                    data-item-size={item.size}>
+                    <div className="product-item bg-light">
+                      <div className="product-img position-relative overflow-hidden">
+                        <img className="img-fluid w-100" src={item.productImage ? `/img/product/${item.productImage[0].value}` : ``} />
+                      </div>
+                      <div className="text-center py-4">
+                        <Link
+                          to={`/product-detail?productId=${item.product.entityId}`}
+                          className="h6 text-decoration-none text-truncate"
+                        >
+                          {item.product.name}
+                        </Link>
+                        <p className={`wishlist-sku`}>
+                          <strong>SKU: </strong>
+                          {item.product.sku}
+                        </p>
+                        <p className={`wishlist-size`}>
+                          <strong>Size: </strong>
+                          {item.size}
+                        </p>
+                        <div className="d-flex align-items-center justify-content-center">
+                          <h5>
+                            {item.product.price
+                              .toString()
+                              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+                            VND
+                          </h5>
+                        </div>
+                        <div className="wishlist-box__qty">
+                          <div className="input-group wishlist-input-group__qty quantity" style={{ width: "100px" }}>
+                            <div className="input-group-btn">
+                              <button
+                                className="btn btn-sm btn-primary btn-minus"
+                                onClick={(event) =>
+                                  minusItem(event, item.productId, item.size)
+                                }
+                              >
+                                <i className="fa fa-minus"></i>
+                              </button>
                             </div>
-                            <div className="wishlist-box__qty">
-                              <div className="input-group wishlist-input-group__qty quantity" style={{ width: "100px" }}>
-                                <div className="input-group-btn">
-                                  <button
-                                    className="btn btn-sm btn-primary btn-minus"
-                                    onClick={(event) =>
-                                      minusItem(event, item.productId, item.size)
-                                    }
-                                  >
-                                    <i className="fa fa-minus"></i>
-                                  </button>
-                                </div>
-                                <span>{item.qty}</span>
-                                <div className="input-group-btn">
-                                  <button
-                                    className="btn btn-sm btn-primary btn-plus"
-                                    onClick={(event) =>
-                                      plusItem(event, item.productId, item.size)
-                                    }
-                                  >
-                                    <i className="fa fa-plus"></i>
-                                  </button>
-                                </div>
-                              </div>
+                            <span>{item.qty}</span>
+                            <div className="input-group-btn">
+                              <button
+                                className="btn btn-sm btn-primary btn-plus"
+                                onClick={(event) =>
+                                  plusItem(event, item.productId, item.size)
+                                }
+                              >
+                                <i className="fa fa-plus"></i>
+                              </button>
                             </div>
-                            <button className="btn btn-primary mr-2 mt-2" onClick={() => addToCart(item)}>
-                              <i className="fa fa-shopping-cart mr-1"></i> Add To
-                              Cart
-                            </button>
-                            <button className="btn btn-primary mt-2" onClick={removeItem}>
-                              <i className="fa fa-eraser mr-1"></i> Remove item
-                            </button>
                           </div>
                         </div>
+                        <button className="btn btn-primary mt-2 my-wishlist-btn" onClick={() => addToCart(item)}>
+                          <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
+                        </button>
+                        <button className="btn btn-primary mt-2 my-wishlist-btn" onClick={removeItem}>
+                          <i className="fa fa-eraser mr-1"></i> Remove item
+                        </button>
                       </div>
                     </div>
+                  </div>
+                );
+              })
+              : <div>These is no item in wishlist</div>
+          }
 
-                  );
-                })
-                : <div>These is no item in wishlist</div>
-            }
-            <button className="btn btn-primary mt-2 mr-2" onClick={() => navigate("/")}>Continue Shopping</button>
-            {
-              wishlist && wishlist.length
-                ?
-                <button className="btn btn-primary mt-2" onClick={() => addAllToCart()}>Add All To Cart</button>
-                :
-                <></>
-            }
-          </div>
         </div>
-
+        <div className="px-xl-5">
+          <button className="btn btn-primary mt-2 mr-2" onClick={() => navigate("/")}>Continue Shopping</button>
+          {
+            wishlist && wishlist.length
+              ?
+              <button className="btn btn-primary mt-2" onClick={() => addAllToCart()}>Add All To Cart</button>
+              :
+              <></>
+          }
+        </div>
       </div>
     </>
   );

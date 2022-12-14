@@ -15,3 +15,12 @@
 .wishlist-sku, .wishlist-size{
     margin: 0;
 }
+
+.my-wishlist-btn:hover {
+    background-color: #ffcb0d!important;
+    border-color: #ffc800!important;
+}
+
+.my-wishlist-btn:hover>i {
+    color: #3d464d!important;
+}
