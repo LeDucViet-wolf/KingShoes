@@ -34,16 +34,10 @@ const Wishlist = () => {
         item.qty--;
         if (item.qty === 0) {
           wishlist.splice(index, 1);
-          const tr = e.target.closest('tr')
-          if (tr) {
-            const itemId = tr.dataset.itemId
-            const size = tr.dataset.itemSize
-            dele(itemId, size)
-            alert.show(`Remove from wishlist successfully!`, {
-              type: 'success',
-            });
-          }
-        }else{
+          alert.show(`Remove from wishlist successfully!`, {
+            type: 'success',
+          });
+        } else {
           alert.show(`Update wishlist successfully!`, {
             type: 'success',
           });
@@ -268,7 +262,7 @@ const Wishlist = () => {
                     data-item-size={item.size}>
                     <div className="product-item bg-light">
                       <div className="product-img position-relative overflow-hidden">
-                        <img className="img-fluid w-100" src={item.productImage ? `/img/product/${item.productImage[0].value}` : ``} />
+                        <img className="img-fluid w-100" src={item.productImage ? `/img/product/${item.productImage[0]?.value}` : ``} />
                       </div>
                       <div className="text-center py-4">
                         <Link

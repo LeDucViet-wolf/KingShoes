@@ -82,14 +82,9 @@ const Cart = () => {
             const size = tr.dataset.itemSize;
             dele(itemId, size);
           }
-        } else {
-          alert.show(`Update cart success!`, {
-            type: 'success',
-          })
         }
-      } else {
-        alert.show(`Update cart fail!`, {
-          type: 'error',
+        alert.show(`Update cart success!`, {
+          type: 'success',
         })
       }
     });

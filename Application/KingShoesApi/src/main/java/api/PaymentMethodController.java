@@ -15,9 +15,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.Gson;
 
 import dao.impl.PaymentMethodDAOImpl;
-import dao.impl.ShippingMethodDAOImpl;
 import entities.PaymentMethod;
-import entities.ShippingMethod;
 
 @Path(value = "/payment-method")
 public class PaymentMethodController {
