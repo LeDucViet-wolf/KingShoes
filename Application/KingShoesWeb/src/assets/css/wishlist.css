@@ -19,6 +19,7 @@
 .my-wishlist-btn:hover {
     background-color: #ffcb0d!important;
     border-color: #ffc800!important;
+    color: #3d464d!important;
 }
 
 .my-wishlist-btn:hover>i {

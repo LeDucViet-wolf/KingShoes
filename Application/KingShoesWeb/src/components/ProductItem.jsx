@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllProductImage, getAllProductReview } from "@/stores/actions";
 import { useAlert } from 'react-alert'
+import '@/assets/css/product-item.css';
 
 const ProductItem = ({ ...props }) => {
   const alert = useAlert()
@@ -16,13 +17,16 @@ const ProductItem = ({ ...props }) => {
     productReviews: state.productReviewReducer.productReviews,
   }));
 
-  const [productImage, setProductImage] = useState([]) 
- 
+  // const [productImage, setProductImage] = useState([]) 
+
   const productReview = productReviews.filter(
     (pr) => pr.productId == product.entityId
   );
 
-  const isProductImageEmpty = !(productImage.length === 0);
+  const productImage = productImages.filter(
+    (pi) => pi.productId == product.entityId
+  );
+
   const isProductReviewEmpty = !(productReview.length === 0);
 
   const [productId, setProductId] = useState();
@@ -110,15 +114,15 @@ const ProductItem = ({ ...props }) => {
       }
       localStorage.setItem(type, JSON.stringify(data));
       var cart = JSON.parse(localStorage.getItem("cart")),
-      wishlist = JSON.parse(localStorage.getItem("wishlist")),
-      cartQty = 0,
-      wishlistQty = 0;
+        wishlist = JSON.parse(localStorage.getItem("wishlist")),
+        cartQty = 0,
+        wishlistQty = 0;
       if (cart) {
         cart.forEach((element) => {
           cartQty += parseInt(element.qty);
         });
       }
-    
+
       if (wishlist) {
         wishlistQty = wishlist.length
       }
@@ -134,10 +138,10 @@ const ProductItem = ({ ...props }) => {
 
   const productRatingAverage = isProductReviewEmpty
     ? Math.floor(
-        parseFloat(
-          productReview.reduce((item1, item2) => item1 + item2.point, 0)
-        ) / productReview.length
-      )
+      parseFloat(
+        productReview.reduce((item1, item2) => item1 + item2.point, 0)
+      ) / productReview.length
+    )
     : 0;
 
   useEffect(() => {
@@ -145,22 +149,9 @@ const ProductItem = ({ ...props }) => {
     dispatch(getAllProductReview());
   }, [dispatch]);
 
-  useEffect(() => {
-    setProductImage(productImages.filter(
-      (pi) => pi.productId == product.entityId
-    ));
-  }, [])
-
   // useEffect(() => {
-  //   var data = localStorage.getItem(type)
-  //   ? JSON.parse(localStorage.getItem(type))
-  //   : [];
-  //   data.forEach(item => {
-  //     if(item.productId === productImage[])
-  //   })
-  //   data = {...data, productImage: productImage}
-  //   localStorage.setItem(type, JSON.stringify(data));
-  // }, [productImage])
+  //   setProductImage(
+  // }, [])
 
   return (
     <div
@@ -170,9 +161,7 @@ const ProductItem = ({ ...props }) => {
         <div className="product-img position-relative overflow-hidden">
           <img
             className="img-fluid w-100"
-            src={`${
-              isProductImageEmpty ? `/img/product/${productImage[0].value}` : ""
-            }`}
+            src={`${productImage.length !== 0 ? `/img/product/${productImage[0].value}` : ""}`}
           />
           <div className="product-action">
             <a
@@ -206,35 +195,35 @@ const ProductItem = ({ ...props }) => {
                   </div>
                   <div className="modal-body">
                     {product.size
-                    
+
                       ? product.size.map((item, i) => (
-                          <div
-                            key={i}
-                            className="custom-control custom-radio custom-control-inline"
+                        <div
+                          key={i}
+                          className="custom-control custom-radio custom-control-inline"
+                        >
+                          <input
+                            type="radio"
+                            className="custom-control-input"
+                            id={`${item.value}${item.productId}`}
+                            value={item.value}
+                            data-id={item.productId}
+                            name={"size" + item.productId}
+                            onClick={handleSize}
+                          />
+                          <label
+                            className="custom-control-label"
+                            htmlFor={`${item.value}${item.productId}`}
                           >
-                            <input
-                              type="radio"
-                              className="custom-control-input"
-                              id={`${item.value}${item.productId}`}
-                              value={item.value}
-                              data-id={item.productId}
-                              name={"size" + item.productId}
-                              onClick={handleSize}
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor={`${item.value}${item.productId}`}
-                            >
-                              {item.value}
-                            </label>
-                          </div>
-                        ))
+                            {item.value}
+                          </label>
+                        </div>
+                      ))
                       : ""}
                   </div>
                   <div className="modal-footer">
                     <button
                       type="button"
-                      className="btn btn-danger"
+                      className="btn btn-danger my-btn-modal"
                       data-dismiss="modal"
                     >
                       Close
@@ -276,11 +265,11 @@ const ProductItem = ({ ...props }) => {
             ))}
             {productRatingAverage < 5
               ? [...Array(5 - productRatingAverage)].map((item, i) => (
-                  <small
-                    key={i}
-                    className="far fa-star text-primary mr-1"
-                  ></small>
-                ))
+                <small
+                  key={i}
+                  className="far fa-star text-primary mr-1"
+                ></small>
+              ))
               : ""}
             <small>{`(${productReview.length})`}</small>
           </div>
