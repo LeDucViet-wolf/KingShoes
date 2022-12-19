@@ -17,7 +17,7 @@ const Header = () => {
 
   const logOut = (e) => {
     e.preventDefault()
-    localStorage.removeItem("customer-login")
+    localStorage.removeItem("customer-login");
     setIsLogOut(true)
   }
 

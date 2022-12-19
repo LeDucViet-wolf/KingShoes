@@ -31,6 +31,10 @@ const Checkout = () => {
   const [shipping, setShipping] = useState(0);
   const [shippingMethod, setShippingMethod] = useState();
   const [shippingMethods, getShippingMethods] = useState([]);
+  const [customerBillingAddresses, setCustomerBillingAddresses] = useState([]);
+  const [customerShippingAddresses, setCustomerShippingAddresses] = useState(
+    []
+  );
   const [paymnetMethod, setPaymentMethod] = useState();
   const [paymentMethods, getPaymentMethods] = useState([]);
   const [shipToDifferentAddress, useShipToDifferentAddress] = useState(false);
@@ -253,6 +257,32 @@ const Checkout = () => {
                       shippingCode
                     );
 
+                  if (customerLoggedInData) {
+                    var dataToCustomerAddressBilling =
+                        prepareDataToCustomerAddress(customerId, billingCode),
+                      dataToCustomerAddressShipping =
+                        prepareDataToCustomerAddress(customerId, shippingCode);
+
+                    axios
+                      .post(
+                        "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
+                        dataToCustomerAddressBilling
+                      )
+                      .then(function (res) {})
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                    axios
+                      .post(
+                        "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
+                        dataToCustomerAddressShipping
+                      )
+                      .then(function (res) {})
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  }
+
                   pushDataOrderItem(orderId);
                   axios
                     .post(
@@ -307,6 +337,25 @@ const Checkout = () => {
       paymentId: parseInt(paymentId),
       grandTotal: parseFloat(grandTotal),
       note: note,
+      customerId: customerId,
+    };
+  };
+
+  const prepareDataToCustomerAddress = (customerId, type) => {
+    var orderAddressType = type;
+    if (!shipToDifferentAddress) {
+      type = billingCode;
+    }
+
+    return {
+      firstName: data[type][firstNameCode].value,
+      lastName: data[type][lastNameCode].value,
+      address: data[type][addressCode].value,
+      city: data[type][cityCode].value,
+      region: data[type][regionCode].value,
+      country: data[type][countryCode].value,
+      phone: data[type][phoneCode].value,
+      type: orderAddressType,
       customerId: customerId,
     };
   };
@@ -389,6 +438,16 @@ const Checkout = () => {
       assignData(shippingCode, lastNameCode, customerLoggedInData.lastName);
       assignData(shippingCode, addressCode, customerLoggedInData.address);
       assignData(shippingCode, phoneCode, customerLoggedInData.phone);
+      var customerShippingAddress = await get(
+          "http://localhost:8080/KingShoesApi/api/customer-address/get-all-shipping/" +
+            customerLoggedInData.entityId
+        ),
+        customerBillingAddress = await get(
+          "http://localhost:8080/KingShoesApi/api/customer-address/get-all-billing/" +
+            customerLoggedInData.entityId
+        );
+      setCustomerBillingAddresses(customerBillingAddress);
+      setCustomerShippingAddresses(customerShippingAddress);
     } else {
       setIsLoggedIn(false);
     }
@@ -411,239 +470,573 @@ const Checkout = () => {
             <h5 className="section-title position-relative text-uppercase mb-3">
               <span className="bg-secondary pr-3">Billing Address</span>
             </h5>
-            <div className="bg-light p-30 mb-5">
-              <div className="row">
-                <div
-                  className="col-md-7 form-group"
-                  style={isLoggedIn ? { display: "none" } : {}}
-                >
-                  <label>Email</label>
-                  <input
-                    className={`form-control ${
-                      data[billingCode][emailCode].valid ? "" : "is-invalid"
-                    }`}
-                    onChange={handleChange(billingCode, emailCode)}
-                    type="text"
-                  />
-                  <div className="invalid-feedback">{emailValidMsg}</div>
-                  <span>You can create an account after checkout.</span>
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>First Name</label>
-                  <input
-                    className={`form-control ${
-                      data[billingCode][firstNameCode].valid ? "" : "is-invalid"
-                    }`}
-                    onChange={handleChange(billingCode, firstNameCode)}
-                    type="text"
-                    defaultValue={
-                      isLoggedIn ? customerLoggedInData.firstName : ""
-                    }
-                  />
-                  <div className="invalid-feedback">{textRequire}</div>
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Last Name</label>
-                  <input
-                    className={`form-control ${
-                      data[billingCode][lastNameCode].valid ? "" : "is-invalid"
-                    }`}
-                    onChange={handleChange(billingCode, lastNameCode)}
-                    type="text"
-                    defaultValue={
-                      isLoggedIn ? customerLoggedInData.lastName : ""
-                    }
-                  />
-                  <div className="invalid-feedback">{textRequire}</div>
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Address</label>
-                  <input
-                    className={`form-control ${
-                      data[billingCode][addressCode].valid ? "" : "is-invalid"
-                    }`}
-                    onChange={handleChange(billingCode, addressCode)}
-                    type="text"
-                    defaultValue={
-                      isLoggedIn ? customerLoggedInData.address : ""
-                    }
-                  />
-                  <div className="invalid-feedback">{textRequire}</div>
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>City</label>
-                  <input
-                    className={`form-control ${
-                      data[billingCode][cityCode].valid ? "" : "is-invalid"
-                    }`}
-                    onChange={handleChange(billingCode, cityCode)}
-                    type="text"
-                  />
-                  <div className="invalid-feedback">{textRequire}</div>
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>State/Province</label>
-                  <input
-                    className={`form-control ${
-                      data[billingCode][regionCode].valid ? "" : "is-invalid"
-                    }`}
-                    onChange={handleChange(billingCode, regionCode)}
-                    type="text"
-                  />
-                  <div className="invalid-feedback">{textRequire}</div>
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Country</label>
-                  <select
-                    defaultValue={57}
-                    className="custom-select"
-                    onChange={handleChange(billingCode, countryCode)}
-                  >
-                    {countries.map((item, i) => (
-                      <option key={i} value={item.code}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Phone</label>
-                  <input
-                    className={`form-control ${
-                      data[billingCode][phoneCode].valid ? "" : "is-invalid"
-                    }`}
-                    onChange={handleChange(billingCode, phoneCode)}
-                    type="text"
-                    defaultValue={isLoggedIn ? customerLoggedInData.phone : ""}
-                  />
-                  <div className="invalid-feedback">{phoneValidMsg}</div>
-                </div>
-                <div className="col-md-12">
-                  <div className="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      className="custom-control-input"
-                      id="shipto"
-                      onChange={checkUseShipToDifferentAddress}
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor="shipto"
-                      data-toggle="collapse"
-                      data-target="#shipping-address"
-                    >
-                      Ship to different address
-                    </label>
+            {customerBillingAddresses.length ? (
+              <>
+                <div className="bg-light p-30">
+                  <div className="row">
+                    <div className="col-lg-8">
+                      {customerBillingAddresses.map((item, i) => (
+                        <div className="form-check" key={i}>
+                          <label className="form-check-label">
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              name={item.entityId}
+                              value={item.entityId}
+                            />
+                            {item.firstName + " " + item.lastName}
+                            <br />
+                            {item.address}
+                            <br />
+                            {item.phone}
+                            <br />
+                            {item.city +
+                              ", " +
+                              item.region +
+                              ", " +
+                              item.country}
+                          </label>
+                        </div>
+                      ))}
+                      <div className="form-check">
+                        <label className="form-check-label">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            data-toggle="collapse"
+                            data-target="#customer-billing-address"
+                          />
+                          Use new billing address
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                <div className="collapse mb-5" id="customer-billing-address">
+                  <hr />
+                  <div className="bg-light p-30">
+                    <div className="row">
+                      <div className="col-md-6 form-group">
+                        <label>First Name</label>
+                        <input
+                          className={`form-control ${
+                            data[billingCode][firstNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(billingCode, firstNameCode)}
+                          type="text"
+                          defaultValue={
+                            isLoggedIn ? customerLoggedInData.firstName : ""
+                          }
+                        />
+                        <div className="invalid-feedback">{textRequire}</div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>Last Name</label>
+                        <input
+                          className={`form-control ${
+                            data[billingCode][lastNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(billingCode, lastNameCode)}
+                          type="text"
+                          defaultValue={
+                            isLoggedIn ? customerLoggedInData.lastName : ""
+                          }
+                        />
+                        <div className="invalid-feedback">{textRequire}</div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>Address</label>
+                        <input
+                          className={`form-control ${
+                            data[billingCode][addressCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(billingCode, addressCode)}
+                          type="text"
+                          defaultValue={
+                            isLoggedIn ? customerLoggedInData.address : ""
+                          }
+                        />
+                        <div className="invalid-feedback">{textRequire}</div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>City</label>
+                        <input
+                          className={`form-control ${
+                            data[billingCode][cityCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(billingCode, cityCode)}
+                          type="text"
+                        />
+                        <div className="invalid-feedback">{textRequire}</div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>State/Province</label>
+                        <input
+                          className={`form-control ${
+                            data[billingCode][regionCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(billingCode, regionCode)}
+                          type="text"
+                        />
+                        <div className="invalid-feedback">{textRequire}</div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>Country</label>
+                        <select
+                          defaultValue={57}
+                          className="custom-select"
+                          onChange={handleChange(billingCode, countryCode)}
+                        >
+                          {countries.map((item, i) => (
+                            <option key={i} value={item.code}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>Phone</label>
+                        <input
+                          className={`form-control ${
+                            data[billingCode][phoneCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(billingCode, phoneCode)}
+                          type="text"
+                          defaultValue={
+                            isLoggedIn ? customerLoggedInData.phone : ""
+                          }
+                        />
+                        <div className="invalid-feedback">{phoneValidMsg}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="bg-light p-30 mb-5">
+                  <div className="row">
+                    <div
+                      className="col-md-7 form-group"
+                      style={isLoggedIn ? { display: "none" } : {}}
+                    >
+                      <label>Email</label>
+                      <input
+                        className={`form-control ${
+                          data[billingCode][emailCode].valid ? "" : "is-invalid"
+                        }`}
+                        onChange={handleChange(billingCode, emailCode)}
+                        type="text"
+                      />
+                      <div className="invalid-feedback">{emailValidMsg}</div>
+                      <span>You can create an account after checkout.</span>
+                    </div>
+                    <div className="col-md-6 form-group">
+                      <label>First Name</label>
+                      <input
+                        className={`form-control ${
+                          data[billingCode][firstNameCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
+                        onChange={handleChange(billingCode, firstNameCode)}
+                        type="text"
+                        defaultValue={
+                          isLoggedIn ? customerLoggedInData.firstName : ""
+                        }
+                      />
+                      <div className="invalid-feedback">{textRequire}</div>
+                    </div>
+                    <div className="col-md-6 form-group">
+                      <label>Last Name</label>
+                      <input
+                        className={`form-control ${
+                          data[billingCode][lastNameCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
+                        onChange={handleChange(billingCode, lastNameCode)}
+                        type="text"
+                        defaultValue={
+                          isLoggedIn ? customerLoggedInData.lastName : ""
+                        }
+                      />
+                      <div className="invalid-feedback">{textRequire}</div>
+                    </div>
+                    <div className="col-md-6 form-group">
+                      <label>Address</label>
+                      <input
+                        className={`form-control ${
+                          data[billingCode][addressCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
+                        onChange={handleChange(billingCode, addressCode)}
+                        type="text"
+                        defaultValue={
+                          isLoggedIn ? customerLoggedInData.address : ""
+                        }
+                      />
+                      <div className="invalid-feedback">{textRequire}</div>
+                    </div>
+                    <div className="col-md-6 form-group">
+                      <label>City</label>
+                      <input
+                        className={`form-control ${
+                          data[billingCode][cityCode].valid ? "" : "is-invalid"
+                        }`}
+                        onChange={handleChange(billingCode, cityCode)}
+                        type="text"
+                      />
+                      <div className="invalid-feedback">{textRequire}</div>
+                    </div>
+                    <div className="col-md-6 form-group">
+                      <label>State/Province</label>
+                      <input
+                        className={`form-control ${
+                          data[billingCode][regionCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
+                        onChange={handleChange(billingCode, regionCode)}
+                        type="text"
+                      />
+                      <div className="invalid-feedback">{textRequire}</div>
+                    </div>
+                    <div className="col-md-6 form-group">
+                      <label>Country</label>
+                      <select
+                        defaultValue={57}
+                        className="custom-select"
+                        onChange={handleChange(billingCode, countryCode)}
+                      >
+                        {countries.map((item, i) => (
+                          <option key={i} value={item.code}>
+                            {item.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="col-md-6 form-group">
+                      <label>Phone</label>
+                      <input
+                        className={`form-control ${
+                          data[billingCode][phoneCode].valid ? "" : "is-invalid"
+                        }`}
+                        onChange={handleChange(billingCode, phoneCode)}
+                        type="text"
+                        defaultValue={
+                          isLoggedIn ? customerLoggedInData.phone : ""
+                        }
+                      />
+                      <div className="invalid-feedback">{phoneValidMsg}</div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+            <div className="col-md-12">
+              <div className="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  className="custom-control-input"
+                  id="shipto"
+                  onChange={checkUseShipToDifferentAddress}
+                />
+                <label
+                  className="custom-control-label"
+                  htmlFor="shipto"
+                  data-toggle="collapse"
+                  data-target="#shipping-address"
+                >
+                  Ship to different address
+                </label>
               </div>
             </div>
             <div className="collapse mb-5" id="shipping-address">
               <h5 className="section-title position-relative text-uppercase mb-3">
                 <span className="bg-secondary pr-3">Shipping Address</span>
               </h5>
-              <div className="bg-light p-30">
-                <div className="row">
-                  <div className="col-md-6 form-group">
-                    <label>First Name</label>
-                    <input
-                      className={`form-control ${
-                        data[shippingCode][firstNameCode].valid
-                          ? ""
-                          : "is-invalid"
-                      }`}
-                      onChange={handleChange(shippingCode, firstNameCode)}
-                      type="text"
-                      defaultValue={
-                        isLoggedIn ? customerLoggedInData.firstName : ""
-                      }
-                    />
-                    <div className="invalid-feedback">{textRequire}</div>
+              {customerShippingAddresses.length ? (
+                <>
+                  <div className="bg-light p-30">
+                    <div className="row">
+                      <div className="col-lg-8">
+                        {customerShippingAddresses.map((item, i) => (
+                          <div className="form-check" key={i}>
+                            <label className="form-check-label">
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                name={item.entityId}
+                                value={item.entityId}
+                              />
+                              {item.firstName + " " + item.lastName}
+                              <br />
+                              {item.address}
+                              <br />
+                              {item.phone}
+                              <br />
+                              {item.city +
+                                ", " +
+                                item.region +
+                                ", " +
+                                item.country}
+                            </label>
+                          </div>
+                        ))}
+                        <div className="form-check">
+                          <label className="form-check-label">
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              data-toggle="collapse"
+                              data-target="#customer-shipping-address"
+                            />
+                            Use new shipping address
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="col-md-6 form-group">
-                    <label>Last Name</label>
-                    <input
-                      className={`form-control ${
-                        data[shippingCode][lastNameCode].valid
-                          ? ""
-                          : "is-invalid"
-                      }`}
-                      onChange={handleChange(shippingCode, lastNameCode)}
-                      type="text"
-                      defaultValue={
-                        isLoggedIn ? customerLoggedInData.lastName : ""
-                      }
-                    />
-                    <div className="invalid-feedback">{textRequire}</div>
+                  <div className="collapse mb-5" id="customer-shipping-address">
+                    <hr />
+                    <div className="bg-light p-30">
+                      <div className="row">
+                        <div className="col-md-6 form-group">
+                          <label>First Name</label>
+                          <input
+                            className={`form-control ${
+                              data[shippingCode][firstNameCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
+                            onChange={handleChange(shippingCode, firstNameCode)}
+                            type="text"
+                            defaultValue={
+                              isLoggedIn ? customerLoggedInData.firstName : ""
+                            }
+                          />
+                          <div className="invalid-feedback">{textRequire}</div>
+                        </div>
+                        <div className="col-md-6 form-group">
+                          <label>Last Name</label>
+                          <input
+                            className={`form-control ${
+                              data[shippingCode][lastNameCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
+                            onChange={handleChange(shippingCode, lastNameCode)}
+                            type="text"
+                            defaultValue={
+                              isLoggedIn ? customerLoggedInData.lastName : ""
+                            }
+                          />
+                          <div className="invalid-feedback">{textRequire}</div>
+                        </div>
+                        <div className="col-md-6 form-group">
+                          <label>Address</label>
+                          <input
+                            className={`form-control ${
+                              data[shippingCode][addressCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
+                            onChange={handleChange(shippingCode, addressCode)}
+                            type="text"
+                            defaultValue={
+                              isLoggedIn ? customerLoggedInData.address : ""
+                            }
+                          />
+                          <div className="invalid-feedback">{textRequire}</div>
+                        </div>
+                        <div className="col-md-6 form-group">
+                          <label>City</label>
+                          <input
+                            className={`form-control ${
+                              data[shippingCode][cityCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
+                            onChange={handleChange(shippingCode, cityCode)}
+                            type="text"
+                          />
+                          <div className="invalid-feedback">{textRequire}</div>
+                        </div>
+                        <div className="col-md-6 form-group">
+                          <label>State/Province</label>
+                          <input
+                            className={`form-control ${
+                              data[shippingCode][regionCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
+                            onChange={handleChange(shippingCode, regionCode)}
+                            type="text"
+                          />
+                          <div className="invalid-feedback">{textRequire}</div>
+                        </div>
+                        <div className="col-md-6 form-group">
+                          <label>Country</label>
+                          <select
+                            defaultValue={57}
+                            className="custom-select"
+                            onChange={handleChange(shippingCode, countryCode)}
+                          >
+                            {countries.map((item, i) => (
+                              <option key={i} value={item.code}>
+                                {item.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="col-md-6 form-group">
+                          <label>Phone</label>
+                          <input
+                            className={`form-control ${
+                              data[shippingCode][phoneCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
+                            onChange={handleChange(shippingCode, phoneCode)}
+                            type="text"
+                            defaultValue={
+                              isLoggedIn ? customerLoggedInData.phone : ""
+                            }
+                          />
+                          <div className="invalid-feedback">
+                            {phoneValidMsg}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="col-md-6 form-group">
-                    <label>Address</label>
-                    <input
-                      className={`form-control ${
-                        data[shippingCode][addressCode].valid
-                          ? ""
-                          : "is-invalid"
-                      }`}
-                      onChange={handleChange(shippingCode, addressCode)}
-                      type="text"
-                      defaultValue={
-                        isLoggedIn ? customerLoggedInData.address : ""
-                      }
-                    />
-                    <div className="invalid-feedback">{textRequire}</div>
+                </>
+              ) : (
+                <>
+                  <div className="bg-light p-30">
+                    <div className="row">
+                      <div className="col-md-6 form-group">
+                        <label>First Name</label>
+                        <input
+                          className={`form-control ${
+                            data[shippingCode][firstNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(shippingCode, firstNameCode)}
+                          type="text"
+                          defaultValue={
+                            isLoggedIn ? customerLoggedInData.firstName : ""
+                          }
+                        />
+                        <div className="invalid-feedback">{textRequire}</div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>Last Name</label>
+                        <input
+                          className={`form-control ${
+                            data[shippingCode][lastNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(shippingCode, lastNameCode)}
+                          type="text"
+                          defaultValue={
+                            isLoggedIn ? customerLoggedInData.lastName : ""
+                          }
+                        />
+                        <div className="invalid-feedback">{textRequire}</div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>Address</label>
+                        <input
+                          className={`form-control ${
+                            data[shippingCode][addressCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(shippingCode, addressCode)}
+                          type="text"
+                          defaultValue={
+                            isLoggedIn ? customerLoggedInData.address : ""
+                          }
+                        />
+                        <div className="invalid-feedback">{textRequire}</div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>City</label>
+                        <input
+                          className={`form-control ${
+                            data[shippingCode][cityCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(shippingCode, cityCode)}
+                          type="text"
+                        />
+                        <div className="invalid-feedback">{textRequire}</div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>State/Province</label>
+                        <input
+                          className={`form-control ${
+                            data[shippingCode][regionCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(shippingCode, regionCode)}
+                          type="text"
+                        />
+                        <div className="invalid-feedback">{textRequire}</div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>Country</label>
+                        <select
+                          defaultValue={57}
+                          className="custom-select"
+                          onChange={handleChange(shippingCode, countryCode)}
+                        >
+                          {countries.map((item, i) => (
+                            <option key={i} value={item.code}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label>Phone</label>
+                        <input
+                          className={`form-control ${
+                            data[shippingCode][phoneCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
+                          onChange={handleChange(shippingCode, phoneCode)}
+                          type="text"
+                          defaultValue={
+                            isLoggedIn ? customerLoggedInData.phone : ""
+                          }
+                        />
+                        <div className="invalid-feedback">{phoneValidMsg}</div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="col-md-6 form-group">
-                    <label>City</label>
-                    <input
-                      className={`form-control ${
-                        data[shippingCode][cityCode].valid ? "" : "is-invalid"
-                      }`}
-                      onChange={handleChange(shippingCode, cityCode)}
-                      type="text"
-                    />
-                    <div className="invalid-feedback">{textRequire}</div>
-                  </div>
-                  <div className="col-md-6 form-group">
-                    <label>State/Province</label>
-                    <input
-                      className={`form-control ${
-                        data[shippingCode][regionCode].valid ? "" : "is-invalid"
-                      }`}
-                      onChange={handleChange(shippingCode, regionCode)}
-                      type="text"
-                    />
-                    <div className="invalid-feedback">{textRequire}</div>
-                  </div>
-                  <div className="col-md-6 form-group">
-                    <label>Country</label>
-                    <select
-                      defaultValue={57}
-                      className="custom-select"
-                      onChange={handleChange(shippingCode, countryCode)}
-                    >
-                      {countries.map((item, i) => (
-                        <option key={i} value={item.code}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="col-md-6 form-group">
-                    <label>Phone</label>
-                    <input
-                      className={`form-control ${
-                        data[shippingCode][phoneCode].valid ? "" : "is-invalid"
-                      }`}
-                      onChange={handleChange(shippingCode, phoneCode)}
-                      type="text"
-                      defaultValue={
-                        isLoggedIn ? customerLoggedInData.phone : ""
-                      }
-                    />
-                    <div className="invalid-feedback">{phoneValidMsg}</div>
-                  </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           </div>
           <div className="col-lg-4">

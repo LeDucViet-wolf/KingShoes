@@ -29,5 +29,6 @@
         <mapping class="entities.Role"/>
         <mapping class="entities.ProductSize"/>
         <mapping class="entities.OrderAddress"/>
+        <mapping class="entities.CustomerAddress"/>
     </session-factory>
 </hibernate-configuration>
