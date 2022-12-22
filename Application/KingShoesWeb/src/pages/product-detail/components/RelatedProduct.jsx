@@ -7,7 +7,7 @@ const RelatedProduct = ({ ...props }) => {
   useScript("public/js/related-carousel");
 
   const { productId } = props;
-  const [products, getRelatedProducts] = useState([]);
+  const [products, setRelatedProducts] = useState([]);
 
   const fetchData = () => {
     var config = {
@@ -31,12 +31,12 @@ const RelatedProduct = ({ ...props }) => {
                 }
               });
             });
-            getRelatedProducts(data);
+            setRelatedProducts(data);
           })
           .catch((err) => { });
       })
       .catch((err) => { });
-  };
+  }
 
   useEffect(() => {
     fetchData();

@@ -40,7 +40,7 @@ const Header = () => {
 
   var cart = JSON.parse(localStorage.getItem("cart")),
     wishlist = JSON.parse(localStorage.getItem("wishlist")),
-    cartQty = 0, 
+    cartQty = 0,
     wishlistQty = 0;
 
   if (cart) {
@@ -50,9 +50,7 @@ const Header = () => {
   }
 
   if (wishlist) {
-    wishlist.forEach((element) => {
-      wishlistQty += parseInt(element.qty);
-    });
+    wishlistQty = wishlist.length;
   }
 
   return (

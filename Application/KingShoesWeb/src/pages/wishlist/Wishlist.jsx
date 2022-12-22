@@ -15,13 +15,6 @@ const Wishlist = () => {
     setWishlist(JSON.parse(localStorage.getItem("wishlist")));
   }
 
-  // const updateWishlist = (qty) => {
-  //   const wishlist = document.querySelector('.dat__wishlist')
-  //   if (wishlist) {
-  //     wishlist.innerText = qty
-  //   }
-  // }
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -83,7 +76,7 @@ const Wishlist = () => {
       wishlistQty = 0
     if (wishlistItem) {
       wishlistItem.forEach((element) => {
-        wishlistQty += parseInt(element.qty);
+        wishlistQty = wishlist.length;
       });
     }
     updateWishlistItem(wishlistQty)

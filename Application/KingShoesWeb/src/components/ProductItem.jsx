@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { getAllProductImage, getAllProductReview } from "@/stores/actions";
+import { getAllProductImage, getAllProductReview, getAllProductSize } from "@/stores/actions";
 import { useAlert } from 'react-alert'
 import '@/assets/css/product-item.css';
 
@@ -12,12 +12,11 @@ const ProductItem = ({ ...props }) => {
 
   const [type, setType] = useState();
 
-  const { productImages, productReviews } = useSelector((state) => ({
+  const { productImages, productReviews, productSizes } = useSelector((state) => ({
     productImages: state.productImageReducer.productImages,
     productReviews: state.productReviewReducer.productReviews,
+    productSizes: state.productSizeReducer.productSizes,
   }));
-
-  // const [productImage, setProductImage] = useState([]) 
 
   const productReview = productReviews.filter(
     (pr) => pr.productId == product.entityId
@@ -25,6 +24,10 @@ const ProductItem = ({ ...props }) => {
 
   const productImage = productImages.filter(
     (pi) => pi.productId == product.entityId
+  );
+
+  const productSize = productSizes.filter(
+    (ps) => ps.productId == product.entityId
   );
 
   const isProductReviewEmpty = !(productReview.length === 0);
@@ -147,11 +150,8 @@ const ProductItem = ({ ...props }) => {
   useEffect(() => {
     dispatch(getAllProductImage());
     dispatch(getAllProductReview());
+    dispatch(getAllProductSize());
   }, [dispatch]);
-
-  // useEffect(() => {
-  //   setProductImage(
-  // }, [])
 
   return (
     <div
@@ -194,9 +194,8 @@ const ProductItem = ({ ...props }) => {
                     </button>
                   </div>
                   <div className="modal-body">
-                    {product.size
-
-                      ? product.size.map((item, i) => (
+                    {productSize
+                      ? productSize.map((item, i) => (
                         <div
                           key={i}
                           className="custom-control custom-radio custom-control-inline"

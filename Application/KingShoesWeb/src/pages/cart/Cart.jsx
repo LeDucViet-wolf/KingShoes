@@ -82,10 +82,11 @@ const Cart = () => {
             const size = tr.dataset.itemSize;
             dele(itemId, size);
           }
+        }else{
+          alert.show(`Update cart success!`, {
+            type: 'success',
+          })
         }
-        alert.show(`Update cart success!`, {
-          type: 'success',
-        })
       }
     });
     localStorage.setItem("cart", JSON.stringify(cart));
