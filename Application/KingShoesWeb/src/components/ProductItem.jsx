@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllProductImage, getAllProductReview, getAllProductSize } from "@/stores/actions";
-import { useAlert } from 'react-alert'
+import { useAlert } from 'react-alert';
+import classNames from 'classnames';
 import '@/assets/css/product-item.css';
 
 const ProductItem = ({ ...props }) => {
@@ -11,6 +12,8 @@ const ProductItem = ({ ...props }) => {
   const dispatch = useDispatch();
 
   const [type, setType] = useState();
+  const [validateModal, setValidateModal] = useState(false);
+  const [textValidateModal, setTextValidateModal] = useState('');
 
   const { productImages, productReviews, productSizes } = useSelector((state) => ({
     productImages: state.productImageReducer.productImages,
@@ -54,37 +57,59 @@ const ProductItem = ({ ...props }) => {
     }
   }
 
+  const hideModal = (productId) => {
+    var modalElement = $(`#modal${productId}`);
+    modalElement.modal('hide');
+  }
+
   const addPLP = (e) => {
     if (size && productId) {
       var data = localStorage.getItem(type)
         ? JSON.parse(localStorage.getItem(type))
         : [];
+      var currentSize = productSize.filter((ps) => ps.value === Number(size))
+      if (currentSize[0].quantity > 0) {
+        if (data.length > 0) {
+          var existProduct = data.filter(
+            (x) => x.productId == productId && x.size == parseInt(size)
+          );
+          if (existProduct.length > 0) {
+            var dataItem = {
+              productId: parseInt(productId),
+              product: product,
+              productImage: productImage,
+              size: parseInt(size),
+              qty: existProduct[0].qty + 1,
+            };
 
-      if (data.length > 0) {
-        var existProduct = data.filter(
-          (x) => x.productId == productId && x.size == parseInt(size)
-        );
-        if (existProduct.length > 0) {
-          var dataItem = {
-            productId: parseInt(productId),
-            product: product,
-            productImage: productImage,
-            size: parseInt(size),
-            qty: existProduct[0].qty + 1,
-          };
+            data.forEach((item, index) => {
+              if (
+                item.productId === parseInt(productId) &&
+                item.size === parseInt(size)
+              ) {
+                data[index] = dataItem;
+              }
+            });
 
-          data.forEach((item, index) => {
-            if (
-              item.productId === parseInt(productId) &&
-              item.size === parseInt(size)
-            ) {
-              data[index] = dataItem;
-            }
-          });
+            alert.show(`Add to ${type} success!`, {
+              type: 'success',
+            })
+          } else {
+            var dataItem = {
+              productId: parseInt(productId),
+              product: product,
+              productImage: productImage,
+              size: parseInt(size),
+              qty: 1,
+            };
+            data.push(dataItem);
 
-          alert.show(`Add to ${type} success!`, {
-            type: 'success',
-          })
+            alert.show(`Add to ${type} success!`, {
+              type: 'success',
+            })
+          }
+
+          localStorage.setItem(type, data);
         } else {
           var dataItem = {
             productId: parseInt(productId),
@@ -94,50 +119,43 @@ const ProductItem = ({ ...props }) => {
             qty: 1,
           };
           data.push(dataItem);
-
           alert.show(`Add to ${type} success!`, {
             type: 'success',
           })
         }
 
-        localStorage.setItem(type, data);
+        localStorage.setItem(type, JSON.stringify(data));
+        var cart = JSON.parse(localStorage.getItem("cart")),
+          wishlist = JSON.parse(localStorage.getItem("wishlist")),
+          cartQty = 0,
+          wishlistQty = 0;
+
+        if (cart) {
+          cart.forEach((element) => {
+            cartQty += parseInt(element.qty);
+          });
+        }
+
+        if (wishlist) {
+          wishlistQty = wishlist.length;
+        }
+
+        setValidateModal(false)
+        setTextValidateModal('')
+        hideModal(productId);
+        updateCartItem(cartQty);
+        updateWishlist(wishlistQty);
       } else {
-        var dataItem = {
-          productId: parseInt(productId),
-          product: product,
-          productImage: productImage,
-          size: parseInt(size),
-          qty: 1,
-        };
-        data.push(dataItem);
-
-        alert.show(`Add to ${type} success!`, {
-          type: 'success',
-        })
+        setValidateModal(true)
+        setTextValidateModal('This size is out of stock')
       }
-      localStorage.setItem(type, JSON.stringify(data));
-      var cart = JSON.parse(localStorage.getItem("cart")),
-        wishlist = JSON.parse(localStorage.getItem("wishlist")),
-        cartQty = 0,
-        wishlistQty = 0;
-      if (cart) {
-        cart.forEach((element) => {
-          cartQty += parseInt(element.qty);
-        });
-      }
-
-      if (wishlist) {
-        wishlistQty = wishlist.length
-      }
-
-      updateCartItem(cartQty)
-      updateWishlist(wishlistQty)
+    } else {
+      setValidateModal(true)
+      setTextValidateModal('You must select size')
     }
   };
 
-  const setTypeAdd = (e) => {
-    setType(e);
-  };
+  const setTypeAdd = (e) => void setType(e);
 
   const productRatingAverage = isProductReviewEmpty
     ? Math.floor(
@@ -202,7 +220,10 @@ const ProductItem = ({ ...props }) => {
                         >
                           <input
                             type="radio"
-                            className="custom-control-input"
+                            className={classNames(
+                              'custom-control-input', {
+                              'is-invalid': validateModal
+                            })}
                             id={`${item.value}${item.productId}`}
                             value={item.value}
                             data-id={item.productId}
@@ -215,9 +236,13 @@ const ProductItem = ({ ...props }) => {
                           >
                             {item.value}
                           </label>
+
                         </div>
                       ))
                       : ""}
+                    <div className={classNames({
+                      'long-validate-modal': validateModal
+                    })}>{textValidateModal}</div>
                   </div>
                   <div className="modal-footer">
                     <button
@@ -230,7 +255,6 @@ const ProductItem = ({ ...props }) => {
                     <button
                       type="button"
                       className="btn btn-primary"
-                      data-dismiss="modal"
                       onClick={addPLP}
                     >
                       Add

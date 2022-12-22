@@ -2,13 +2,15 @@ import React, { useEffect, useRef, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { getAllCustomer, updateProductReview } from '@/stores/actions'
 import { useAlert } from 'react-alert'
-import "@/assets/css/review-item.css"
 import { del } from '@/helpers'
+import { useAppContext } from "@/hooks/useAppContext"
 import ModalAction from './ModalAction'
+import "@/assets/css/review-item.css"
 
 const ReviewItem = ({ ...props }) => {
     const dispatch = useDispatch()
     const alert = useAlert()
+    const { data: editReview, setData: setEditReview } = useAppContext('edit-review')
 
     const { customers, productReview, resultProductReview } = useSelector((state) => ({
         customers: state.customerReducer.customers,
@@ -22,7 +24,12 @@ const ReviewItem = ({ ...props }) => {
 
     // #region REVIEW
     const handleEditReview = (e) => {
-
+        e.preventDefault()
+        setEditReview({
+            replies: replies,
+            review: review,
+            submit: 'edit'
+        })
     }
 
     const handleDeleteReview = async (e, id) => {
@@ -204,13 +211,12 @@ const ReviewItem = ({ ...props }) => {
                                                     <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
                                                 </button>
                                                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a className="dropdown-item" href="#">Edit</a>
+                                                    <a className="dropdown-item" onClick={(e) => handleEditReview(e)} href="#">Edit</a>
                                                     <a
                                                         data-toggle="modal"
                                                         data-target={`#modal-review-${review.entityId}`}
                                                         className="dropdown-item"
                                                         href="#"
-
                                                     >Delete</a>
                                                 </div>
                                             </div>

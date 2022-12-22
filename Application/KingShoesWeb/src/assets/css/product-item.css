@@ -1,3 +1,7 @@
 .my-btn-modal:hover{
     color: #FFF !important;
 }
+
+.long-validate-modal{
+    color: red;
+}

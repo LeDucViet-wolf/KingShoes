@@ -8,6 +8,7 @@ import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllProductImage } from "@/stores/actions";
 import { useAlert } from 'react-alert'
+import { useAppContext } from "@/hooks/useAppContext"
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -28,7 +29,7 @@ const ProductDetail = () => {
   const { productImages, resultProductReview } = useSelector((state) => ({
     productImages: state.productImageReducer.productImages,
   }));
-
+  
   const navigate = useNavigate();
   const customer = localStorage.getItem("customer-login");
 
@@ -55,6 +56,8 @@ const ProductDetail = () => {
     (pi) => pi.productId == product.entityId
   );
 
+  
+
   // #region Rating
   const stars = 5;
   const [objRating, setObjRating] = useState({
@@ -76,6 +79,14 @@ const ProductDetail = () => {
   //  #endregion
 
   const inputReview = useRef();
+  const { data: editReview, setData: setEditReview } = useAppContext('edit-review')
+  useEffect(() => {
+    setObjRating({
+      ...objRating,
+      rating: editReview.review.point
+    })
+    inputReview.current.value = editReview.review.comment
+  },[editReview])
 
   const handleReviewChange = (e) => {
     if (e.target.value) {
