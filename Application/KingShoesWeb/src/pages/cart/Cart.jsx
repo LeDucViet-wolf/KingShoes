@@ -1,21 +1,94 @@
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Breadcrumb } from "@/components";
 import useScript from "@/hooks/useScript";
 import { useState, useEffect } from "react";
 import { useAlert } from 'react-alert';
-
+import { useSelector, useDispatch } from "react-redux";
+import { getAllProductSize } from "@/stores/actions";
+import { useAppContext } from "@/hooks/useAppContext"
 
 const Cart = () => {
+  useScript("public/js/product-quantity");
+
   const navigate = useNavigate();
   const alert = useAlert();
+  const dispatch = useDispatch();
 
-  useScript("public/js/product-quantity");
   const [cart, setCart] = useState([]);
+  const [handlingCart, setHandlingCart] = useState(false)
+  const { data: validateCart, setData: setValidateCart } = useAppContext('validate-cart')
+
+  const { productSizes } = useSelector((state) => ({
+    productSizes: state.productSizeReducer.productSizes,
+  }));
 
   const fetchData = () => {
     setCart(JSON.parse(localStorage.getItem("cart")));
   };
+
+  const handleCart = () => {
+    window.scrollTo(0, 0);
+    dispatch(getAllProductSize());
+    setHandlingCart(true);
+  }
+
+  const alertCart = () => {
+    return (
+      <div className="container-fluid">
+        <div className="row px-xl-5">
+          <div className="col-12">
+            <div className="alert alert-danger" role="alert">
+              {
+                validateCart.lstProduct.map(item => (
+                  <>
+                    <span>
+                      <strong>{item.product.name}</strong> with size {item.size} have {item.repository} pairs left
+                    </span>
+                    <br />
+                  </>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  useEffect(() => {
+    if (handlingCart) {
+      let countProductFalse = 0;
+      let lstProduct = [];
+      cart.map(item => {
+        let filterProduct = productSizes.find(ps => ps.productId === item.productId && ps.value === item.size)
+        if (filterProduct) {
+          if (item.qty > filterProduct.quantity) {
+            countProductFalse++;
+            lstProduct.push({
+              ...item,
+              repository: filterProduct.quantity
+            })
+          }
+        }
+      })
+      if(countProductFalse === 0) {
+        navigate('/checkout')
+        setValidateCart({
+          isSuccess: true,
+          lstProduct: lstProduct
+        })
+      }else{
+        setValidateCart({
+          isSuccess: false,
+          lstProduct: lstProduct
+        })
+      }
+    }
+    return () => {
+      setHandlingCart(false);
+    }
+  }, [productSizes])
 
   useEffect(() => {
     fetchData();
@@ -29,7 +102,6 @@ const Cart = () => {
       subtotal += parseInt(element.product.price) * parseInt(element.qty);
     });
   }
-
   total = subtotal + shipping;
 
   const updateCartItem = (qty) => {
@@ -82,7 +154,7 @@ const Cart = () => {
             const size = tr.dataset.itemSize;
             dele(itemId, size);
           }
-        }else{
+        } else {
           alert.show(`Update cart success!`, {
             type: 'success',
           })
@@ -124,6 +196,13 @@ const Cart = () => {
         pageName="Shop"
         pageNameChild="Shopping Cart"
       />
+
+      {
+        validateCart && !validateCart.isSuccess && validateCart.lstProduct
+          ? alertCart()
+          : <></>
+      }
+
       <div className="container-fluid">
         <div className="row px-xl-5">
           <div className="col-lg-8 table-responsive mb-5">
@@ -150,8 +229,7 @@ const Cart = () => {
                         >
                           <td className="align-middle">
                             <img
-                              src="img/product-1.jpg"
-                              alt=""
+                              src={`${item.productImage.length !== 0 ? `/img/product/${item.productImage[0].value}` : ""}`}
                               style={{ width: "50px" }}
                             />{" "}
                             {item.product.name}
@@ -227,9 +305,6 @@ const Cart = () => {
               </>
             ) : (
               <div>
-                <h1>Shopping Cart</h1>
-                <br />
-                <br />
                 <div>You have no items in your shopping cart.</div>
                 <div>
                   Click{" "}
@@ -307,13 +382,12 @@ const Cart = () => {
                         VND
                       </h5>
                     </div>
-                    <NavLink
-                      activeclassname="active"
-                      to="/checkout"
+                    <a
+                      onClick={handleCart}
                       className="btn btn-block btn-primary font-weight-bold my-3 py-3"
                     >
                       Proceed To Checkout
-                    </NavLink>
+                    </a>
                   </div>
                 </div>
               </>

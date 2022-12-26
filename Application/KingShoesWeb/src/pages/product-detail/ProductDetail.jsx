@@ -4,20 +4,18 @@ import RelatedProduct from "./components/RelatedProduct";
 import ReviewItem from "./components/ReviewItem";
 import { Breadcrumb } from "@/components";
 import useScript from "@/hooks/useScript";
-import { useSearchParams, useNavigate, Link } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllProductImage } from "@/stores/actions";
 import { useAlert } from 'react-alert'
 import { useAppContext } from "@/hooks/useAppContext"
 
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-// Import Swiper styles
+import { Navigation } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
+
 import "@/assets/css/product-detail.css";
-// Import required modules
-import { Navigation } from "swiper";
 
 const ProductDetail = () => {
   useScript("public/js/product-quantity");
@@ -26,11 +24,10 @@ const ProductDetail = () => {
   const dispatch = useDispatch();
   const alert = useAlert()
 
-  const { productImages, resultProductReview } = useSelector((state) => ({
+  const { productImages } = useSelector((state) => ({
     productImages: state.productImageReducer.productImages,
   }));
   
-  const navigate = useNavigate();
   const customer = localStorage.getItem("customer-login");
 
   // Param url
@@ -56,8 +53,6 @@ const ProductDetail = () => {
     (pi) => pi.productId == product.entityId
   );
 
-  
-
   // #region Rating
   const stars = 5;
   const [objRating, setObjRating] = useState({
@@ -81,11 +76,13 @@ const ProductDetail = () => {
   const inputReview = useRef();
   const { data: editReview, setData: setEditReview } = useAppContext('edit-review')
   useEffect(() => {
-    setObjRating({
-      ...objRating,
-      rating: editReview.review.point
-    })
-    inputReview.current.value = editReview.review.comment
+    if(editReview){
+      setObjRating({
+        ...objRating,
+        rating: editReview.review.point
+      })
+      inputReview.current.value = editReview.review.comment
+    }
   },[editReview])
 
   const handleReviewChange = (e) => {
@@ -180,7 +177,9 @@ const ProductDetail = () => {
           cartQty += parseInt(element.qty);
         });
       }
-
+      alert.show("Add to cart success!", {
+        type: 'success',
+      })
       updateCartItem(cartQty)
     }
   };
@@ -253,6 +252,9 @@ const ProductDetail = () => {
       if (wishlistt) {
         wishlistQty = wishlistt.length;
       }
+      alert.show("Add to wishlist success!", {
+        type: 'success',
+      })
       updateWishlist(wishlistQty)
     }
   };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Breadcrumb } from "@/components";
 import { Link } from "react-router-dom";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAlert } from 'react-alert';
 import "@/assets/css/wishlist.css";
 
@@ -18,15 +18,6 @@ const Wishlist = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const [qty, setQty] = useState(1);
-
-  const handleQty = (e) => {
-    var qty = e.target.value;
-    if (Math.floor(qty) == qty && $.isNumeric(qty) && Math.floor(qty) > 0) {
-      setQty(parseInt(e.target.value));
-    }
-  };
 
   const minusItem = (e, id, size) => {
     wishlist.forEach((item, index) => {
@@ -48,7 +39,6 @@ const Wishlist = () => {
     fetchData();
     updateWishlist()
   };
-
 
   const plusItem = (e, id, size) => {
     wishlist.forEach((item, index) => {
@@ -83,7 +73,7 @@ const Wishlist = () => {
   }
 
   const addToCart = (item) => {
-    const qty = item.qty, size = item.size, productId = item.productId, product = item.product
+    const qty = item.qty, size = item.size, productId = item.productId, product = item.product;
     var cart = localStorage.getItem("cart")
       ? JSON.parse(localStorage.getItem("cart"))
       : [];
@@ -136,7 +126,6 @@ const Wishlist = () => {
         cartQty += parseInt(element.qty);
       });
     }
-
     updateCartItem(cartQty)
     alert.show(`Add to cart successfully!`, {
       type: 'success',
@@ -184,29 +173,42 @@ const Wishlist = () => {
   const addAllToCart = () => {
     wishlist.forEach(item => {
       const qty = item.qty, size = item.size, productId = item.productId, product = item.product
+      let currentSize = productSizes.filter((ps) => ps.value === Number(size) && ps.productId === productId)
       var cart = localStorage.getItem("cart")
         ? JSON.parse(localStorage.getItem("cart"))
         : [];
-      if (cart.length > 0) {
-        var existProductInCart = cart.filter(
-          (x) => x.productId == productId && x.size == parseInt(size)
-        );
-        if (existProductInCart.length > 0) {
-          var cartItem = {
-            productId: parseInt(productId),
-            product: product,
-            size: parseInt(size),
-            qty: existProductInCart[0].qty + parseInt(qty),
-          };
+      let oldCart = [...cart];
 
-          cart.forEach((item, index) => {
-            if (
-              item.productId === parseInt(productId) &&
-              item.size === parseInt(size)
-            ) {
-              cart[index] = cartItem;
-            }
-          });
+      if (currentSize[0].quantity >= size) {
+        if (cart.length > 0) {
+          var existProductInCart = cart.filter(
+            (x) => x.productId == productId && x.size == parseInt(size)
+          );
+          if (existProductInCart.length > 0) {
+            var cartItem = {
+              productId: parseInt(productId),
+              product: product,
+              size: parseInt(size),
+              qty: existProductInCart[0].qty + parseInt(qty),
+            };
+
+            cart.forEach((item, index) => {
+              if (
+                item.productId === parseInt(productId) &&
+                item.size === parseInt(size)
+              ) {
+                cart[index] = cartItem;
+              }
+            });
+          } else {
+            var cartItem = {
+              productId: parseInt(productId),
+              product: product,
+              size: parseInt(size),
+              qty: parseInt(qty),
+            };
+            cart.push(cartItem);
+          }
         } else {
           var cartItem = {
             productId: parseInt(productId),
@@ -214,23 +216,19 @@ const Wishlist = () => {
             size: parseInt(size),
             qty: parseInt(qty),
           };
+
           cart.push(cartItem);
         }
 
-        localStorage.setItem("cart", cart);
+        localStorage.setItem("cart", JSON.stringify(cart));
       } else {
-        var cartItem = {
-          productId: parseInt(productId),
-          product: product,
-          size: parseInt(size),
-          qty: parseInt(qty),
-        };
-
-        cart.push(cartItem);
+        localStorage.setItem("cart", JSON.stringify(oldCart));
+        alert.show(`Error!`, {
+          type: 'error',
+        });
       }
-      localStorage.setItem("cart", JSON.stringify(cart));
-
     });
+
     var cart = JSON.parse(localStorage.getItem("cart")),
       cartQty = 0
     if (cart) {
@@ -251,6 +249,7 @@ const Wishlist = () => {
         pageName="Shop"
         pageNameChild="My Wishlist"
       />
+
       <div className="container-fluid">
         <div className="row px-xl-5">
           {
@@ -324,7 +323,9 @@ const Wishlist = () => {
                   </div>
                 );
               })
-              : <div>These is no item in wishlist</div>
+              : <div className="container-fluid">
+                These is no item in wishlist
+              </div>
           }
 
         </div>

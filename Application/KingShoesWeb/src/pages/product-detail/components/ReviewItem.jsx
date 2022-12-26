@@ -247,16 +247,16 @@ const ReviewItem = ({ ...props }) => {
                                 replies
                                     ? replies.map((item, index) => (
                                         <>
-                                            <div key={index} className="reply--child reply--child__done p-0">
+                                            <div key={`reply-${customerLogin[0].entityId}`} className="reply--child reply--child__done p-0">
                                                 <img src="img/user.jpg" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
                                                 <div className="information">
                                                     {
                                                         item.customer
-                                                            ? <h6 className="title">
+                                                            ? <h6 className="title" key={`customer-${customerLogin[0].entityId}`}>
                                                                 <span className="name">{`${item.customer.firstName} ${item.customer.lastName}`}</span>
                                                                 {
                                                                     customerLogin && customerLogin[0].entityId === item.customerId
-                                                                        ? <div className="tools">
+                                                                        ? <div className="tools" key={`tool-${customerLogin[0].entityId}`}>
                                                                             <div className="dropdown tool-comment">
                                                                                 <button className="dropdown-toggle"
                                                                                     type="button" id="dropdownMenuButton"
@@ -296,7 +296,7 @@ const ReviewItem = ({ ...props }) => {
                                             />
                                         </>
                                     ))
-                                    : ''
+                                    : <></>
                             }
 
                             <div ref={boxReply} className="reply--child d-none">

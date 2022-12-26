@@ -39,6 +39,8 @@ const ProductItem = ({ ...props }) => {
   const [size, setSize] = useState();
 
   const handleSize = (e) => {
+    setValidateModal(false)
+    setTextValidateModal('')
     setProductId(e.target.dataset.id);
     setSize(e.target.value);
   };
@@ -64,52 +66,30 @@ const ProductItem = ({ ...props }) => {
 
   const addPLP = (e) => {
     if (size && productId) {
-      var data = localStorage.getItem(type)
+      let data = localStorage.getItem(type)
         ? JSON.parse(localStorage.getItem(type))
         : [];
-      var currentSize = productSize.filter((ps) => ps.value === Number(size))
-      if (currentSize[0].quantity > 0) {
-        if (data.length > 0) {
-          var existProduct = data.filter(
-            (x) => x.productId == productId && x.size == parseInt(size)
-          );
-          if (existProduct.length > 0) {
-            var dataItem = {
-              productId: parseInt(productId),
-              product: product,
-              productImage: productImage,
-              size: parseInt(size),
-              qty: existProduct[0].qty + 1,
-            };
 
-            data.forEach((item, index) => {
-              if (
-                item.productId === parseInt(productId) &&
-                item.size === parseInt(size)
-              ) {
-                data[index] = dataItem;
-              }
-            });
-
-            alert.show(`Add to ${type} success!`, {
-              type: 'success',
-            })
-          } else {
-            var dataItem = {
-              productId: parseInt(productId),
-              product: product,
-              productImage: productImage,
-              size: parseInt(size),
-              qty: 1,
-            };
-            data.push(dataItem);
-
-            alert.show(`Add to ${type} success!`, {
-              type: 'success',
-            })
-          }
-
-          localStorage.setItem(type, data);
+      if (data.length > 0) {
+        var existProduct = data.filter(
+          (x) => x.productId == productId && x.size == parseInt(size)
+        );
+        if (existProduct.length > 0) {
+          var dataItem = {
+            productId: parseInt(productId),
+            product: product,
+            productImage: productImage,
+            size: parseInt(size),
+            qty: existProduct[0].qty + 1,
+          };
+          data.forEach((item, index) => {
+            if (
+              item.productId === parseInt(productId) &&
+              item.size === parseInt(size)
+            ) {
+              data[index] = dataItem;
+            }
+          });
         } else {
           var dataItem = {
             productId: parseInt(productId),
@@ -119,36 +99,41 @@ const ProductItem = ({ ...props }) => {
             qty: 1,
           };
           data.push(dataItem);
-          alert.show(`Add to ${type} success!`, {
-            type: 'success',
-          })
         }
-
-        localStorage.setItem(type, JSON.stringify(data));
-        var cart = JSON.parse(localStorage.getItem("cart")),
-          wishlist = JSON.parse(localStorage.getItem("wishlist")),
-          cartQty = 0,
-          wishlistQty = 0;
-
-        if (cart) {
-          cart.forEach((element) => {
-            cartQty += parseInt(element.qty);
-          });
-        }
-
-        if (wishlist) {
-          wishlistQty = wishlist.length;
-        }
-
-        setValidateModal(false)
-        setTextValidateModal('')
-        hideModal(productId);
-        updateCartItem(cartQty);
-        updateWishlist(wishlistQty);
       } else {
-        setValidateModal(true)
-        setTextValidateModal('This size is out of stock')
+        var dataItem = {
+          productId: parseInt(productId),
+          product: product,
+          productImage: productImage,
+          size: parseInt(size),
+          qty: 1,
+        };
+        data.push(dataItem);
       }
+
+      localStorage.setItem(type, JSON.stringify(data));
+      let cart = JSON.parse(localStorage.getItem("cart")),
+        wishlist = JSON.parse(localStorage.getItem("wishlist")),
+        cartQty = 0,
+        wishlistQty = 0;
+
+      if (cart) {
+        cart.forEach((element) => {
+          cartQty += parseInt(element.qty);
+        });
+      }
+
+      if (wishlist) {
+        wishlistQty = wishlist.length;
+      }
+
+      setValidateModal(false);
+      setTextValidateModal('');
+      hideModal(productId);
+      updateCartItem(cartQty);
+      alert.show(`Add to ${type} success!`, {
+        type: 'success',
+      });
     } else {
       setValidateModal(true)
       setTextValidateModal('You must select size')

@@ -25,7 +25,7 @@ const Register = () => {
   const [address, setAddress] = useState();
   const [gender, setGender] = useState("1");
 
-  const [fisrtNameDefaultValue, setFisrtNameDefaultValue] = useState("");
+  const [firstNameDefaultValue, setFirstNameDefaultValue] = useState("");
   const [lastNameDefaultValue, setLastNameDefaultValue] = useState("");
   const [emailDefaultValue, setEmailDefaultValue] = useState("");
   const [phoneDefaultValue, setPhoneDefaultValue] = useState("");
@@ -226,7 +226,7 @@ const Register = () => {
     if (customerData) {
       customerData = JSON.parse(customerData);
 
-      setFisrtNameDefaultValue(customerData.firstName.value);
+      setFirstNameDefaultValue(customerData.firstName.value);
       setFirstName(customerData.firstName.value);
       setLastNameDefaultValue(customerData.lastName.value);
       setLastName(customerData.lastName.value);
@@ -255,7 +255,7 @@ const Register = () => {
                       isFirstNameValid ? "" : "is-invalid"
                     }`}
                     onChange={handleFirstNameChange}
-                    defaultValue={fisrtNameDefaultValue}
+                    defaultValue={firstNameDefaultValue}
                     type="text"
                   />
                   <div className="invalid-feedback">{textRequire}</div>
