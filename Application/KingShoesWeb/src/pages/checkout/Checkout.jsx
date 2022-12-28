@@ -3,17 +3,59 @@ import { Breadcrumb } from "@/components";
 import { get } from "@/helpers";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useAppContext } from "@/hooks/useAppContext"
+import { useAppContext } from "@/hooks/useAppContext";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllProductSize } from "@/stores/actions";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { data: validateCart, setData: setValidateCart } = useAppContext('validate-cart')
+  const dispatch = useDispatch();
+
+  const { data: validateCart, setData: setValidateCart } = useAppContext('validate-cart');
+  const { productSizes } = useSelector((state) => ({
+    productSizes: state.productSizeReducer.productSizes,
+  }));
 
   useEffect(() => {
-    if (!validateCart || (validateCart && !validateCart.isSuccess)) {
-      navigate('/cart');
+    if (!validateCart) {
+      dispatch(getAllProductSize())
+    } else {
+      if (!validateCart.isSuccess) {
+        navigate('/cart')
+      }
     }
-  }, [])
+  }, [validateCart]);
+
+  useEffect(() => {
+    if (productSizes.length > 0) {
+      let countProductFalse = 0;
+      let lstProduct = [];
+      let cart = JSON.parse(localStorage.getItem("cart"));
+      cart.map(item => {
+        let filterProduct = productSizes.find(ps => ps.productId === item.productId && ps.value === item.size)
+        if (filterProduct) {
+          if (item.qty > filterProduct.quantity) {
+            countProductFalse++;
+            lstProduct.push({
+              ...item,
+              repository: filterProduct.quantity
+            })
+          }
+        }
+      })
+      if (countProductFalse === 0) {
+        setValidateCart({
+          isSuccess: true,
+          lstProduct: lstProduct
+        })
+      } else {
+        setValidateCart({
+          isSuccess: false,
+          lstProduct: lstProduct
+        })
+      }
+    }
+  },[productSizes])
 
   const emailCode = "email";
   const firstNameCode = "firstName";
@@ -28,11 +70,10 @@ const Checkout = () => {
   const textRequire = "This is a required field.";
   const emailValidMsg = "Your email is not valid.";
   const phoneValidMsg = "Your phone number is not valid.";
-  // const [isValid, setIsValid] = useState(true);
   var isValid = true;
-  const regrexEmail =
+  const regexEmail =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  const regrexPhone = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+  const regexPhone = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
   const [countries, getCountries] = useState([]);
   const [emails, getEmails] = useState([]);
   const [note, setNote] = useState("");
@@ -98,11 +139,11 @@ const Checkout = () => {
   const validator = (code, value) => {
     var valid = !value ? false : true;
     if (code == emailCode) {
-      valid = value.match(regrexEmail) ? true : false;
+      valid = value.match(regexEmail) ? true : false;
     }
 
     if (code == phoneCode) {
-      valid = value.match(regrexPhone) ? true : false;
+      valid = value.match(regexPhone) ? true : false;
     }
 
     if (!valid) {

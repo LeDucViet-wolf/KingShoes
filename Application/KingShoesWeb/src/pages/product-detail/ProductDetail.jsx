@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllProductImage } from "@/stores/actions";
 import { useAlert } from 'react-alert'
 import { useAppContext } from "@/hooks/useAppContext"
+import { post, put } from '@/helpers';
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
@@ -27,7 +28,7 @@ const ProductDetail = () => {
   const { productImages } = useSelector((state) => ({
     productImages: state.productImageReducer.productImages,
   }));
-  
+
   const customer = localStorage.getItem("customer-login");
 
   // Param url
@@ -54,7 +55,6 @@ const ProductDetail = () => {
   );
 
   // #region Rating
-  const stars = 5;
   const [objRating, setObjRating] = useState({
     stars: 5,
     rating: 0,
@@ -73,26 +73,37 @@ const ProductDetail = () => {
   };
   //  #endregion
 
-  const inputReview = useRef();
   const { data: editReview, setData: setEditReview } = useAppContext('edit-review')
   useEffect(() => {
-    if(editReview){
+    if (editReview && Object.keys(editReview).length !== 0 && Object.getPrototypeOf(editReview) === Object.prototype) {
       setObjRating({
         ...objRating,
         rating: editReview.review.point
       })
-      inputReview.current.value = editReview.review.comment
+      setReview(editReview.review.comment)
+    } else {
+      setObjRating({
+        ...objRating,
+        rating: 0
+      })
+      setReview('')
     }
-  },[editReview])
+  }, [editReview])
+
+  const cancelEdit = (e) => {
+    e.preventDefault();
+    setEditReview({})
+  }
 
   const handleReviewChange = (e) => {
-    if (e.target.value) {
-      setReview(e.target.value);
+    if (e.currentTarget.value) {
       setIsReviewValid(true);
     } else {
       setIsReviewValid(false);
     }
+    setReview(e.currentTarget.value);
   };
+
   const updateCartItem = (qty) => {
     const cart = document.querySelector('.dat__cart-item')
     if (cart) {
@@ -274,8 +285,9 @@ const ProductDetail = () => {
     setQty(qty + 1);
   };
 
-  const submitReview = (e) => {
+  const submitReview = async (e) => {
     e.preventDefault();
+
     let valid = true;
     if (objRating.rating < 1) {
       setIsPointValid(false);
@@ -288,36 +300,48 @@ const ProductDetail = () => {
     }
 
     if (valid) {
-      var customerData = JSON.parse(customer)[0];
-
-      const productReview = {
+      let customerData = JSON.parse(customer)[0];
+      let productReview = {
         productId: parseInt(productId),
         customerId: customerData.entityId,
         comment: review,
         point: objRating.rating,
+        reply: ''
       };
 
-      axios
-        .post(
-          "http://localhost:8080/KingShoesApi/api/product-reviews/insert",
-          productReview
-        )
-        .then(function (response) {
-          if ((response.status = 200 && response.data)) {
-            fetchData();
-            changeRating(0);
-            inputReview.current.value = "";
-            setReview("");
-            alert.show("Create Review Success!", {
-              type: 'success',
-            })
-          }
-        })
-        .catch(() => {
+      if (editReview && editReview.submit == 'edit') {
+        productReview = { ...productReview, reply: JSON.stringify(editReview.replies), entityId: editReview.review.entityId }
+        console.log(productReview);
+        let resultEdit = await put(`product-reviews/update`, productReview)
+        if (resultEdit && resultEdit != 0) {
+          fetchData();
+          changeRating(0)
+          setReview('')
+          setEditReview({})
+          alert.show("Edit Review Success!", {
+            type: 'success',
+          })
+        } else {
+          alert.show("Edit Review Fail!", {
+            type: 'error',
+          })
+        }
+      } else {
+        let resultCreate = await post(`product-reviews/insert`, productReview)
+        if (resultCreate && resultCreate != 0) {
+          fetchData();
+          changeRating(0)
+          setReview('')
+          alert.show("Create Review Success!", {
+            type: 'success',
+          })
+          setEditReview
+        } else {
           alert.show("Create Review Fail!", {
             type: 'error',
           })
-        });
+        }
+      }
     }
   };
 
@@ -604,10 +628,10 @@ const ProductDetail = () => {
                                   onMouseLeave={() => hoverRating(0)}
                                   key={index + 1}
                                   className={`${objRating.rating < star
-                                      ? objRating.hovered < star
-                                        ? objRating.deselectedClass
-                                        : objRating.selectedClass
+                                    ? objRating.hovered < star
+                                      ? objRating.deselectedClass
                                       : objRating.selectedClass
+                                    : objRating.selectedClass
                                     } 
                                   fa-star`}
                                 ></i>
@@ -625,7 +649,7 @@ const ProductDetail = () => {
                           <div className="form-group">
                             <label htmlFor="message">Your Review *</label>
                             <textarea
-                              ref={inputReview}
+                              value={review}
                               onChange={handleReviewChange}
                               id="message"
                               cols="30"
@@ -644,6 +668,16 @@ const ProductDetail = () => {
                               defaultValue="Leave Your Review"
                               className="btn btn-primary px-3"
                             />
+                            {
+                              editReview && editReview.submit === 'edit'
+                                ? <input
+                                  onClick={cancelEdit}
+                                  type="button"
+                                  defaultValue="Cancel edit"
+                                  className="btn btn-primary px-3 ml-2"
+                                />
+                                : <></>
+                            }
                           </div>
                         </form>
                       </div>
