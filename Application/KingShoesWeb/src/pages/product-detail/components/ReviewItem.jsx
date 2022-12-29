@@ -19,7 +19,7 @@ const ReviewItem = ({ ...props }) => {
         productReview: state.productReviewReducer.productReview,
     }))
 
-    const { review, customer, fetchData } = props
+    const { review, setReview, customer, fetchData } = props
     const customerLogin = JSON.parse(customer)
 
     const [productReviewAction, setProductReviewAction] = useState("")
@@ -62,9 +62,6 @@ const ReviewItem = ({ ...props }) => {
         e.preventDefault()
         boxReply.current.classList.toggle('d-none')
         setProductReviewAction('add-reply')
-    }
-
-    const handleEditReply = (e) => {
     }
 
     const handleDeleteReply = (e, index) => {
@@ -130,13 +127,17 @@ const ReviewItem = ({ ...props }) => {
 
     const reloadReply = () => {
         let newReplies = []
-        JSON.parse(waitProductReply.reply).forEach((r) => {
-            newReplies.push({
-                ...r,
-                customer: customers.filter((c) => c.entityId == r.customerId)[0]
+        if (waitProductReply
+            && Object.keys(waitProductReply).length !== 0
+            && Object.getPrototypeOf(waitProductReply) === Object.prototype) {
+            JSON.parse(waitProductReply.reply).forEach((r) => {
+                newReplies.push({
+                    ...r,
+                    customer: customers.filter((c) => c.entityId == r.customerId)[0]
+                })
             })
-        })
-        setReplies(newReplies)
+            setReplies(newReplies)
+        }
     }
     // #endregion
 
@@ -252,12 +253,16 @@ const ReviewItem = ({ ...props }) => {
                                         <>
                                             {
                                                 editReply && editReply.index === index
-                                                    ? <EditReply />
+                                                    ? <EditReply
+                                                        key={`edit-reply-${index}`}
+                                                        reloadReply={reloadReply}
+                                                        waitProductReply={waitProductReply}
+                                                        index={index}
+                                                    />
                                                     : <ReplyItem
                                                         key={`reply-${index}`}
                                                         item={item}
                                                         index={index}
-                                                        handleEditReply={handleEditReply}
                                                         customerLogin={customerLogin}
                                                     />
                                             }

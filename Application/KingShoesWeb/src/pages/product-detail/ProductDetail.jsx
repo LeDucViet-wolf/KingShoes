@@ -311,7 +311,6 @@ const ProductDetail = () => {
 
       if (editReview && editReview.submit == 'edit') {
         productReview = { ...productReview, reply: JSON.stringify(editReview.replies), entityId: editReview.review.entityId }
-        console.log(productReview);
         let resultEdit = await put(`product-reviews/update`, productReview)
         if (resultEdit && resultEdit != 0) {
           fetchData();
@@ -332,10 +331,10 @@ const ProductDetail = () => {
           fetchData();
           changeRating(0)
           setReview('')
+          setEditReview({})
           alert.show("Create Review Success!", {
             type: 'success',
           })
-          setEditReview
         } else {
           alert.show("Create Review Fail!", {
             type: 'error',
