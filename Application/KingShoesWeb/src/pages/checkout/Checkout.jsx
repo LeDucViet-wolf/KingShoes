@@ -11,17 +11,18 @@ const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { data: validateCart, setData: setValidateCart } = useAppContext('validate-cart');
+  const { data: validateCart, setData: setValidateCart } =
+    useAppContext("validate-cart");
   const { productSizes } = useSelector((state) => ({
     productSizes: state.productSizeReducer.productSizes,
   }));
 
   useEffect(() => {
     if (!validateCart) {
-      dispatch(getAllProductSize())
+      dispatch(getAllProductSize());
     } else {
       if (!validateCart.isSuccess) {
-        navigate('/cart')
+        navigate("/cart");
       }
     }
   }, [validateCart]);
@@ -31,31 +32,33 @@ const Checkout = () => {
       let countProductFalse = 0;
       let lstProduct = [];
       let cart = JSON.parse(localStorage.getItem("cart"));
-      cart.map(item => {
-        let filterProduct = productSizes.find(ps => ps.productId === item.productId && ps.value === item.size)
+      cart.map((item) => {
+        let filterProduct = productSizes.find(
+          (ps) => ps.productId === item.productId && ps.value === item.size
+        );
         if (filterProduct) {
           if (item.qty > filterProduct.quantity) {
             countProductFalse++;
             lstProduct.push({
               ...item,
-              repository: filterProduct.quantity
-            })
+              repository: filterProduct.quantity,
+            });
           }
         }
-      })
+      });
       if (countProductFalse === 0) {
         setValidateCart({
           isSuccess: true,
-          lstProduct: lstProduct
-        })
+          lstProduct: lstProduct,
+        });
       } else {
         setValidateCart({
           isSuccess: false,
-          lstProduct: lstProduct
-        })
+          lstProduct: lstProduct,
+        });
       }
     }
-  },[productSizes])
+  }, [productSizes]);
 
   const emailCode = "email";
   const firstNameCode = "firstName";
@@ -78,6 +81,8 @@ const Checkout = () => {
   const [emails, getEmails] = useState([]);
   const [note, setNote] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isUseNewBillingAddress, setIsUseNewBillingAddress] = useState();
+  const [isUseNewShippingAddress, setIsUseNewShippingAddress] = useState();
   const [shipping, setShipping] = useState(0);
   const [shippingMethod, setShippingMethod] = useState();
   const [shippingMethods, getShippingMethods] = useState([]);
@@ -155,6 +160,14 @@ const Checkout = () => {
 
   const handleChangeNote = (e) => {
     setNote(e.currentTarget.value);
+  };
+
+  const handleChangeUseNewBillingAddress = (value) => (e) => {
+    setIsUseNewBillingAddress(value);
+  };
+
+  const handleChangeUseNewShippingAddress = (value) => (e) => {
+    setIsUseNewShippingAddress(value);
   };
 
   const [data, setData] = useState({
@@ -256,14 +269,58 @@ const Checkout = () => {
   const submitOrder = async (e) => {
     e.preventDefault();
 
-    billingData.forEach(async (code) => {
-      await assignData(billingCode, code, data[billingCode][code].value);
-    });
+    if (isLoggedIn) {
+      if (isUseNewBillingAddress !== undefined && !isUseNewBillingAddress) {
+        if (!shipToDifferentAddress) {
+          isValid = true;
+        } else {
+          if (
+            isUseNewShippingAddress !== undefined &&
+            !isUseNewShippingAddress
+          ) {
+            isValid = true;
+          } else {
+            shippingData.forEach(async (code) => {
+              await assignData(
+                shippingCode,
+                code,
+                data[shippingCode][code].value
+              );
+            });
+          }
+        }
+      } else {
+        if (shipToDifferentAddress) {
+          if (
+            isUseNewShippingAddress !== undefined &&
+            !isUseNewShippingAddress
+          ) {
+            isValid = true;
+          } else {
+            shippingData.forEach(async (code) => {
+              await assignData(
+                shippingCode,
+                code,
+                data[shippingCode][code].value
+              );
+            });
+          }
+        }
 
-    if (shipToDifferentAddress) {
-      shippingData.forEach(async (code) => {
-        await assignData(shippingCode, code, data[shippingCode][code].value);
+        billingData.forEach(async (code) => {
+          await assignData(billingCode, code, data[billingCode][code].value);
+        });
+      }
+    } else {
+      billingData.forEach(async (code) => {
+        await assignData(billingCode, code, data[billingCode][code].value);
       });
+
+      if (shipToDifferentAddress) {
+        shippingData.forEach(async (code) => {
+          await assignData(shippingCode, code, data[shippingCode][code].value);
+        });
+      }
     }
 
     if (!shippingMethod || !paymnetMethod) {
@@ -294,14 +351,14 @@ const Checkout = () => {
             axios
               .get(
                 "http://localhost:8080/KingShoesApi/api/orders/get-by-id/" +
-                orderId
+                  orderId
               )
               .then(function (response) {
                 if ((response.status = 200 && response.data)) {
                   var dataToOrderAddressBilling = prepareDataToOrderAddress(
-                    orderId,
-                    billingCode
-                  ),
+                      orderId,
+                      billingCode
+                    ),
                     dataToOrderAddressShipping = prepareDataToOrderAddress(
                       orderId,
                       shippingCode
@@ -309,7 +366,7 @@ const Checkout = () => {
 
                   if (customerLoggedInData) {
                     var dataToCustomerAddressBilling =
-                      prepareDataToCustomerAddress(customerId, billingCode),
+                        prepareDataToCustomerAddress(customerId, billingCode),
                       dataToCustomerAddressShipping =
                         prepareDataToCustomerAddress(customerId, shippingCode);
 
@@ -318,7 +375,7 @@ const Checkout = () => {
                         "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
                         dataToCustomerAddressBilling
                       )
-                      .then(function (res) { })
+                      .then(function (res) {})
                       .catch((err) => {
                         console.log(err);
                       });
@@ -327,7 +384,7 @@ const Checkout = () => {
                         "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
                         dataToCustomerAddressShipping
                       )
-                      .then(function (res) { })
+                      .then(function (res) {})
                       .catch((err) => {
                         console.log(err);
                       });
@@ -339,7 +396,7 @@ const Checkout = () => {
                       "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                       dataToOrderAddressBilling
                     )
-                    .then(function (res) { })
+                    .then(function (res) {})
                     .catch((err) => {
                       console.log(err);
                     });
@@ -348,7 +405,7 @@ const Checkout = () => {
                       "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                       dataToOrderAddressShipping
                     )
-                    .then(function (res) { })
+                    .then(function (res) {})
                     .catch((err) => {
                       console.log(err);
                     });
@@ -439,7 +496,7 @@ const Checkout = () => {
       };
       axios
         .post("http://localhost:8080/KingShoesApi/api/order-item/insert/", data)
-        .then(function (res) { })
+        .then(function (res) {})
         .catch((err) => {
           console.log(err);
         });
@@ -466,8 +523,8 @@ const Checkout = () => {
     );
 
     var customerListEnable = await get(
-      "http://localhost:8080/KingShoesApi/api/customers/get-list-enabled"
-    ),
+        "http://localhost:8080/KingShoesApi/api/customers/get-list-enabled"
+      ),
       emailList = [];
 
     customerListEnable.map((item, i) => {
@@ -489,12 +546,12 @@ const Checkout = () => {
       assignData(shippingCode, addressCode, customerLoggedInData.address);
       assignData(shippingCode, phoneCode, customerLoggedInData.phone);
       var customerShippingAddress = await get(
-        "http://localhost:8080/KingShoesApi/api/customer-address/get-all-shipping/" +
-        customerLoggedInData.entityId
-      ),
+          "http://localhost:8080/KingShoesApi/api/customer-address/get-all-shipping/" +
+            customerLoggedInData.entityId
+        ),
         customerBillingAddress = await get(
           "http://localhost:8080/KingShoesApi/api/customer-address/get-all-billing/" +
-          customerLoggedInData.entityId
+            customerLoggedInData.entityId
         );
       setCustomerBillingAddresses(customerBillingAddress);
       setCustomerShippingAddresses(customerShippingAddress);
@@ -526,53 +583,74 @@ const Checkout = () => {
                   <div className="row">
                     <div className="col-lg-8">
                       {customerBillingAddresses.map((item, i) => (
-                        <div className="form-check" key={i}>
-                          <label className="form-check-label">
-                            <input
-                              type="checkbox"
-                              className="form-check-input"
-                              name={item.entityId}
-                              value={item.entityId}
-                            />
-                            {item.firstName + " " + item.lastName}
-                            <br />
-                            {item.address}
-                            <br />
-                            {item.phone}
-                            <br />
-                            {item.city +
-                              ", " +
-                              item.region +
-                              ", " +
-                              item.country}
+                        <>
+                          <div key={i} className="form-group">
+                            <div className="custom-control custom-radio">
+                              <input
+                                type="radio"
+                                className="custom-control-input"
+                                name="customer-billing-address"
+                                id={item.entityId}
+                                value={item.entityId}
+                                onChange={handleChangeUseNewBillingAddress(
+                                  false
+                                )}
+                              />
+                              <label
+                                className="custom-control-label"
+                                htmlFor={item.entityId}
+                              >
+                                {item.firstName + " " + item.lastName}
+                                <br />
+                                {item.address}
+                                <br />
+                                {item.phone}
+                                <br />
+                                {item.city +
+                                  ", " +
+                                  item.region +
+                                  ", " +
+                                  item.country}
+                              </label>
+                            </div>
+                          </div>
+                        </>
+                      ))}
+                      <div className="form-group">
+                        <div className="custom-control custom-radio">
+                          <input
+                            type="radio"
+                            className="custom-control-input"
+                            name="customer-billing-address"
+                            id="customer-billing-address"
+                            onChange={handleChangeUseNewBillingAddress(true)}
+                          />
+                          <label
+                            className="custom-control-label"
+                            htmlFor="customer-billing-address"
+                          >
+                            Use new billing address
                           </label>
                         </div>
-                      ))}
-                      <div className="form-check">
-                        <label className="form-check-label">
-                          <input
-                            type="checkbox"
-                            className="form-check-input"
-                            data-toggle="collapse"
-                            data-target="#customer-billing-address"
-                          />
-                          Use new billing address
-                        </label>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="collapse mb-5" id="customer-billing-address">
+                <div
+                  className="mb-5"
+                  style={!isUseNewBillingAddress ? { display: "none" } : {}}
+                >
                   <hr />
                   <div className="bg-light p-30">
                     <div className="row">
                       <div className="col-md-6 form-group">
                         <label>First Name</label>
                         <input
-                          className={`form-control ${data[billingCode][firstNameCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][firstNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, firstNameCode)}
                           type="text"
                           defaultValue={
@@ -584,10 +662,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Last Name</label>
                         <input
-                          className={`form-control ${data[billingCode][lastNameCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][lastNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, lastNameCode)}
                           type="text"
                           defaultValue={
@@ -599,10 +678,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Address</label>
                         <input
-                          className={`form-control ${data[billingCode][addressCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][addressCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, addressCode)}
                           type="text"
                           defaultValue={
@@ -614,10 +694,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>City</label>
                         <input
-                          className={`form-control ${data[billingCode][cityCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][cityCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, cityCode)}
                           type="text"
                         />
@@ -626,10 +707,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>State/Province</label>
                         <input
-                          className={`form-control ${data[billingCode][regionCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][regionCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, regionCode)}
                           type="text"
                         />
@@ -652,10 +734,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Phone</label>
                         <input
-                          className={`form-control ${data[billingCode][phoneCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][phoneCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, phoneCode)}
                           type="text"
                           defaultValue={
@@ -678,8 +761,9 @@ const Checkout = () => {
                     >
                       <label>Email</label>
                       <input
-                        className={`form-control ${data[billingCode][emailCode].valid ? "" : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][emailCode].valid ? "" : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, emailCode)}
                         type="text"
                       />
@@ -689,10 +773,11 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>First Name</label>
                       <input
-                        className={`form-control ${data[billingCode][firstNameCode].valid
-                          ? ""
-                          : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][firstNameCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, firstNameCode)}
                         type="text"
                         defaultValue={
@@ -704,10 +789,11 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>Last Name</label>
                       <input
-                        className={`form-control ${data[billingCode][lastNameCode].valid
-                          ? ""
-                          : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][lastNameCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, lastNameCode)}
                         type="text"
                         defaultValue={
@@ -719,10 +805,11 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>Address</label>
                       <input
-                        className={`form-control ${data[billingCode][addressCode].valid
-                          ? ""
-                          : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][addressCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, addressCode)}
                         type="text"
                         defaultValue={
@@ -734,8 +821,9 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>City</label>
                       <input
-                        className={`form-control ${data[billingCode][cityCode].valid ? "" : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][cityCode].valid ? "" : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, cityCode)}
                         type="text"
                       />
@@ -744,10 +832,11 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>State/Province</label>
                       <input
-                        className={`form-control ${data[billingCode][regionCode].valid
-                          ? ""
-                          : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][regionCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, regionCode)}
                         type="text"
                       />
@@ -770,8 +859,9 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>Phone</label>
                       <input
-                        className={`form-control ${data[billingCode][phoneCode].valid ? "" : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][phoneCode].valid ? "" : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, phoneCode)}
                         type="text"
                         defaultValue={
@@ -812,53 +902,74 @@ const Checkout = () => {
                     <div className="row">
                       <div className="col-lg-8">
                         {customerShippingAddresses.map((item, i) => (
-                          <div className="form-check" key={i}>
-                            <label className="form-check-label">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                                name={item.entityId}
-                                value={item.entityId}
-                              />
-                              {item.firstName + " " + item.lastName}
-                              <br />
-                              {item.address}
-                              <br />
-                              {item.phone}
-                              <br />
-                              {item.city +
-                                ", " +
-                                item.region +
-                                ", " +
-                                item.country}
+                          <>
+                            <div key={i} className="form-group">
+                              <div className="custom-control custom-radio">
+                                <input
+                                  type="radio"
+                                  className="custom-control-input"
+                                  name="customer-shipping-address"
+                                  id={item.entityId}
+                                  value={item.entityId}
+                                  onChange={handleChangeUseNewShippingAddress(
+                                    false
+                                  )}
+                                />
+                                <label
+                                  className="custom-control-label"
+                                  htmlFor={item.entityId}
+                                >
+                                  {item.firstName + " " + item.lastName}
+                                  <br />
+                                  {item.address}
+                                  <br />
+                                  {item.phone}
+                                  <br />
+                                  {item.city +
+                                    ", " +
+                                    item.region +
+                                    ", " +
+                                    item.country}
+                                </label>
+                              </div>
+                            </div>
+                          </>
+                        ))}
+                        <div className="form-group">
+                          <div className="custom-control custom-radio">
+                            <input
+                              type="radio"
+                              className="custom-control-input"
+                              name="customer-shipping-address"
+                              id="customer-shipping-address"
+                              onChange={handleChangeUseNewShippingAddress(true)}
+                            />
+                            <label
+                              className="custom-control-label"
+                              htmlFor="customer-shipping-address"
+                            >
+                              Use new shipping address
                             </label>
                           </div>
-                        ))}
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input
-                              type="checkbox"
-                              className="form-check-input"
-                              data-toggle="collapse"
-                              data-target="#customer-shipping-address"
-                            />
-                            Use new shipping address
-                          </label>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="collapse mb-5" id="customer-shipping-address">
+                  <div
+                    className="mb-5"
+                    style={!isUseNewShippingAddress ? { display: "none" } : {}}
+                  >
                     <hr />
                     <div className="bg-light p-30">
                       <div className="row">
                         <div className="col-md-6 form-group">
                           <label>First Name</label>
                           <input
-                            className={`form-control ${data[shippingCode][firstNameCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][firstNameCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, firstNameCode)}
                             type="text"
                             defaultValue={
@@ -870,10 +981,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>Last Name</label>
                           <input
-                            className={`form-control ${data[shippingCode][lastNameCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][lastNameCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, lastNameCode)}
                             type="text"
                             defaultValue={
@@ -885,10 +997,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>Address</label>
                           <input
-                            className={`form-control ${data[shippingCode][addressCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][addressCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, addressCode)}
                             type="text"
                             defaultValue={
@@ -900,10 +1013,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>City</label>
                           <input
-                            className={`form-control ${data[shippingCode][cityCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][cityCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, cityCode)}
                             type="text"
                           />
@@ -912,10 +1026,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>State/Province</label>
                           <input
-                            className={`form-control ${data[shippingCode][regionCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][regionCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, regionCode)}
                             type="text"
                           />
@@ -938,10 +1053,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>Phone</label>
                           <input
-                            className={`form-control ${data[shippingCode][phoneCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][phoneCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, phoneCode)}
                             type="text"
                             defaultValue={
@@ -963,10 +1079,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>First Name</label>
                         <input
-                          className={`form-control ${data[shippingCode][firstNameCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][firstNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, firstNameCode)}
                           type="text"
                           defaultValue={
@@ -978,10 +1095,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Last Name</label>
                         <input
-                          className={`form-control ${data[shippingCode][lastNameCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][lastNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, lastNameCode)}
                           type="text"
                           defaultValue={
@@ -993,10 +1111,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Address</label>
                         <input
-                          className={`form-control ${data[shippingCode][addressCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][addressCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, addressCode)}
                           type="text"
                           defaultValue={
@@ -1008,10 +1127,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>City</label>
                         <input
-                          className={`form-control ${data[shippingCode][cityCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][cityCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, cityCode)}
                           type="text"
                         />
@@ -1020,10 +1140,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>State/Province</label>
                         <input
-                          className={`form-control ${data[shippingCode][regionCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][regionCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, regionCode)}
                           type="text"
                         />
@@ -1046,10 +1167,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Phone</label>
                         <input
-                          className={`form-control ${data[shippingCode][phoneCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][phoneCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, phoneCode)}
                           type="text"
                           defaultValue={
@@ -1123,7 +1245,7 @@ const Checkout = () => {
                 />
               </div>
             </div>
-            <div className="mb-5 ">
+            <div className="mb-5">
               <h5 className="section-title position-relative text-uppercase mb-3">
                 <span className="bg-secondary pr-3">Shipping</span>
               </h5>
