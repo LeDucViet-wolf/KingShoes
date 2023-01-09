@@ -86,6 +86,8 @@ const Checkout = () => {
   const [shipping, setShipping] = useState(0);
   const [shippingMethod, setShippingMethod] = useState();
   const [shippingMethods, getShippingMethods] = useState([]);
+  const [customerBillingAddressId, setCustomerBillingAddressId] = useState();
+  const [customerShippingAddressId, setCustomerShippingAddressId] = useState();
   const [customerBillingAddresses, setCustomerBillingAddresses] = useState([]);
   const [customerShippingAddresses, setCustomerShippingAddresses] = useState(
     []
@@ -163,10 +165,16 @@ const Checkout = () => {
   };
 
   const handleChangeUseNewBillingAddress = (value) => (e) => {
+    if (!value) {
+      setCustomerBillingAddressId(e.currentTarget.value);
+    }
     setIsUseNewBillingAddress(value);
   };
 
   const handleChangeUseNewShippingAddress = (value) => (e) => {
+    if (!value) {
+      setCustomerShippingAddressId(e.currentTarget.value);
+    }
     setIsUseNewShippingAddress(value);
   };
 
@@ -329,7 +337,7 @@ const Checkout = () => {
 
     if (isValid) {
       var customerId = null;
-      if (customerLoggedInData) {
+      if (isLoggedIn) {
         customerId = customerLoggedInData.entityId;
       }
 
@@ -355,25 +363,395 @@ const Checkout = () => {
               )
               .then(function (response) {
                 if ((response.status = 200 && response.data)) {
-                  var dataToOrderAddressBilling = prepareDataToOrderAddress(
-                      orderId,
-                      billingCode
-                    ),
-                    dataToOrderAddressShipping = prepareDataToOrderAddress(
-                      orderId,
-                      shippingCode
-                    );
+                  if (isLoggedIn) {
+                    if (
+                      isUseNewBillingAddress !== undefined &&
+                      !isUseNewBillingAddress
+                    ) {
+                      if (!shipToDifferentAddress) {
+                        axios
+                          .get(
+                            "http://localhost:8080/KingShoesApi/api/customer-address/get-by-id/" +
+                              customerBillingAddressId
+                          )
+                          .then(function (customerDataAddressResponse) {
+                            dataToOrderAddressBilling = {
+                              firstName:
+                                customerDataAddressResponse.data.firstName,
+                              lastName:
+                                customerDataAddressResponse.data.lastName,
+                              address: customerDataAddressResponse.data.address,
+                              city: customerDataAddressResponse.data.city,
+                              region: customerDataAddressResponse.data.region,
+                              country: customerDataAddressResponse.data.country,
+                              phone: customerDataAddressResponse.data.phone,
+                              type: billingCode,
+                              orderId: orderId,
+                            };
+                            dataToOrderAddressShipping = {
+                              firstName:
+                                customerDataAddressResponse.data.firstName,
+                              lastName:
+                                customerDataAddressResponse.data.lastName,
+                              address: customerDataAddressResponse.data.address,
+                              city: customerDataAddressResponse.data.city,
+                              region: customerDataAddressResponse.data.region,
+                              country: customerDataAddressResponse.data.country,
+                              phone: customerDataAddressResponse.data.phone,
+                              type: shippingCode,
+                              orderId: orderId,
+                            };
 
-                  if (customerLoggedInData) {
-                    var dataToCustomerAddressBilling =
-                        prepareDataToCustomerAddress(customerId, billingCode),
-                      dataToCustomerAddressShipping =
-                        prepareDataToCustomerAddress(customerId, shippingCode);
+                            axios
+                              .post(
+                                "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                                dataToOrderAddressBilling
+                              )
+                              .then(function (res) {})
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                            axios
+                              .post(
+                                "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                                dataToOrderAddressShipping
+                              )
+                              .then(function (res) {})
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                      } else {
+                        if (
+                          isUseNewShippingAddress !== undefined &&
+                          !isUseNewShippingAddress
+                        ) {
+                          axios
+                            .get(
+                              "http://localhost:8080/KingShoesApi/api/customer-address/get-by-id/" +
+                                customerBillingAddressId
+                            )
+                            .then(function (customerDataAddressResponse) {
+                              dataToOrderAddressBilling = {
+                                firstName:
+                                  customerDataAddressResponse.data.firstName,
+                                lastName:
+                                  customerDataAddressResponse.data.lastName,
+                                address:
+                                  customerDataAddressResponse.data.address,
+                                city: customerDataAddressResponse.data.city,
+                                region: customerDataAddressResponse.data.region,
+                                country:
+                                  customerDataAddressResponse.data.country,
+                                phone: customerDataAddressResponse.data.phone,
+                                type: billingCode,
+                                orderId: orderId,
+                              };
+
+                              axios
+                                .post(
+                                  "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                                  dataToOrderAddressBilling
+                                )
+                                .then(function (res) {})
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                          axios
+                            .get(
+                              "http://localhost:8080/KingShoesApi/api/customer-address/get-by-id/" +
+                                customerShippingAddressId
+                            )
+                            .then(function (customerDataAddressResponse) {
+                              dataToOrderAddressShipping = {
+                                firstName:
+                                  customerDataAddressResponse.data.firstName,
+                                lastName:
+                                  customerDataAddressResponse.data.lastName,
+                                address:
+                                  customerDataAddressResponse.data.address,
+                                city: customerDataAddressResponse.data.city,
+                                region: customerDataAddressResponse.data.region,
+                                country:
+                                  customerDataAddressResponse.data.country,
+                                phone: customerDataAddressResponse.data.phone,
+                                type: shippingCode,
+                                orderId: orderId,
+                              };
+
+                              axios
+                                .post(
+                                  "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                                  dataToOrderAddressShipping
+                                )
+                                .then(function (res) {})
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        } else {
+                          var dataToOrderAddressShipping =
+                              prepareDataToOrderAddress(orderId, shippingCode),
+                            dataToCustomerAddressShipping =
+                              prepareDataToCustomerAddress(
+                                customerId,
+                                shippingCode
+                              );
+
+                          axios
+                            .get(
+                              "http://localhost:8080/KingShoesApi/api/customer-address/get-by-id/" +
+                                customerBillingAddressId
+                            )
+                            .then(function (customerDataAddressResponse) {
+                              dataToOrderAddressBilling = {
+                                firstName:
+                                  customerDataAddressResponse.data.firstName,
+                                lastName:
+                                  customerDataAddressResponse.data.lastName,
+                                address:
+                                  customerDataAddressResponse.data.address,
+                                city: customerDataAddressResponse.data.city,
+                                region: customerDataAddressResponse.data.region,
+                                country:
+                                  customerDataAddressResponse.data.country,
+                                phone: customerDataAddressResponse.data.phone,
+                                type: billingCode,
+                                orderId: orderId,
+                              };
+
+                              axios
+                                .post(
+                                  "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                                  dataToOrderAddressBilling
+                                )
+                                .then(function (res) {})
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                          axios
+                            .post(
+                              "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
+                              dataToCustomerAddressShipping
+                            )
+                            .then(function (res) {})
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                          axios
+                            .post(
+                              "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                              dataToOrderAddressShipping
+                            )
+                            .then(function (res) {})
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        }
+                      }
+                    } else {
+                      if (shipToDifferentAddress) {
+                        if (
+                          isUseNewShippingAddress !== undefined &&
+                          !isUseNewShippingAddress
+                        ) {
+                          var dataToOrderAddressBilling =
+                              prepareDataToOrderAddress(orderId, billingCode),
+                            dataToCustomerAddressBilling =
+                              prepareDataToCustomerAddress(
+                                customerId,
+                                billingCode
+                              );
+                          axios
+                            .post(
+                              "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
+                              dataToCustomerAddressBilling
+                            )
+                            .then(function (res) {})
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                          axios
+                            .post(
+                              "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                              dataToOrderAddressBilling
+                            )
+                            .then(function (res) {})
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                          axios
+                            .get(
+                              "http://localhost:8080/KingShoesApi/api/customer-address/get-by-id/" +
+                                customerShippingAddressId
+                            )
+                            .then(function (customerDataAddressResponse) {
+                              dataToOrderAddressShipping = {
+                                firstName:
+                                  customerDataAddressResponse.data.firstName,
+                                lastName:
+                                  customerDataAddressResponse.data.lastName,
+                                address:
+                                  customerDataAddressResponse.data.address,
+                                city: customerDataAddressResponse.data.city,
+                                region: customerDataAddressResponse.data.region,
+                                country:
+                                  customerDataAddressResponse.data.country,
+                                phone: customerDataAddressResponse.data.phone,
+                                type: shippingCode,
+                                orderId: orderId,
+                              };
+
+                              axios
+                                .post(
+                                  "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                                  dataToOrderAddressShipping
+                                )
+                                .then(function (res) {})
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        } else {
+                          var dataToOrderAddressBilling =
+                              prepareDataToOrderAddress(orderId, billingCode),
+                            dataToOrderAddressShipping =
+                              prepareDataToOrderAddress(orderId, shippingCode),
+                            dataToCustomerAddressBilling =
+                              prepareDataToCustomerAddress(
+                                customerId,
+                                billingCode
+                              ),
+                            dataToCustomerAddressShipping =
+                              prepareDataToCustomerAddress(
+                                customerId,
+                                shippingCode
+                              );
+                          axios
+                            .post(
+                              "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
+                              dataToCustomerAddressBilling
+                            )
+                            .then(function (res) {})
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                          axios
+                            .post(
+                              "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
+                              dataToCustomerAddressShipping
+                            )
+                            .then(function (res) {})
+                            .catch((err) => {
+                              console.log(err);
+                            });
+
+                          axios
+                            .post(
+                              "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                              dataToOrderAddressBilling
+                            )
+                            .then(function (res) {})
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                          axios
+                            .post(
+                              "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                              dataToOrderAddressShipping
+                            )
+                            .then(function (res) {})
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        }
+                      } else {
+                        var dataToOrderAddressBilling =
+                            prepareDataToOrderAddress(orderId, billingCode),
+                          dataToCustomerAddressBilling =
+                            prepareDataToCustomerAddress(
+                              customerId,
+                              billingCode
+                            );
+
+                        var dataToCustomerAddressShipping = JSON.parse(
+                            JSON.stringify(dataToCustomerAddressBilling)
+                          ),
+                          dataToOrderAddressShipping = JSON.parse(
+                            JSON.stringify(dataToOrderAddressBilling)
+                          );
+                        dataToCustomerAddressShipping.type = shippingCode;
+                        dataToOrderAddressShipping.type = shippingCode;
+
+                        axios
+                          .post(
+                            "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
+                            dataToCustomerAddressBilling
+                          )
+                          .then(function (res) {})
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                        axios
+                          .post(
+                            "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
+                            dataToCustomerAddressShipping
+                          )
+                          .then(function (res) {})
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                        axios
+                          .post(
+                            "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                            dataToOrderAddressBilling
+                          )
+                          .then(function (res) {})
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                        axios
+                          .post(
+                            "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                            dataToOrderAddressShipping
+                          )
+                          .then(function (res) {})
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                      }
+                    }
+                  } else {
+                    var dataToOrderAddressBilling = prepareDataToOrderAddress(
+                        orderId,
+                        billingCode
+                      ),
+                      dataToOrderAddressShipping = prepareDataToOrderAddress(
+                        orderId,
+                        shippingCode
+                      );
 
                     axios
                       .post(
-                        "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
-                        dataToCustomerAddressBilling
+                        "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                        dataToOrderAddressBilling
                       )
                       .then(function (res) {})
                       .catch((err) => {
@@ -381,8 +759,8 @@ const Checkout = () => {
                       });
                     axios
                       .post(
-                        "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
-                        dataToCustomerAddressShipping
+                        "http://localhost:8080/KingShoesApi/api/order-address/insert/",
+                        dataToOrderAddressShipping
                       )
                       .then(function (res) {})
                       .catch((err) => {
@@ -391,24 +769,6 @@ const Checkout = () => {
                   }
 
                   pushDataOrderItem(orderId);
-                  axios
-                    .post(
-                      "http://localhost:8080/KingShoesApi/api/order-address/insert/",
-                      dataToOrderAddressBilling
-                    )
-                    .then(function (res) {})
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  axios
-                    .post(
-                      "http://localhost:8080/KingShoesApi/api/order-address/insert/",
-                      dataToOrderAddressShipping
-                    )
-                    .then(function (res) {})
-                    .catch((err) => {
-                      console.log(err);
-                    });
                   localStorage.removeItem("cart");
                   localStorage.setItem("last-order-id", orderId);
                   localStorage.setItem(
