@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Breadcrumb } from "@/components";
 import { get } from "@/helpers";
+import { useAlert } from 'react-alert';
+import bcrypt from "bcryptjs";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/hooks/useAppContext";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllProductSize } from "@/stores/actions";
+import { getAllProductSize, getAllCustomer } from "@/stores/actions";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const alert = useAlert();
 
   const { data: validateCart, setData: setValidateCart } =
     useAppContext("validate-cart");
-  const { productSizes } = useSelector((state) => ({
+
+  const { productSizes, customers } = useSelector((state) => ({
     productSizes: state.productSizeReducer.productSizes,
+    customers: state.customerReducer.customers,
   }));
 
   useEffect(() => {
@@ -26,6 +31,10 @@ const Checkout = () => {
       }
     }
   }, [validateCart]);
+
+  useEffect(() => {
+    dispatch(getAllCustomer());
+  }, [dispatch]);
 
   useEffect(() => {
     if (productSizes.length > 0) {
@@ -61,6 +70,7 @@ const Checkout = () => {
   }, [productSizes]);
 
   const emailCode = "email";
+  const passwordCode = "password";
   const firstNameCode = "firstName";
   const lastNameCode = "lastName";
   const addressCode = "address";
@@ -210,6 +220,10 @@ const Checkout = () => {
       },
     },
     billing: {
+      password: {
+        valid: true,
+        value: "",
+      },
       email: {
         valid: true,
         value: "",
@@ -261,21 +275,51 @@ const Checkout = () => {
     }));
   };
 
-  const [isSubmitEmail, setIsSubmitEmail] = useState(false)
+  const [isSubmitEmail, setIsSubmitEmail] = useState(false);
   const handleChange = (type, code) => (e) => {
     var value = e.currentTarget.value.trim();
     assignData(type, code, value);
-    console.log(type, code, value, emails);
 
     if (type == billingCode && code == emailCode) {
+      let countEmailMatches = 0;
       emails.map((email, i) => {
         if (value == email) {
-          setIsSubmitEmail(true)
-          break;
+          countEmailMatches++;
         }
       });
+      if (countEmailMatches > 0) {
+        setIsSubmitEmail(true);
+      } else {
+        setIsSubmitEmail(false);
+      }
     }
-  };
+  }
+
+  const inputSignInEmail = useRef();
+  const inputSignInPass = useRef();
+  const handleSignInEmail = () => {
+    let email = inputSignInEmail.current.value;
+    let pass = inputSignInPass.current.value;
+
+    let customer = customers.filter((c) => {
+      if (c.email === email && bcrypt.compareSync(pass, c.password)) {
+        return c;
+      } else {
+        return null;
+      }
+    });
+    if (customer && customer.length > 0) {
+      localStorage.setItem("customer-login", JSON.stringify(customer));
+      location.reload();
+      alert.show("Login success!", {
+        type: 'success',
+      });
+    } else {
+      alert.show("Email or Password is not match!", {
+        type: 'error',
+      });
+    }
+  }
 
   const submitOrder = async (e) => {
     e.preventDefault();
@@ -916,6 +960,7 @@ const Checkout = () => {
           "http://localhost:8080/KingShoesApi/api/customer-address/get-all-billing/" +
           customerLoggedInData.entityId
         );
+        console.log(customerBillingAddress)
       setCustomerBillingAddresses(customerBillingAddress);
       setCustomerShippingAddresses(customerShippingAddress);
     } else {
@@ -1118,25 +1163,27 @@ const Checkout = () => {
                     >
                       <label>Email</label>
                       <input
+                        ref={inputSignInEmail}
                         className={`form-control ${data[billingCode][emailCode].valid ? "" : "is-invalid"
                           }`}
                         onChange={handleChange(billingCode, emailCode)}
                         type="text"
                       />
+                      <div className="invalid-feedback">{emailValidMsg}</div>
                       {
                         isSubmitEmail
                           ? <>
                             <input
-                              className={`form-control ${data[billingCode][emailCode].valid ? "" : "is-invalid"
-                                }`}
-                              onChange={handleChange(billingCode, emailCode)}
+                              ref={inputSignInPass}
+                              className={`form-control ${data[billingCode][passwordCode].valid ? "" : "is-invalid"}`}
+                              onChange={handleChange(billingCode, passwordCode)}
                               type="text"
                             />
-                            <button>Submit</button>
+                            <div className="invalid-feedback">{textRequire}</div>
+                            <button onClick={handleSignInEmail}>Submit</button>
                           </>
                           : <></>
                       }
-                      <div className="invalid-feedback">{emailValidMsg}</div>
                       <span>You can create an account after checkout.</span>
                     </div>
                     <div className="col-md-6 form-group">
