@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useAlert } from 'react-alert';
 import { useSelector, useDispatch } from "react-redux";
 import { getAllProductSize } from "@/stores/actions";
-import { useAppContext } from "@/hooks/useAppContext"
+import { useAppContext } from "@/hooks/useAppContext";
 
 const Cart = () => {
   useScript("public/js/product-quantity");

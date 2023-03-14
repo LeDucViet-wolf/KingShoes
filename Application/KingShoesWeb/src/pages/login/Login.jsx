@@ -5,6 +5,7 @@ import { getAllCustomer } from "@/stores/actions";
 import bcrypt from "bcryptjs";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from 'react-alert';
+import { useAppContext } from "@/hooks/useAppContext";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const Login = () => {
       setIsPasswordValid(false);
     }
   };
-
+  const { data: customerLogin, setData: setCustomerLogin } = useAppContext('customer-login');
   const handleSubmit = () => {
     if (!email) {
       setIsEmailValid(false);
@@ -64,6 +65,7 @@ const Login = () => {
       });
       if (customer && customer.length > 0) {
         localStorage.setItem("customer-login", JSON.stringify(customer));
+        setCustomerLogin(JSON.stringify(customer))
         navigate("/");
         alert.show("Login success!", {
           type: 'success',

@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import axios from "axios";
 import { useAlert } from "react-alert";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "@/hooks/useAppContext";
 
 const Register = () => {
   const alert = useAlert();
@@ -74,7 +75,7 @@ const Register = () => {
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
   };
-
+  const { data: customerLogin, setData: setCustomerLogin } = useAppContext('customer-login');
   const handleSubmit = () => {
     var valid = true;
     if (!email) {
@@ -185,10 +186,8 @@ const Register = () => {
               )
               .then(function (res) {
                 if (res.data) {
-                  localStorage.setItem(
-                    "customer-login",
-                    JSON.stringify([res.data])
-                  );
+                  localStorage.setItem("customer-login", JSON.stringify([res.data]));
+                  setCustomerLogin(JSON.stringify([res.data]))
                   navigate("/profile");
                   alert.show(`Register success!`, {
                     type: "success",

@@ -5,9 +5,9 @@ import { useAlert } from 'react-alert';
 import bcrypt from "bcryptjs";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useAppContext } from "@/hooks/useAppContext";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllProductSize, getAllCustomer } from "@/stores/actions";
+import { useAppContext } from "@/hooks/useAppContext";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -125,10 +125,11 @@ const Checkout = () => {
     countryCode,
   ];
 
-  var customerLoggedInData = localStorage.getItem("customer-login");
-  if (customerLoggedInData) {
-    customerLoggedInData = JSON.parse(customerLoggedInData)[0];
-  }
+  const [customerLoggedInData, setCustomerLoggedInData] = useState(
+    localStorage.getItem("customer-login")
+      ? JSON.parse(localStorage.getItem("customer-login"))[0]
+      : {}
+  );
 
   const checkUseShipToDifferentAddress = (e) => {
     useShipToDifferentAddress(e.currentTarget.checked);
@@ -297,6 +298,8 @@ const Checkout = () => {
 
   const inputSignInEmail = useRef();
   const inputSignInPass = useRef();
+  const { data: customerLogin, setData: setCustomerLogin } = useAppContext('customer-login');
+
   const handleSignInEmail = () => {
     let email = inputSignInEmail.current.value;
     let pass = inputSignInPass.current.value;
@@ -309,8 +312,10 @@ const Checkout = () => {
       }
     });
     if (customer && customer.length > 0) {
+      setIsLoggedIn(true);
+      setCustomerLoggedInData(customer[0]);
+      setCustomerLogin(JSON.stringify(customer));
       localStorage.setItem("customer-login", JSON.stringify(customer));
-      location.reload();
       alert.show("Login success!", {
         type: 'success',
       });
@@ -941,7 +946,7 @@ const Checkout = () => {
     getCountries(countryList);
     assignData(billingCode, countryCode, countryList[0].code);
     assignData(shippingCode, countryCode, countryList[0].code);
-    if (customerLoggedInData) {
+    if (customerLoggedInData && Object.keys(customerLoggedInData).length !== 0 && Object.getPrototypeOf(customerLoggedInData) === Object.prototype) {
       setIsLoggedIn(true);
       assignData(billingCode, emailCode, customerLoggedInData.email);
       assignData(billingCode, firstNameCode, customerLoggedInData.firstName);
@@ -960,7 +965,6 @@ const Checkout = () => {
           "http://localhost:8080/KingShoesApi/api/customer-address/get-all-billing/" +
           customerLoggedInData.entityId
         );
-        console.log(customerBillingAddress)
       setCustomerBillingAddresses(customerBillingAddress);
       setCustomerShippingAddresses(customerShippingAddress);
     } else {
@@ -970,7 +974,7 @@ const Checkout = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [customerLoggedInData]);
 
   return (
     <>
@@ -1175,12 +1179,12 @@ const Checkout = () => {
                           ? <>
                             <input
                               ref={inputSignInPass}
-                              className={`form-control ${data[billingCode][passwordCode].valid ? "" : "is-invalid"}`}
+                              className={`form-control mt-2 mb-2 ${data[billingCode][passwordCode].valid ? "" : "is-invalid"}`}
                               onChange={handleChange(billingCode, passwordCode)}
                               type="text"
                             />
                             <div className="invalid-feedback">{textRequire}</div>
-                            <button onClick={handleSignInEmail}>Submit</button>
+                            <button onClick={handleSignInEmail} class="btn btn-block btn-primary">Login</button>
                           </>
                           : <></>
                       }

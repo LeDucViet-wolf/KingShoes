@@ -1,15 +1,16 @@
 import React, { useRef, useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import "@/assets/css/header.css";
-import { useAlert } from 'react-alert'
+import { useAlert } from 'react-alert';
+import { useAppContext } from "@/hooks/useAppContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const alert = useAlert()
-
-  const customer = localStorage.getItem("customer-login");
-  const [isLogout, setIsLogOut] = useState(false)
-
+  const { data: customerLogin, setData: setCustomerLogin } = useAppContext('customer-login');
+  const [customer, setCustomer] = useState(localStorage.getItem("customer-login"));
+  const [isLogout, setIsLogOut] = useState(false);
+  
   const redirectProfile = (e) => {
     e.preventDefault()
     navigate('/profile')
@@ -28,8 +29,14 @@ const Header = () => {
       })
       navigate('/')
       setIsLogOut(false)
+      setCustomer(null)
+      setCustomerLogin(null)
     }
   }, [isLogout])
+
+  useEffect(() => {
+    setCustomer(customerLogin)
+  }, [customerLogin])
 
   // Search
   const inputSearch = useRef();
@@ -82,7 +89,7 @@ const Header = () => {
                   className="btn btn-sm btn-light dropdown-toggle"
                   data-toggle="dropdown"
                 >
-                  {!customer ? "My Account" : `${JSON.parse(customer)[0].lastName}`}
+                  {!customer ? "My Account" : `${JSON.parse(customer)[0]?.lastName}`}
                 </button>
                 <div className="dropdown-menu dropdown-menu-right">
                   {
