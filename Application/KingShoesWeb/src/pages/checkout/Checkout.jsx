@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Breadcrumb } from "@/components";
 import { get } from "@/helpers";
-import { useAlert } from 'react-alert';
+import { useAlert } from "react-alert";
 import bcrypt from "bcryptjs";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -294,11 +294,12 @@ const Checkout = () => {
         setIsSubmitEmail(false);
       }
     }
-  }
+  };
 
   const inputSignInEmail = useRef();
   const inputSignInPass = useRef();
-  const { data: customerLogin, setData: setCustomerLogin } = useAppContext('customer-login');
+  const { data: customerLogin, setData: setCustomerLogin } =
+    useAppContext("customer-login");
 
   const handleSignInEmail = () => {
     let email = inputSignInEmail.current.value;
@@ -317,14 +318,14 @@ const Checkout = () => {
       setCustomerLogin(JSON.stringify(customer));
       localStorage.setItem("customer-login", JSON.stringify(customer));
       alert.show("Login success!", {
-        type: 'success',
+        type: "success",
       });
     } else {
       alert.show("Email or Password is not match!", {
-        type: 'error',
+        type: "error",
       });
     }
-  }
+  };
 
   const submitOrder = async (e) => {
     e.preventDefault();
@@ -411,7 +412,7 @@ const Checkout = () => {
             axios
               .get(
                 "http://localhost:8080/KingShoesApi/api/orders/get-by-id/" +
-                orderId
+                  orderId
               )
               .then(function (response) {
                 if ((response.status = 200 && response.data)) {
@@ -424,7 +425,7 @@ const Checkout = () => {
                         axios
                           .get(
                             "http://localhost:8080/KingShoesApi/api/customer-address/get-by-id/" +
-                            customerBillingAddressId
+                              customerBillingAddressId
                           )
                           .then(function (customerDataAddressResponse) {
                             dataToOrderAddressBilling = {
@@ -459,7 +460,7 @@ const Checkout = () => {
                                 "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                                 dataToOrderAddressBilling
                               )
-                              .then(function (res) { })
+                              .then(function (res) {})
                               .catch((err) => {
                                 console.log(err);
                               });
@@ -468,10 +469,49 @@ const Checkout = () => {
                                 "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                                 dataToOrderAddressShipping
                               )
-                              .then(function (res) { })
+                              .then(function (res) {})
                               .catch((err) => {
                                 console.log(err);
                               });
+                            cart.forEach((e) => {
+                              axios
+                                .get(
+                                  "http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id-and-size/" +
+                                    e.productId +
+                                    "/" +
+                                    e.size
+                                )
+                                .then(function (res) {
+                                  if (res.data) {
+                                    res.data.forEach((productSize) => {
+                                      cart.forEach((cartItem) => {
+                                        if (
+                                          cartItem.productId ==
+                                            productSize.productId &&
+                                          productSize.quantity - cartItem.qty >=
+                                            0
+                                        ) {
+                                          axios
+                                            .put(
+                                              "http://localhost:8080/KingShoesApi/api/product-sizes/update/",
+                                              prepareDataProductSize(
+                                                productSize,
+                                                cartItem
+                                              )
+                                            )
+                                            .then(function (res) {})
+                                            .catch((err) => {
+                                              console.log(err);
+                                            });
+                                        }
+                                      });
+                                    });
+                                  }
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            });
                           })
                           .catch((err) => {
                             console.log(err);
@@ -484,7 +524,7 @@ const Checkout = () => {
                           axios
                             .get(
                               "http://localhost:8080/KingShoesApi/api/customer-address/get-by-id/" +
-                              customerBillingAddressId
+                                customerBillingAddressId
                             )
                             .then(function (customerDataAddressResponse) {
                               dataToOrderAddressBilling = {
@@ -508,7 +548,7 @@ const Checkout = () => {
                                   "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                                   dataToOrderAddressBilling
                                 )
-                                .then(function (res) { })
+                                .then(function (res) {})
                                 .catch((err) => {
                                   console.log(err);
                                 });
@@ -519,7 +559,7 @@ const Checkout = () => {
                           axios
                             .get(
                               "http://localhost:8080/KingShoesApi/api/customer-address/get-by-id/" +
-                              customerShippingAddressId
+                                customerShippingAddressId
                             )
                             .then(function (customerDataAddressResponse) {
                               dataToOrderAddressShipping = {
@@ -543,7 +583,7 @@ const Checkout = () => {
                                   "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                                   dataToOrderAddressShipping
                                 )
-                                .then(function (res) { })
+                                .then(function (res) {})
                                 .catch((err) => {
                                   console.log(err);
                                 });
@@ -551,9 +591,47 @@ const Checkout = () => {
                             .catch((err) => {
                               console.log(err);
                             });
+                          cart.forEach((e) => {
+                            axios
+                              .get(
+                                "http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id-and-size/" +
+                                  e.productId +
+                                  "/" +
+                                  e.size
+                              )
+                              .then(function (res) {
+                                if (res.data) {
+                                  res.data.forEach((productSize) => {
+                                    cart.forEach((cartItem) => {
+                                      if (
+                                        cartItem.productId ==
+                                          productSize.productId &&
+                                        productSize.quantity - cartItem.qty >= 0
+                                      ) {
+                                        axios
+                                          .put(
+                                            "http://localhost:8080/KingShoesApi/api/product-sizes/update/",
+                                            prepareDataProductSize(
+                                              productSize,
+                                              cartItem
+                                            )
+                                          )
+                                          .then(function (res) {})
+                                          .catch((err) => {
+                                            console.log(err);
+                                          });
+                                      }
+                                    });
+                                  });
+                                }
+                              })
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          });
                         } else {
                           var dataToOrderAddressShipping =
-                            prepareDataToOrderAddress(orderId, shippingCode),
+                              prepareDataToOrderAddress(orderId, shippingCode),
                             dataToCustomerAddressShipping =
                               prepareDataToCustomerAddress(
                                 customerId,
@@ -563,7 +641,7 @@ const Checkout = () => {
                           axios
                             .get(
                               "http://localhost:8080/KingShoesApi/api/customer-address/get-by-id/" +
-                              customerBillingAddressId
+                                customerBillingAddressId
                             )
                             .then(function (customerDataAddressResponse) {
                               dataToOrderAddressBilling = {
@@ -587,7 +665,7 @@ const Checkout = () => {
                                   "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                                   dataToOrderAddressBilling
                                 )
-                                .then(function (res) { })
+                                .then(function (res) {})
                                 .catch((err) => {
                                   console.log(err);
                                 });
@@ -600,7 +678,7 @@ const Checkout = () => {
                               "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
                               dataToCustomerAddressShipping
                             )
-                            .then(function (res) { })
+                            .then(function (res) {})
                             .catch((err) => {
                               console.log(err);
                             });
@@ -609,10 +687,48 @@ const Checkout = () => {
                               "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                               dataToOrderAddressShipping
                             )
-                            .then(function (res) { })
+                            .then(function (res) {})
                             .catch((err) => {
                               console.log(err);
                             });
+                          cart.forEach((e) => {
+                            axios
+                              .get(
+                                "http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id-and-size/" +
+                                  e.productId +
+                                  "/" +
+                                  e.size
+                              )
+                              .then(function (res) {
+                                if (res.data) {
+                                  res.data.forEach((productSize) => {
+                                    cart.forEach((cartItem) => {
+                                      if (
+                                        cartItem.productId ==
+                                          productSize.productId &&
+                                        productSize.quantity - cartItem.qty >= 0
+                                      ) {
+                                        axios
+                                          .put(
+                                            "http://localhost:8080/KingShoesApi/api/product-sizes/update/",
+                                            prepareDataProductSize(
+                                              productSize,
+                                              cartItem
+                                            )
+                                          )
+                                          .then(function (res) {})
+                                          .catch((err) => {
+                                            console.log(err);
+                                          });
+                                      }
+                                    });
+                                  });
+                                }
+                              })
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          });
                         }
                       }
                     } else {
@@ -622,7 +738,7 @@ const Checkout = () => {
                           !isUseNewShippingAddress
                         ) {
                           var dataToOrderAddressBilling =
-                            prepareDataToOrderAddress(orderId, billingCode),
+                              prepareDataToOrderAddress(orderId, billingCode),
                             dataToCustomerAddressBilling =
                               prepareDataToCustomerAddress(
                                 customerId,
@@ -633,7 +749,7 @@ const Checkout = () => {
                               "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
                               dataToCustomerAddressBilling
                             )
-                            .then(function (res) { })
+                            .then(function (res) {})
                             .catch((err) => {
                               console.log(err);
                             });
@@ -642,14 +758,14 @@ const Checkout = () => {
                               "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                               dataToOrderAddressBilling
                             )
-                            .then(function (res) { })
+                            .then(function (res) {})
                             .catch((err) => {
                               console.log(err);
                             });
                           axios
                             .get(
                               "http://localhost:8080/KingShoesApi/api/customer-address/get-by-id/" +
-                              customerShippingAddressId
+                                customerShippingAddressId
                             )
                             .then(function (customerDataAddressResponse) {
                               dataToOrderAddressShipping = {
@@ -673,7 +789,7 @@ const Checkout = () => {
                                   "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                                   dataToOrderAddressShipping
                                 )
-                                .then(function (res) { })
+                                .then(function (res) {})
                                 .catch((err) => {
                                   console.log(err);
                                 });
@@ -681,9 +797,47 @@ const Checkout = () => {
                             .catch((err) => {
                               console.log(err);
                             });
+                          cart.forEach((e) => {
+                            axios
+                              .get(
+                                "http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id-and-size/" +
+                                  e.productId +
+                                  "/" +
+                                  e.size
+                              )
+                              .then(function (res) {
+                                if (res.data) {
+                                  res.data.forEach((productSize) => {
+                                    cart.forEach((cartItem) => {
+                                      if (
+                                        cartItem.productId ==
+                                          productSize.productId &&
+                                        productSize.quantity - cartItem.qty >= 0
+                                      ) {
+                                        axios
+                                          .put(
+                                            "http://localhost:8080/KingShoesApi/api/product-sizes/update/",
+                                            prepareDataProductSize(
+                                              productSize,
+                                              cartItem
+                                            )
+                                          )
+                                          .then(function (res) {})
+                                          .catch((err) => {
+                                            console.log(err);
+                                          });
+                                      }
+                                    });
+                                  });
+                                }
+                              })
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          });
                         } else {
                           var dataToOrderAddressBilling =
-                            prepareDataToOrderAddress(orderId, billingCode),
+                              prepareDataToOrderAddress(orderId, billingCode),
                             dataToOrderAddressShipping =
                               prepareDataToOrderAddress(orderId, shippingCode),
                             dataToCustomerAddressBilling =
@@ -701,7 +855,7 @@ const Checkout = () => {
                               "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
                               dataToCustomerAddressBilling
                             )
-                            .then(function (res) { })
+                            .then(function (res) {})
                             .catch((err) => {
                               console.log(err);
                             });
@@ -710,7 +864,7 @@ const Checkout = () => {
                               "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
                               dataToCustomerAddressShipping
                             )
-                            .then(function (res) { })
+                            .then(function (res) {})
                             .catch((err) => {
                               console.log(err);
                             });
@@ -720,7 +874,7 @@ const Checkout = () => {
                               "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                               dataToOrderAddressBilling
                             )
-                            .then(function (res) { })
+                            .then(function (res) {})
                             .catch((err) => {
                               console.log(err);
                             });
@@ -729,14 +883,52 @@ const Checkout = () => {
                               "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                               dataToOrderAddressShipping
                             )
-                            .then(function (res) { })
+                            .then(function (res) {})
                             .catch((err) => {
                               console.log(err);
                             });
+                          cart.forEach((e) => {
+                            axios
+                              .get(
+                                "http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id-and-size/" +
+                                  e.productId +
+                                  "/" +
+                                  e.size
+                              )
+                              .then(function (res) {
+                                if (res.data) {
+                                  res.data.forEach((productSize) => {
+                                    cart.forEach((cartItem) => {
+                                      if (
+                                        cartItem.productId ==
+                                          productSize.productId &&
+                                        productSize.quantity - cartItem.qty >= 0
+                                      ) {
+                                        axios
+                                          .put(
+                                            "http://localhost:8080/KingShoesApi/api/product-sizes/update/",
+                                            prepareDataProductSize(
+                                              productSize,
+                                              cartItem
+                                            )
+                                          )
+                                          .then(function (res) {})
+                                          .catch((err) => {
+                                            console.log(err);
+                                          });
+                                      }
+                                    });
+                                  });
+                                }
+                              })
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          });
                         }
                       } else {
                         var dataToOrderAddressBilling =
-                          prepareDataToOrderAddress(orderId, billingCode),
+                            prepareDataToOrderAddress(orderId, billingCode),
                           dataToCustomerAddressBilling =
                             prepareDataToCustomerAddress(
                               customerId,
@@ -744,8 +936,8 @@ const Checkout = () => {
                             );
 
                         var dataToCustomerAddressShipping = JSON.parse(
-                          JSON.stringify(dataToCustomerAddressBilling)
-                        ),
+                            JSON.stringify(dataToCustomerAddressBilling)
+                          ),
                           dataToOrderAddressShipping = JSON.parse(
                             JSON.stringify(dataToOrderAddressBilling)
                           );
@@ -757,7 +949,7 @@ const Checkout = () => {
                             "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
                             dataToCustomerAddressBilling
                           )
-                          .then(function (res) { })
+                          .then(function (res) {})
                           .catch((err) => {
                             console.log(err);
                           });
@@ -766,7 +958,7 @@ const Checkout = () => {
                             "http://localhost:8080/KingShoesApi/api/customer-address/insert/",
                             dataToCustomerAddressShipping
                           )
-                          .then(function (res) { })
+                          .then(function (res) {})
                           .catch((err) => {
                             console.log(err);
                           });
@@ -775,7 +967,7 @@ const Checkout = () => {
                             "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                             dataToOrderAddressBilling
                           )
-                          .then(function (res) { })
+                          .then(function (res) {})
                           .catch((err) => {
                             console.log(err);
                           });
@@ -784,17 +976,55 @@ const Checkout = () => {
                             "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                             dataToOrderAddressShipping
                           )
-                          .then(function (res) { })
+                          .then(function (res) {})
                           .catch((err) => {
                             console.log(err);
                           });
+                        cart.forEach((e) => {
+                          axios
+                            .get(
+                              "http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id-and-size/" +
+                                e.productId +
+                                "/" +
+                                e.size
+                            )
+                            .then(function (res) {
+                              if (res.data) {
+                                res.data.forEach((productSize) => {
+                                  cart.forEach((cartItem) => {
+                                    if (
+                                      cartItem.productId ==
+                                        productSize.productId &&
+                                      productSize.quantity - cartItem.qty >= 0
+                                    ) {
+                                      axios
+                                        .put(
+                                          "http://localhost:8080/KingShoesApi/api/product-sizes/update/",
+                                          prepareDataProductSize(
+                                            productSize,
+                                            cartItem
+                                          )
+                                        )
+                                        .then(function (res) {})
+                                        .catch((err) => {
+                                          console.log(err);
+                                        });
+                                    }
+                                  });
+                                });
+                              }
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        });
                       }
                     }
                   } else {
                     var dataToOrderAddressBilling = prepareDataToOrderAddress(
-                      orderId,
-                      billingCode
-                    ),
+                        orderId,
+                        billingCode
+                      ),
                       dataToOrderAddressShipping = prepareDataToOrderAddress(
                         orderId,
                         shippingCode
@@ -805,7 +1035,7 @@ const Checkout = () => {
                         "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                         dataToOrderAddressBilling
                       )
-                      .then(function (res) { })
+                      .then(function (res) {})
                       .catch((err) => {
                         console.log(err);
                       });
@@ -814,10 +1044,47 @@ const Checkout = () => {
                         "http://localhost:8080/KingShoesApi/api/order-address/insert/",
                         dataToOrderAddressShipping
                       )
-                      .then(function (res) { })
+                      .then(function (res) {})
                       .catch((err) => {
                         console.log(err);
                       });
+                    cart.forEach((e) => {
+                      axios
+                        .get(
+                          "http://localhost:8080/KingShoesApi/api/product-sizes/get-by-product-id-and-size/" +
+                            e.productId +
+                            "/" +
+                            e.size
+                        )
+                        .then(function (res) {
+                          if (res.data) {
+                            res.data.forEach((productSize) => {
+                              cart.forEach((cartItem) => {
+                                if (
+                                  cartItem.productId == productSize.productId &&
+                                  productSize.quantity - cartItem.qty >= 0
+                                ) {
+                                  axios
+                                    .put(
+                                      "http://localhost:8080/KingShoesApi/api/product-sizes/update/",
+                                      prepareDataProductSize(
+                                        productSize,
+                                        cartItem
+                                      )
+                                    )
+                                    .then(function (res) {})
+                                    .catch((err) => {
+                                      console.log(err);
+                                    });
+                                }
+                              });
+                            });
+                          }
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                    });
                   }
 
                   pushDataOrderItem(orderId);
@@ -841,6 +1108,15 @@ const Checkout = () => {
           console.log(err);
         });
     }
+  };
+
+  const prepareDataProductSize = (productSize, cartItem) => {
+    return {
+      entityId: productSize.entityId,
+      value: productSize.value,
+      quantity: productSize.quantity - cartItem.qty,
+      productId: productSize.productId,
+    };
   };
 
   const prepareDataToOrder = (
@@ -908,7 +1184,7 @@ const Checkout = () => {
       };
       axios
         .post("http://localhost:8080/KingShoesApi/api/order-item/insert/", data)
-        .then(function (res) { })
+        .then(function (res) {})
         .catch((err) => {
           console.log(err);
         });
@@ -935,8 +1211,8 @@ const Checkout = () => {
     );
 
     var customerListEnable = await get(
-      "http://localhost:8080/KingShoesApi/api/customers/get-list-enabled"
-    ),
+        "http://localhost:8080/KingShoesApi/api/customers/get-list-enabled"
+      ),
       emailList = [];
 
     customerListEnable.map((item, i) => {
@@ -946,7 +1222,11 @@ const Checkout = () => {
     getCountries(countryList);
     assignData(billingCode, countryCode, countryList[0].code);
     assignData(shippingCode, countryCode, countryList[0].code);
-    if (customerLoggedInData && Object.keys(customerLoggedInData).length !== 0 && Object.getPrototypeOf(customerLoggedInData) === Object.prototype) {
+    if (
+      customerLoggedInData &&
+      Object.keys(customerLoggedInData).length !== 0 &&
+      Object.getPrototypeOf(customerLoggedInData) === Object.prototype
+    ) {
       setIsLoggedIn(true);
       assignData(billingCode, emailCode, customerLoggedInData.email);
       assignData(billingCode, firstNameCode, customerLoggedInData.firstName);
@@ -958,12 +1238,12 @@ const Checkout = () => {
       assignData(shippingCode, addressCode, customerLoggedInData.address);
       assignData(shippingCode, phoneCode, customerLoggedInData.phone);
       var customerShippingAddress = await get(
-        "http://localhost:8080/KingShoesApi/api/customer-address/get-all-shipping/" +
-        customerLoggedInData.entityId
-      ),
+          "http://localhost:8080/KingShoesApi/api/customer-address/get-all-shipping/" +
+            customerLoggedInData.entityId
+        ),
         customerBillingAddress = await get(
           "http://localhost:8080/KingShoesApi/api/customer-address/get-all-billing/" +
-          customerLoggedInData.entityId
+            customerLoggedInData.entityId
         );
       setCustomerBillingAddresses(customerBillingAddress);
       setCustomerShippingAddresses(customerShippingAddress);
@@ -1058,10 +1338,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>First Name</label>
                         <input
-                          className={`form-control ${data[billingCode][firstNameCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][firstNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, firstNameCode)}
                           type="text"
                           defaultValue={
@@ -1073,10 +1354,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Last Name</label>
                         <input
-                          className={`form-control ${data[billingCode][lastNameCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][lastNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, lastNameCode)}
                           type="text"
                           defaultValue={
@@ -1088,10 +1370,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Address</label>
                         <input
-                          className={`form-control ${data[billingCode][addressCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][addressCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, addressCode)}
                           type="text"
                           defaultValue={
@@ -1103,10 +1386,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>City</label>
                         <input
-                          className={`form-control ${data[billingCode][cityCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][cityCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, cityCode)}
                           type="text"
                         />
@@ -1115,10 +1399,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>State/Province</label>
                         <input
-                          className={`form-control ${data[billingCode][regionCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][regionCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, regionCode)}
                           type="text"
                         />
@@ -1141,10 +1426,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Phone</label>
                         <input
-                          className={`form-control ${data[billingCode][phoneCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[billingCode][phoneCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(billingCode, phoneCode)}
                           type="text"
                           defaultValue={
@@ -1168,35 +1454,46 @@ const Checkout = () => {
                       <label>Email</label>
                       <input
                         ref={inputSignInEmail}
-                        className={`form-control ${data[billingCode][emailCode].valid ? "" : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][emailCode].valid ? "" : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, emailCode)}
                         type="text"
                       />
                       <div className="invalid-feedback">{emailValidMsg}</div>
-                      {
-                        isSubmitEmail
-                          ? <>
-                            <input
-                              ref={inputSignInPass}
-                              className={`form-control mt-2 mb-2 ${data[billingCode][passwordCode].valid ? "" : "is-invalid"}`}
-                              onChange={handleChange(billingCode, passwordCode)}
-                              type="text"
-                            />
-                            <div className="invalid-feedback">{textRequire}</div>
-                            <button onClick={handleSignInEmail} class="btn btn-block btn-primary">Login</button>
-                          </>
-                          : <></>
-                      }
+                      {isSubmitEmail ? (
+                        <>
+                          <input
+                            ref={inputSignInPass}
+                            className={`form-control mt-2 mb-2 ${
+                              data[billingCode][passwordCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
+                            onChange={handleChange(billingCode, passwordCode)}
+                            type="text"
+                          />
+                          <div className="invalid-feedback">{textRequire}</div>
+                          <button
+                            onClick={handleSignInEmail}
+                            class="btn btn-block btn-primary"
+                          >
+                            Login
+                          </button>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                       <span>You can create an account after checkout.</span>
                     </div>
                     <div className="col-md-6 form-group">
                       <label>First Name</label>
                       <input
-                        className={`form-control ${data[billingCode][firstNameCode].valid
-                          ? ""
-                          : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][firstNameCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, firstNameCode)}
                         type="text"
                         defaultValue={
@@ -1208,10 +1505,11 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>Last Name</label>
                       <input
-                        className={`form-control ${data[billingCode][lastNameCode].valid
-                          ? ""
-                          : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][lastNameCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, lastNameCode)}
                         type="text"
                         defaultValue={
@@ -1223,10 +1521,11 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>Address</label>
                       <input
-                        className={`form-control ${data[billingCode][addressCode].valid
-                          ? ""
-                          : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][addressCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, addressCode)}
                         type="text"
                         defaultValue={
@@ -1238,8 +1537,9 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>City</label>
                       <input
-                        className={`form-control ${data[billingCode][cityCode].valid ? "" : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][cityCode].valid ? "" : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, cityCode)}
                         type="text"
                       />
@@ -1248,10 +1548,11 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>State/Province</label>
                       <input
-                        className={`form-control ${data[billingCode][regionCode].valid
-                          ? ""
-                          : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][regionCode].valid
+                            ? ""
+                            : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, regionCode)}
                         type="text"
                       />
@@ -1274,8 +1575,9 @@ const Checkout = () => {
                     <div className="col-md-6 form-group">
                       <label>Phone</label>
                       <input
-                        className={`form-control ${data[billingCode][phoneCode].valid ? "" : "is-invalid"
-                          }`}
+                        className={`form-control ${
+                          data[billingCode][phoneCode].valid ? "" : "is-invalid"
+                        }`}
                         onChange={handleChange(billingCode, phoneCode)}
                         type="text"
                         defaultValue={
@@ -1379,10 +1681,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>First Name</label>
                           <input
-                            className={`form-control ${data[shippingCode][firstNameCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][firstNameCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, firstNameCode)}
                             type="text"
                             defaultValue={
@@ -1394,10 +1697,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>Last Name</label>
                           <input
-                            className={`form-control ${data[shippingCode][lastNameCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][lastNameCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, lastNameCode)}
                             type="text"
                             defaultValue={
@@ -1409,10 +1713,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>Address</label>
                           <input
-                            className={`form-control ${data[shippingCode][addressCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][addressCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, addressCode)}
                             type="text"
                             defaultValue={
@@ -1424,10 +1729,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>City</label>
                           <input
-                            className={`form-control ${data[shippingCode][cityCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][cityCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, cityCode)}
                             type="text"
                           />
@@ -1436,10 +1742,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>State/Province</label>
                           <input
-                            className={`form-control ${data[shippingCode][regionCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][regionCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, regionCode)}
                             type="text"
                           />
@@ -1462,10 +1769,11 @@ const Checkout = () => {
                         <div className="col-md-6 form-group">
                           <label>Phone</label>
                           <input
-                            className={`form-control ${data[shippingCode][phoneCode].valid
-                              ? ""
-                              : "is-invalid"
-                              }`}
+                            className={`form-control ${
+                              data[shippingCode][phoneCode].valid
+                                ? ""
+                                : "is-invalid"
+                            }`}
                             onChange={handleChange(shippingCode, phoneCode)}
                             type="text"
                             defaultValue={
@@ -1487,10 +1795,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>First Name</label>
                         <input
-                          className={`form-control ${data[shippingCode][firstNameCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][firstNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, firstNameCode)}
                           type="text"
                           defaultValue={
@@ -1502,10 +1811,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Last Name</label>
                         <input
-                          className={`form-control ${data[shippingCode][lastNameCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][lastNameCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, lastNameCode)}
                           type="text"
                           defaultValue={
@@ -1517,10 +1827,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Address</label>
                         <input
-                          className={`form-control ${data[shippingCode][addressCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][addressCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, addressCode)}
                           type="text"
                           defaultValue={
@@ -1532,10 +1843,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>City</label>
                         <input
-                          className={`form-control ${data[shippingCode][cityCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][cityCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, cityCode)}
                           type="text"
                         />
@@ -1544,10 +1856,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>State/Province</label>
                         <input
-                          className={`form-control ${data[shippingCode][regionCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][regionCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, regionCode)}
                           type="text"
                         />
@@ -1570,10 +1883,11 @@ const Checkout = () => {
                       <div className="col-md-6 form-group">
                         <label>Phone</label>
                         <input
-                          className={`form-control ${data[shippingCode][phoneCode].valid
-                            ? ""
-                            : "is-invalid"
-                            }`}
+                          className={`form-control ${
+                            data[shippingCode][phoneCode].valid
+                              ? ""
+                              : "is-invalid"
+                          }`}
                           onChange={handleChange(shippingCode, phoneCode)}
                           type="text"
                           defaultValue={

@@ -39,6 +39,16 @@ public class ProductSizeController {
 		String data = son.toJson(list);
 		return data;
 	}
+	
+	@GET
+	@Path("/get-by-product-id-and-size/{productId}/{value}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getByProductIdAndSize(@PathParam("productId") int productId, @PathParam("value") int value) {
+		List<ProductSize> list = new ProductSizeDAOImpl().getByProductIdAndSize(productId, value);
+		Gson son = new Gson();
+		String data = son.toJson(list);
+		return data;
+	}
 
 	@GET
 	@Path("/get-by-id/{entityId}")

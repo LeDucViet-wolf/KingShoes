@@ -46,6 +46,25 @@ public class ProductSizeDAOImpl implements ProductSizeDAO {
 		}
 		return null;
 	}
+	
+	public List<ProductSize> getByProductIdAndSize(int productId, int value) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List<ProductSize> list = session
+					.createQuery("from ProductSize where productId = :productId and value = :value", ProductSize.class)
+					.setParameter("productId", productId).setParameter("value", value).list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
 
 	@Override
 	public ProductSize getById(int entityId) {
