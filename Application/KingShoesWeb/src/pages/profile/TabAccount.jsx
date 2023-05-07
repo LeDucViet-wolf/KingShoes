@@ -1,9 +1,11 @@
 import React from "react";
+import { useAppContext } from "@/hooks/useAppContext";
 import { handleEdit, handleChangePass, convertToDate } from "./services";
 import styles from "./style.module.css";
 
-const TabAccount = ({...props}) => {
+const TabAccount = ({ ...props }) => {
     const { customer } = props;
+    const { data: getPass, setData: setPass } = useAppContext('change-pass-customer');
 
     return (
         <>
@@ -29,8 +31,8 @@ const TabAccount = ({...props}) => {
                                     </p>
                                 </div>
                                 <div className="box-actions">
-                                    <a href="" onClick={handleEdit} className={`action edit ${styles['btn-edit']}`}>Edit</a>
-                                    <a href="" onClick={''} className={`action change-password`}>Change Password</a>
+                                    <a href="" onClick={(e) => { handleEdit(e, setPass) }} className={`action edit ${styles['btn-edit']}`}>Edit</a>
+                                    <a href="" onClick={(e) => { handleChangePass(e, setPass) }} className={`action change-password`}>Change Password</a>
                                 </div>
                             </div>
                         </div>
