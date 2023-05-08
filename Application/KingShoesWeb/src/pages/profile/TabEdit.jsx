@@ -70,9 +70,12 @@ const TabEdit = ({ ...props }) => {
                     password: bcrypt.hashSync(values.newPass, bcrypt.genSaltSync())
                 }
                 handleSubmit(newCus);
+                localStorage.setItem("customer-login", JSON.stringify([newCus]));
             } else {
                 handleSubmit(values);
+                localStorage.setItem("customer-login", JSON.stringify([values]));
             }
+            location.reload();
         }
     });
 
