@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import TabAccount from "./TabAccount";
 import TabEdit from "./TabEdit";
 
@@ -6,7 +6,7 @@ const TabPanels = () => {
     const customer = localStorage.getItem("customer-login")
         ? JSON.parse(localStorage.getItem("customer-login"))[0]
         : null;
-   
+
     return (
         <div className="tab-content" id="profile-tab-content">
             <div
@@ -39,7 +39,7 @@ const TabPanels = () => {
                 role="tabpanel"
                 aria-labelledby="v-pills-edit-profile-tab"
             >
-                <TabEdit customer={customer}/>
+                <TabEdit customer={customer} />
             </div>
         </div>
     );
