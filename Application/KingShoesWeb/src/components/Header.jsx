@@ -35,7 +35,7 @@ const Header = () => {
   }, [isLogout])
 
   useEffect(() => {
-    setCustomer(customerLogin)
+    setCustomer(localStorage.getItem("customer-login"))
   }, [customerLogin])
 
   // Search

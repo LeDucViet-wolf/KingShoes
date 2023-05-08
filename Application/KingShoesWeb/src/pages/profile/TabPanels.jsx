@@ -39,7 +39,7 @@ const TabPanels = () => {
                 role="tabpanel"
                 aria-labelledby="v-pills-edit-profile-tab"
             >
-                <TabEdit/>
+                <TabEdit customer={customer}/>
             </div>
         </div>
     );

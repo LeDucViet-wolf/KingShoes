@@ -45,8 +45,15 @@ const handleShowChangePass = (e, setPass) => {
 }
 
 const convertToDate = (dateString) => {
-  var mydate = new Date(dateString);
-  return mydate.toLocaleDateString();
+  var myDate = new Date(dateString);
+  var datearray = myDate.toLocaleDateString().split("/");
+  var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+  return newdate;
 }
 
-export { handleEdit, handleChangePass, convertToDate, handleShowChangePass };
+const convertToDateToSubmit = (dateString) => {
+  var myDate = new Date(dateString);
+  return myDate.toISOString().split('T')[0];
+}
+
+export { handleEdit, handleChangePass, convertToDate, handleShowChangePass, convertToDateToSubmit };
